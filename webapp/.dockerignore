@@ -1,0 +1,10 @@
+node_modules
+npm-debug.log
+docker-compose.yml
+.dockerignore
+.git
+.gitignore
+
+# Игнорируем локальный Yarn 4 кэш и lock-файлы
+.yarn/
+.yarnrc.yml

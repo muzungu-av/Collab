@@ -1,0 +1,9 @@
+.env
+*.zip
+**/*.ods
+OLD/
+docs/
+**/node_modules/
+**/package-lock.json
+**/package.json
+

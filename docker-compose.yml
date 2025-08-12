@@ -1,0 +1,28 @@
+services:
+  webapp:
+    build: ./webapp
+    ports:
+      - "3000:80"
+    networks:
+      - bot_network
+
+  cot-backend:
+    build:
+      context: ./cot-backend
+    networks:
+      - bot_network
+    environment:
+      - WEBAPP_URL=${WEBAPP_URL:-}
+    # command: ["sh", "-c", "sleep infinity"]
+
+  bot:
+    build: ./bot
+    env_file: .env
+    environment:
+      WEBAPP_URL: ${WEBAPP_URL:-}
+    networks:
+      - bot_network
+
+networks:
+  bot_network:
+    driver: bridge

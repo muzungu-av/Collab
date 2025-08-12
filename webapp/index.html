@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Моё приложение</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      color: #2D617E;
+    }
+
+    #info {
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 5px;
+      background-color: #ddffdd;
+      color: #090;
+    }
+
+    #error {
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 5px;
+      background-color: #ffdddd;
+      color: #900;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Привет!</h1>
+  <div id="user-info"></div> <!-- Здесь выведем ID и имя -->
+  <div id="info"></div>
+  <div id="error"></div>
+
+  <script>
+    window.__BASE_API__ = "{{API_BASE_URL}}"; // будет заменено на реальный URL
+  </script>
+
+  <script src="main.js"></script> <!-- Твой основной скрипт -->
+</body>
+
+</html>
+
+<!-- 
+  < !DOCTYPE html>
+  <html>
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Telegram Web App</title>
+    <script>(function () {
+        // 1) Сначала — query-параметр (dev / localtunnel)
+        const params = new URLSearchParams(location.search);
+        const apiFromQuery = params.get('api_base_url') || params.get('apiBase');
+        const debugApi = params.get('debug_api');
+
+        if (debugApi) {
+          window.__BASE_API__ = debugApi;
+          console.info('Using debug API from query:', debugApi);
+          return;
+        }
+
+        if (apiFromQuery) {
+          window.__BASE_API__ = apiFromQuery;
+          console.info('Using API from query:', apiFromQuery);
+          return;
+        }
+
+        // 2) Если config.js уже подставлен (prod runtime генерация), используем его.
+        //    config.js должен установить window.__BASE_API__ заранее.
+        if (window.__BASE_API__) {
+          console.info('Using API from injected config:', window.__BASE_API__);
+          return;
+        }
+
+        // 3) fallback — внутренний адрес контейнера (если нужно)
+        window.__BASE_API__ = 'http://webapp:4000';
+        console.info('Using fallback API:', window.__BASE_API__);
+      })();
+
+    </script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 20px;
+      }
+
+      #error,
+      #info {
+        margin-top: 20px;
+        padding: 10px;
+        border-radius: 5px;
+      }
+
+      #error {
+        background-color: #ffdddd;
+        color: #900;
+      }
+
+      #info {
+        background-color: #ddffdd;
+        color: #090;
+      }
+
+      </></head><body><h1>Привет,
+      <span id="username">пользователь</span> !</h1><div id="info"></div><div id="error"></div><script>window.__BASE_API__="{{API_BASE_URL}}";
+
+      </script><script>window.addEventListener('load', ()=> {
+          const errorBox=document.getElementById('error');
+          const infoBox=document.getElementById('info');
+
+          try {
+            if ( !window.Telegram || !window.Telegram.WebApp) {
+              throw new Error("Telegram WebApp API не доступен. Проверьте, что вы открыли страницу *внутри Telegram*.");
+            }
+
+            const tg=window.Telegram.WebApp;
+            tg.expand();
+            tg.ready();
+
+            const initData=tg.initData;
+            const initDataUnsafe=tg.initDataUnsafe;
+
+            document.getElementById('username').innerText=initDataUnsafe?.user?.username || 'пользователь';
+            infoBox.innerText="Инициализация Telegram WebApp прошла успешно.";
+
+            const baseUrl=window.__BASE_API__ || "http://webapp:4000"; // fallback
+            // Отправка на бэкенд
+            //  fetch(`${baseUrl}/auth/telegram`, {
+            //     method: "POST",
+            //     body: JSON.stringify({ initData }),
+            //     headers: {
+            //       "Content-Type": "application/json"
+            //     }
+            //   })
+            //   .then(res => {
+            //     if (!res.ok) {
+            //       return res.text().then(t => {
+            //         throw new Error("Ошибка ответа от сервера: " + t);
+            //       });
+            //     }
+            //     return res.json();
+            //   })
+            //   .then(data => {
+            //     infoBox.innerText += "\nУспешно отправлено на сервер.";
+            //   })
+            //   .catch(err => {
+            //     errorBox.innerText = "Ошибка при запросе на сервер: " + err.message;
+            //   });
+
+          }
+
+          catch (err) {
+            errorBox.innerText="Ошибка JS: " + err.message;
+          }
+        });
+      </script></body></html>-->
