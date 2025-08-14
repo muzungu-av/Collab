@@ -3,13 +3,44 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Моё приложение</title>
+  <title>Collaborify Task</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: sans-serif;
-      padding: 20px;
+      font-family: 'Montserrat';
+      padding: 0;
+      margin: 0;
       color: #2D617E;
+      background: #0B111D;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .logo {
+      display: block;
+      margin-top: 10px;
+      /* Отступ сверху */
+      max-width: 350px;
+      width: 350px;
+      height: 45px;
+      margin-left: 20px;
+    }
+
+    .content {
+      flex: 1;
+      /* Занимает всё свободное пространство */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      /* Центрирование по высоте */
+      align-items: center;
+      /* Центрирование по ширине */
+      width: 100%;
+      max-width: 350px;
+      text-align: center;
     }
 
     #info {
@@ -27,172 +58,148 @@
       background-color: #ffdddd;
       color: #900;
     }
-  </style>
 
-  <style>
     .welcome-text {
-      .welcome-text {
-        width: 350px;
-        height: 85px;
-        font-family: 'Montserrat', sans-serif;
-        font-style: normal;
-        font-weight: 600;
-        font-size: 30px;
-        line-height: 120%;
-        text-align: center;
-        color: #FFFFFF;
-        display: flex;
-        justify-content: center;
-        align-items: flex-end;
-        flex: none;
-        order: 0;
-        align-self: stretch;
-        flex-grow: 0;
-      }
+      font-family: 'Montserrat';
+      height: auto;
+      font-weight: 600;
+      font-size: 30px;
+      line-height: 120%;
+      text-align: center;
+      color: #FFFFFF;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto;
+    }
 
-      .gradient-text {
-        background: linear-gradient(90deg, #FF7A18, #AF002D 70%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        text-fill-color: transparent;
-      }
+    .gradient-text {
+      width: 100%;
+      height: auto;
+      font-family: 'Montserrat';
+      font-style: normal;
+      font-weight: 800;
+      font-size: 38px;
+      line-height: 140%;
+      text-align: center;
+      background: linear-gradient(90deg, #FBA220 0%, #FFD28F 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      flex: none;
+      order: 0;
+      align-self: stretch;
+      flex-grow: 0;
+    }
+
+    .gradient-small-text {
+      font-family: 'Montserrat';
+      font-style: normal;
+      font-weight: 800;
+      background: linear-gradient(90deg, #FBA220 0%, #FFD28F 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .simple-text {
+      font-family: 'Montserrat';
+      font-weight: 400;
+      font-style: normal;
+      font-size: 18px;
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 105%;
+      letter-spacing: 0;
+      text-align: center;
+      margin: 5px 0;
+    }
+
+    .button-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .custom-button {
+      width: 350px;
+      height: 55px;
+      font-family: 'Montserrat';
+      font-weight: 500;
+      font-size: 14px;
+      color: #FFFFFF;
+      text-align: center;
+      line-height: 60px;
+      /* Центрирование текста по вертикали */
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+      border-radius: 5px;
+      background: linear-gradient(90deg, #231F1D 100%, #232327 100%);
+      /* Внутренний градиент */
+      padding: 0;
+      /* Убираем лишние отступы */
+      box-sizing: border-box;
+    }
+
+    /* Градиентная рамка */
+    .custom-button::before {
+      content: "";
+      position: absolute;
+      top: -1px;
+      left: -1px;
+      right: -1px;
+      bottom: -1px;
+      z-index: -1;
+      border-radius: 6px;
+      /* На 1px больше, чем у кнопки */
+      background: linear-gradient(90deg, #FBA220 0%, #FFD28F 100%);
+      /* Градиент рамки */
+      clip-path: inset(0 round 6px);
+      /* Обрезаем внутреннюю часть */
+    }
+
+
+    /* background: linear-gradient(90deg, #FBA220 0%, #FFD28F 100%); */
   </style>
 </head>
 
 <body>
-  <div class="welcome-text">
-    Добро пожаловать в <span class="gradient-text">Collaborify Task</span>
+  <!-- Логотип прижат к верху -->
+  <img src="/logo.png" alt="Логотип" class="logo">
+
+  <!-- Остальной контент по центру -->
+  <div class="content">
+    <div class="welcome-text">
+      Добро пожаловать в
+      <span class="gradient-text">Collaborify Task</span>
+    </div>
+    <br />
+    <div class="simple-text">
+      Выберите, как вы хотите
+    </div>
+    <div class="simple-text">
+      использовать бота:
+    </div>
+    <div class="button-container">
+      <div class="custom-button"> <span class="gradient-small-text">Я покупаю бота (менеджер)</span></div>
+    </div>
+    <div class="button-container">
+      <div class="custom-button"><span class="gradient-small-text">Я хочу стать партнёром</span></div>
+    </div>
+    <div class="button-container">
+      <div class="custom-button"><span class="gradient-small-text">У меня уже есть аккаунт</span></div>
+    </div>
+
   </div>
-  <div id="user-info"></div> <!-- Здесь выведем ID и имя -->
-  <div id="info"></div>
-  <div id="error"></div>
 
   <script>
-    window.__BASE_API__ = "{{API_BASE_URL}}"; // будет заменено на реальный URL
+    window.__BASE_API__ = "{{API_BASE_URL}}";
   </script>
-
-  <script src="main.js"></script> <!-- Твой основной скрипт -->
+  <script src="main.js"></script>
 </body>
 
 </html>
-
-
-
-
-
-<!-- 
-  < !DOCTYPE html>
-  <html>
-
-  <head>
-    <meta charset="UTF-8">
-    <title>Telegram Web App</title>
-    <script>(function () {
-        // 1) Сначала — query-параметр (dev / localtunnel)
-        const params = new URLSearchParams(location.search);
-        const apiFromQuery = params.get('api_base_url') || params.get('apiBase');
-        const debugApi = params.get('debug_api');
-
-        if (debugApi) {
-          window.__BASE_API__ = debugApi;
-          console.info('Using debug API from query:', debugApi);
-          return;
-        }
-
-        if (apiFromQuery) {
-          window.__BASE_API__ = apiFromQuery;
-          console.info('Using API from query:', apiFromQuery);
-          return;
-        }
-
-        // 2) Если config.js уже подставлен (prod runtime генерация), используем его.
-        //    config.js должен установить window.__BASE_API__ заранее.
-        if (window.__BASE_API__) {
-          console.info('Using API from injected config:', window.__BASE_API__);
-          return;
-        }
-
-        // 3) fallback — внутренний адрес контейнера (если нужно)
-        window.__BASE_API__ = 'http://webapp:4000';
-        console.info('Using fallback API:', window.__BASE_API__);
-      })();
-
-    </script>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-      body {
-        font-family: sans-serif;
-        padding: 20px;
-      }
-
-      #error,
-      #info {
-        margin-top: 20px;
-        padding: 10px;
-        border-radius: 5px;
-      }
-
-      #error {
-        background-color: #ffdddd;
-        color: #900;
-      }
-
-      #info {
-        background-color: #ddffdd;
-        color: #090;
-      }
-
-      </></head><body><h1>Привет,
-      <span id="username">пользователь</span> !</h1><div id="info"></div><div id="error"></div><script>window.__BASE_API__="{{API_BASE_URL}}";
-
-      </script><script>window.addEventListener('load', ()=> {
-          const errorBox=document.getElementById('error');
-          const infoBox=document.getElementById('info');
-
-          try {
-            if ( !window.Telegram || !window.Telegram.WebApp) {
-              throw new Error("Telegram WebApp API не доступен. Проверьте, что вы открыли страницу *внутри Telegram*.");
-            }
-
-            const tg=window.Telegram.WebApp;
-            tg.expand();
-            tg.ready();
-
-            const initData=tg.initData;
-            const initDataUnsafe=tg.initDataUnsafe;
-
-            document.getElementById('username').innerText=initDataUnsafe?.user?.username || 'пользователь';
-            infoBox.innerText="Инициализация Telegram WebApp прошла успешно.";
-
-            const baseUrl=window.__BASE_API__ || "http://webapp:4000"; // fallback
-            // Отправка на бэкенд
-            //  fetch(`${baseUrl}/auth/telegram`, {
-            //     method: "POST",
-            //     body: JSON.stringify({ initData }),
-            //     headers: {
-            //       "Content-Type": "application/json"
-            //     }
-            //   })
-            //   .then(res => {
-            //     if (!res.ok) {
-            //       return res.text().then(t => {
-            //         throw new Error("Ошибка ответа от сервера: " + t);
-            //       });
-            //     }
-            //     return res.json();
-            //   })
-            //   .then(data => {
-            //     infoBox.innerText += "\nУспешно отправлено на сервер.";
-            //   })
-            //   .catch(err => {
-            //     errorBox.innerText = "Ошибка при запросе на сервер: " + err.message;
-            //   });
-
-          }
-
-          catch (err) {
-            errorBox.innerText="Ошибка JS: " + err.message;
-          }
-        });
-      </script></body></html>-->
