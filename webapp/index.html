@@ -28,10 +28,42 @@
       color: #900;
     }
   </style>
+
+  <style>
+    .welcome-text {
+      .welcome-text {
+        width: 350px;
+        height: 85px;
+        font-family: 'Montserrat', sans-serif;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 30px;
+        line-height: 120%;
+        text-align: center;
+        color: #FFFFFF;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        flex: none;
+        order: 0;
+        align-self: stretch;
+        flex-grow: 0;
+      }
+
+      .gradient-text {
+        background: linear-gradient(90deg, #FF7A18, #AF002D 70%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-fill-color: transparent;
+      }
+  </style>
 </head>
 
 <body>
-  <h1>Привет!</h1>
+  <div class="welcome-text">
+    Добро пожаловать в <span class="gradient-text">Collaborify Task</span>
+  </div>
   <div id="user-info"></div> <!-- Здесь выведем ID и имя -->
   <div id="info"></div>
   <div id="error"></div>
@@ -44,6 +76,10 @@
 </body>
 
 </html>
+
+
+
+
 
 <!-- 
   < !DOCTYPE html>

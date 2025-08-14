@@ -8,5 +8,3 @@ docker-compose.yml
 # Игнорируем локальный Yarn 4 кэш и lock-файлы
 .yarn/
 .yarnrc.yml
-yarn.lock
-package-lock.json

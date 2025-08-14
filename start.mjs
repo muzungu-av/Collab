@@ -1,11 +1,15 @@
 #!/usr/bin/env node
 import { execa } from "execa";
 import path from "path";
+import localtunnel from "localtunnel";
 
 async function main() {
   const projectDir = path.resolve();
 
   try {
+    // Даём контейнеру время на запуск
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+
     console.log("→ Starting webapp container...");
     await execa("docker-compose", ["up", "-d", "--build", "webapp"], {
       cwd: projectDir,
@@ -44,7 +48,7 @@ async function main() {
     console.log("→ Starting backend and bot containers with WEBAPP_URL env...");
     await execa(
       "docker-compose",
-      ["up", "-d", "--build", "cot-backend", "bot"],
+      ["up", "-d", "--build", "bot", "cot-backend"],
       {
         cwd: projectDir,
         stdio: "inherit",
