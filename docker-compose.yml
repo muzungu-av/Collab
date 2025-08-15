@@ -1,6 +1,6 @@
 services:
   webapp:
-    build: ./webapp
+    build: ./react-webapp
     ports:
       - "3000:80"
     networks:
@@ -9,8 +9,11 @@ services:
   cot-backend:
     build:
       context: ./cot-backend
+      args:
+        - VITE_API_BASE_URL=${WEBAPP_URL:-}
     networks:
       - bot_network
+
     environment:
       - WEBAPP_URL=${WEBAPP_URL:-}
     # command: ["sh", "-c", "sleep infinity"]

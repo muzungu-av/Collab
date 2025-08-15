@@ -28,7 +28,7 @@ async function main() {
     // Читаем вывод localtunnel чтобы получить URL
     for await (const chunk of ltProc.stdout) {
       const text = chunk.toString();
-      // Обычно localtunnel выводит что-то типа:
+      // localtunnel выводит что-то типа:
       // "your url is: https://some-name.loca.lt"
       const m = text.match(/your url is: (https:\/\/[^\s]+)/i);
       if (m) {
@@ -44,7 +44,7 @@ async function main() {
       console.error("❌ Не удалось получить URL из localtunnel");
       process.exit(1);
     }
-
+    //docker build --build-arg VITE_API_BASE_URL=https://your-backend-url.com -t your-app .
     console.log("→ Starting backend and bot containers with WEBAPP_URL env...");
     await execa(
       "docker-compose",

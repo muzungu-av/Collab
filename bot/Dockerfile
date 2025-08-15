@@ -4,8 +4,7 @@ FROM mirror.gcr.io/library/node:20-slim
 #RUN apt update && apt install -y bash curl
 
 WORKDIR /app
-# Включаем Corepack (для поддержки packageManager в package.json)
-RUN corepack enable
+
 # Копируем только package.json и устанавливаем зависимости
 COPY package.json ./
 # Пробуем скопировать yarn.lock (если существует)
