@@ -55,6 +55,11 @@ const App: React.FC = () => {
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   return (
+    // <div className="app">
+    //   <div className="button-container">
+    //     <CustomButton2>Я покупаю бота (менеджер)</CustomButton2>
+    //   </div>
+    // </div>
     <div className="App">
       <img src={logo} alt="Логотип" className="logo" />
       <div className="content">
@@ -75,19 +80,6 @@ const App: React.FC = () => {
           <CustomButton>У меня уже есть аккаунт</CustomButton>
         </div>
       </div>
-      {/* {error && <div id="error">{error}</div>}
-      {info && <div id="info">{info}</div>}
-      {userInfo && (
-        <div id="user-info">
-          <p>
-            <strong>Telegram ID:</strong> {userInfo.id}
-          </p>
-          <p>
-            <strong>Имя пользователя:</strong>{" "}
-            {userInfo.username || "Не указано"}
-          </p>
-        </div>
-      )} */}
     </div>
   );
 };
