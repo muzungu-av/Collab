@@ -10,7 +10,7 @@ services:
     build:
       context: ./cot-backend
       args:
-        - VITE_API_BASE_URL=${WEBAPP_URL:-}
+        - VITE_WEBAPP_URL=${WEBAPP_URL:-}
     networks:
       - bot_network
 
