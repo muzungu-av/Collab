@@ -3,8 +3,16 @@ import "./App.css";
 import logo from "./assets/logo.png";
 import CustomButton from "./components/buttons/CustomButton";
 
-// import.meta.env.VITE_API_BASE_URL
 const App: React.FC = () => {
+  const [baseApiUrl, setBaseApiUrl] = useState<string>("");
+
+  useEffect(() => {
+    // Получаем текущий URL приложения
+    const currentUrl = window.location.origin;
+    setBaseApiUrl(currentUrl);
+    console.log("Current URL:", currentUrl);
+  }, []);
+
   const [userInfo, setUserInfo] = useState<{
     id?: string;
     username?: string;
@@ -52,19 +60,12 @@ const App: React.FC = () => {
     }
   }, []);
 
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
   return (
-    // <div className="app">
-    //   <div className="button-container">
-    //     <CustomButton2>Я покупаю бота (менеджер)</CustomButton2>
-    //   </div>
-    // </div>
     <div className="App">
       <img src={logo} alt="Логотип" className="logo" />
       <div className="content">
         <div className="welcome-text">
-          Добро пожаловать в {API_BASE_URL}-
+          Добро пожаловать в
           <span className="gradient-text">Collaborify Task</span>
         </div>
         <br />
@@ -80,6 +81,8 @@ const App: React.FC = () => {
           <CustomButton>У меня уже есть аккаунт</CustomButton>
         </div>
       </div>
+
+      <div style={{ color: "#765", fontSize: "10px" }}>{baseApiUrl}</div>
     </div>
   );
 };

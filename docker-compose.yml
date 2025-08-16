@@ -13,10 +13,8 @@ services:
         - VITE_WEBAPP_URL=${WEBAPP_URL:-}
     networks:
       - bot_network
-
     environment:
       - WEBAPP_URL=${WEBAPP_URL:-}
-    # command: ["sh", "-c", "sleep infinity"]
 
   bot:
     build: ./bot

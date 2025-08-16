@@ -9,9 +9,7 @@ RUN if [ -f yarn.lock ]; then cp yarn.lock ./; fi
 RUN if [ -f yarn.lock ]; then yarn install --frozen-lockfile; else yarn install --immutable; fi
 # Копируем весь код и собираем
 COPY . .
-# Передаём VITE_API_BASE_URL как переменную окружения
-ARG VITE_API_BASE_URL
-ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+
 RUN yarn build
 
 # --- Стадия запуска ---

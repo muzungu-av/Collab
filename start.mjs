@@ -7,14 +7,13 @@ async function main() {
   const projectDir = path.resolve();
 
   try {
-    // Даём контейнеру время на запуск
-    await new Promise((resolve) => setTimeout(resolve, 5000));
+    // await new Promise((resolve) => setTimeout(resolve, 5000));
 
-    console.log("→ Starting webapp container...");
-    await execa("docker-compose", ["up", "-d", "--build", "webapp"], {
-      cwd: projectDir,
-      stdio: "inherit",
-    });
+    // console.log("→ Starting webapp container...");
+    // await execa("docker-compose", ["up", "-d", "--build", "webapp"], {
+    //   cwd: projectDir,
+    //   stdio: "inherit",
+    // });
 
     console.log("→ Starting localtunnel process...");
     // Запускаем localtunnel с указанием порта 3000, читаем stdout чтобы получить URL
@@ -48,7 +47,7 @@ async function main() {
     console.log("→ Starting backend and bot containers with WEBAPP_URL env...");
     await execa(
       "docker-compose",
-      ["up", "-d", "--build", "bot", "cot-backend"],
+      ["up", "-d", "--build", "bot", "cot-backend", "webapp"],
       {
         cwd: projectDir,
         stdio: "inherit",
@@ -58,7 +57,7 @@ async function main() {
         },
       }
     );
-
+    //контейнер webapp не получит WEBAPP_URL (можно сделать после) он узнает URL из запроса
     console.log("→ All services started successfully!");
 
     // Можно оставить localtunnel запущенным, чтобы туннель не закрывался
