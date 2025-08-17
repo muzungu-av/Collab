@@ -60,6 +60,26 @@ const App: React.FC = () => {
     }
   }, []);
 
+  const handleButtonClick = async () => {
+    try {
+      const response = await fetch(`${baseApiUrl}/api/profile`, {
+        method: "POST",
+        credentials: "include", // Если куки для аутентификации
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user: "abs" }),
+      });
+      if (!response.ok) {
+        throw new Error("Ошибка при запросе профиля");
+      }
+      const data = await response.json();
+      console.log("Профиль пользователя:", data);
+    } catch (error) {
+      console.error("Ошибка:", error);
+    }
+  };
+
   return (
     <div className="App">
       <img src={logo} alt="Логотип" className="logo" />
@@ -78,7 +98,9 @@ const App: React.FC = () => {
           <CustomButton>Я хочу стать партнёром</CustomButton>
         </div>
         <div className="button-container">
-          <CustomButton>У меня уже есть аккаунт</CustomButton>
+          <CustomButton onClick={handleButtonClick}>
+            У меня уже есть аккаунт
+          </CustomButton>
         </div>
       </div>
 

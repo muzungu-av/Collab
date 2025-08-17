@@ -1,28 +1,48 @@
 services:
+  bot:
+    build: ./bot
+    env_file: .env
+    environment:
+      WEBAPP_URL: ${WEBAPP_URL:-}
+    depends_on:
+      - cot-backend
+      - webapp
+    networks:
+      - bot_network
+
   webapp:
     build: ./react-webapp
     ports:
       - "3000:80"
     networks:
       - bot_network
+    depends_on:
+      - cot-backend
 
   cot-backend:
     build:
       context: ./cot-backend
       args:
         - VITE_WEBAPP_URL=${WEBAPP_URL:-}
+    ports:
+      - "4000:4000"
     networks:
       - bot_network
     environment:
       - WEBAPP_URL=${WEBAPP_URL:-}
 
-  bot:
-    build: ./bot
-    env_file: .env
-    environment:
-      WEBAPP_URL: ${WEBAPP_URL:-}
+  # контейнер распределяющий запросы (бакенд/фронтенд)
+  nginx:
+    image: mirror.gcr.io/library/nginx:1.25.5-alpine
+    ports:
+      - "80:80" # Порт 80 общий наружу для всех сервисов
+    volumes:
+      - ./nginx_controller.conf:/etc/nginx/nginx.conf # Конфиг Nginx
     networks:
       - bot_network
+    depends_on:
+      - cot-backend
+      - webapp
 
 networks:
   bot_network:

@@ -7,17 +7,9 @@ async function main() {
   const projectDir = path.resolve();
 
   try {
-    // await new Promise((resolve) => setTimeout(resolve, 5000));
-
-    // console.log("→ Starting webapp container...");
-    // await execa("docker-compose", ["up", "-d", "--build", "webapp"], {
-    //   cwd: projectDir,
-    //   stdio: "inherit",
-    // });
-
     console.log("→ Starting localtunnel process...");
-    // Запускаем localtunnel с указанием порта 3000, читаем stdout чтобы получить URL
-    const ltProc = execa("npx", ["localtunnel", "--port", "3000"], {
+    // Запускаем localtunnel с указанием порта, читаем stdout чтобы получить URL
+    const ltProc = execa("npx", ["localtunnel", "--port", "80"], {
       cwd: projectDir,
       stdio: ["ignore", "pipe", "inherit"],
     });
@@ -47,7 +39,7 @@ async function main() {
     console.log("→ Starting backend and bot containers with WEBAPP_URL env...");
     await execa(
       "docker-compose",
-      ["up", "-d", "--build", "bot", "cot-backend", "webapp"],
+      ["up", "-d", "--build", "bot", "cot-backend", "webapp", "nginx"], //
       {
         cwd: projectDir,
         stdio: "inherit",
