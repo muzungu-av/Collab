@@ -1,10 +1,22 @@
+//ЭТО ГЛАВНАЯ СТРАНИЦА ВХОДА
+//но экспортируется AppWrapper ниже
+//ключевой объект App роутиться на "/" в AppWrapper
+
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import logo from "./assets/logo.png";
+import head_logo from "./assets/head_logo.png";
 import CustomButton from "./components/buttons/CustomButton";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useNavigate,
+} from "react-router-dom";
+import PartnerPage from "./pages/PartnerPage";
 
 const App: React.FC = () => {
   const [baseApiUrl, setBaseApiUrl] = useState<string>("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Получаем текущий URL приложения
@@ -60,29 +72,29 @@ const App: React.FC = () => {
     }
   }, []);
 
-  const handleButtonClick = async () => {
-    try {
-      const response = await fetch(`${baseApiUrl}/api/profile`, {
-        method: "POST",
-        credentials: "include", // Если куки для аутентификации
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ user: "abs" }),
-      });
-      if (!response.ok) {
-        throw new Error("Ошибка при запросе профиля");
-      }
-      const data = await response.json();
-      console.log("Профиль пользователя:", data);
-    } catch (error) {
-      console.error("Ошибка:", error);
-    }
-  };
+  // const handleButtonClick = async () => {
+  //   try {
+  //     const response = await fetch(`${baseApiUrl}/api/profile`, {
+  //       method: "POST",
+  //       credentials: "include", // Если куки для аутентификации
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ user: "abs" }),
+  //     });
+  //     if (!response.ok) {
+  //       throw new Error("Ошибка при запросе профиля");
+  //     }
+  //     const data = await response.json();
+  //     console.log("Профиль пользователя:", data);
+  //   } catch (error) {
+  //     console.error("Ошибка:", error);
+  //   }
+  // };
 
   return (
     <div className="App">
-      <img src={logo} alt="Логотип" className="logo" />
+      <img src={head_logo} alt="Логотип" className="head_logo" />
       <div className="content">
         <div className="welcome-text">
           Добро пожаловать в
@@ -95,12 +107,12 @@ const App: React.FC = () => {
           <CustomButton>Я покупаю бота (менеджер)</CustomButton>
         </div>
         <div className="button-container">
-          <CustomButton>Я хочу стать партнёром</CustomButton>
+          <CustomButton onClick={() => navigate("/partner")}>
+            Я хочу стать партнёром
+          </CustomButton>
         </div>
         <div className="button-container">
-          <CustomButton onClick={handleButtonClick}>
-            У меня уже есть аккаунт
-          </CustomButton>
+          <CustomButton>У меня уже есть аккаунт</CustomButton>
         </div>
       </div>
 
@@ -109,4 +121,13 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+const AppWrapper = () => (
+  <Router>
+    <Routes>
+      <Route path="/" element={<App />} />
+      <Route path="/partner" element={<PartnerPage />} />
+    </Routes>
+  </Router>
+);
+
+export default AppWrapper;

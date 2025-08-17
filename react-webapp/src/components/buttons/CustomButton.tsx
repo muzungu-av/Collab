@@ -2,11 +2,11 @@ import React from "react";
 import "./CustomButton.css";
 
 interface CustomButtonProps {
-  children: React.ReactNode;
   onClick?: () => void;
+  children: React.ReactNode;
 }
 
-const CustomButton: React.FC<CustomButtonProps> = ({ children, onClick }) => {
+const CustomButton: React.FC<CustomButtonProps> = ({ onClick, children }) => {
   return (
     <div className="custom-button" onClick={onClick}>
       <span className="gradient-small-text">{children}</span>

@@ -1,0 +1,22 @@
+/* BackButton.css */
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: 74px;
+  height: 18px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.back-button__text {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 105%;
+  letter-spacing: 0%;
+  background: linear-gradient(90deg, #fba220 0%, #ffd28f 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}

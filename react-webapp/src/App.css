@@ -24,18 +24,18 @@ html {
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  /* align-items: center; */
   background-color: #0b111d;
 }
 
 /* Логотип */
-.logo {
+.head_logo {
   display: block;
   margin-top: 10px;
   max-width: 350px;
   width: 350px;
   height: 45px;
-  margin-left: 20px;
+  margin-left: 10px;
 }
 
 /* Основной контейнер контента */
