@@ -5,7 +5,7 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import head_logo from "./assets/head_logo.png";
-import CustomButton from "./components/buttons/CustomButton";
+
 import {
   BrowserRouter as Router,
   Routes,
@@ -13,6 +13,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import PartnerPage from "./pages/PartnerPage";
+import OutlineButton from "./components/buttons/OutlineButton";
 
 const App: React.FC = () => {
   const [baseApiUrl, setBaseApiUrl] = useState<string>("");
@@ -103,17 +104,11 @@ const App: React.FC = () => {
         <br />
         <div className="simple-text">Выберите, как вы хотите</div>
         <div className="simple-text">использовать бота:</div>
-        <div className="button-container">
-          <CustomButton>Я покупаю бота (менеджер)</CustomButton>
-        </div>
-        <div className="button-container">
-          <CustomButton onClick={() => navigate("/partner")}>
-            Я хочу стать партнёром
-          </CustomButton>
-        </div>
-        <div className="button-container">
-          <CustomButton>У меня уже есть аккаунт</CustomButton>
-        </div>
+        <OutlineButton>Я покупаю бота (менеджер)</OutlineButton>
+        <OutlineButton onClick={() => navigate("/partner")}>
+          Я хочу стать партнёром
+        </OutlineButton>
+        <OutlineButton>У меня уже есть аккаунт</OutlineButton>
       </div>
 
       <div style={{ color: "#765", fontSize: "10px" }}>{baseApiUrl}</div>

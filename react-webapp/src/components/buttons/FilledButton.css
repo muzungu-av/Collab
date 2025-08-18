@@ -1,0 +1,37 @@
+/* Стили для нижней кнопки (залитой градиентом) */
+.outline-button-filled {
+  width: 350px;
+  height: 55px;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  color: #231f1d; /* Цвет текста для контраста с градиентом */
+  text-align: center;
+  line-height: 55px;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  border-radius: 8px;
+  background: linear-gradient(
+    90deg,
+    #fba220,
+    #ffd28f
+  ); /* Градиент как у рамки */
+  padding: 0;
+  border: none;
+  overflow: hidden;
+}
+
+/* Текст для нижней кнопки (если нужен градиентный текст, как в примере) */
+.gradient-filled-small-text {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 800;
+  background: linear-gradient(
+    90deg,
+    #231f1d 0%,
+    #0b111d 100%
+  ); /* Или другой градиент для контраста */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}

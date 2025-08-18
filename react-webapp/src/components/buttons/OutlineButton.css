@@ -8,7 +8,7 @@
 }
 
 /* Стили для кастомной кнопки */
-.custom-button {
+.outline-button {
   width: 350px;
   height: 55px;
   font-family: "Montserrat", sans-serif;
@@ -28,7 +28,7 @@
 }
 
 /* Градиентная рамка */
-.custom-button::before {
+.outline-button::before {
   content: "";
   position: absolute;
   top: 0;
