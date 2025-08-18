@@ -13,6 +13,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import PartnerPage from "./pages/PartnerPage";
+import AdminContact from "./pages/AdminContact";
 import OutlineButton from "./components/buttons/OutlineButton";
 
 const App: React.FC = () => {
@@ -121,6 +122,7 @@ const AppWrapper = () => (
     <Routes>
       <Route path="/" element={<App />} />
       <Route path="/partner" element={<PartnerPage />} />
+      <Route path="/admin-contact" element={<AdminContact />} />
     </Routes>
   </Router>
 );
