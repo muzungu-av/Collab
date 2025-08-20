@@ -1,4 +1,8 @@
 .env
+.env.*
+**/.env
+**/.env.*
+
 *.zip
 **/*.ods
 OLD/
@@ -6,4 +10,25 @@ docs/
 **/node_modules/
 **/package-lock.json
 **/package.json
+
+**/dist
+**/node_modules
+**/build
+**/.yarn/
+**/yarn.lock
+**/logs
+**/*.log
+**/npm-debug.log*
+**/pnpm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/lerna-debug.log*
+
+**/.DS_Store
+
+**/.vscode/*
+!**/.vscode/settings.json
+!**/.vscode/tasks.json
+!**/.vscode/launch.json
+!**/.vscode/extensions.json
 
