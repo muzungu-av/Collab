@@ -8,4 +8,11 @@ export class EmptyPartnerPasscodeRepository
       '*** Empty implementation of IPartnerPasscodeRepository is used! ***',
     );
   }
+
+  async getPasscodes(is_used?: boolean): Promise<string[]> {
+    console.warn(
+      '*** Empty implementation of IPartnerPasscodeRepository is used! ***',
+    );
+    return [];
+  }
 }

@@ -13,5 +13,9 @@ export class PartnerPasscodeService {
     const passcodes = PartnerPasscodeDomain.generatePasscodes(count);
     await this.repository.savePasscodes(passcodes);
   }
-  с;
+
+  async getPasscodes(is_used?: boolean): Promise<string[]> {
+    //слой домена не нужен - все просто
+    return this.repository.getPasscodes(is_used);
+  }
 }
