@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import CommonLayout from "../layouts/CommonLayout";
 import OutlineButton from "../components/buttons/OutlineButton";
-import FilledButton from "../components/buttons/FilledButton";
 import { useNavigate } from "react-router-dom";
 import { getUser } from "../context/UserContext";
 import OutlineInput from "../components/inputs/OutlineInput";
@@ -13,7 +12,7 @@ const PartnerSignUpPage: React.FC = () => {
 
   const handleCheckPassCode = async () => {
     // Проверяем наличие всех необходимых данных перед отправкой
-    if (!user?.id || !user?.username || !inputValue) {
+    if (!user?.id || !inputValue) {
       alert("Некорректные данные пользователя или код.");
       return;
     }
@@ -64,10 +63,3 @@ const PartnerSignUpPage: React.FC = () => {
 };
 
 export default PartnerSignUpPage;
-
-/* {user && (
-          <div>
-            <p>Telegram ID: {user.id}</p>
-            <p>Username: {user.username}</p>
-          </div>
-        )} */

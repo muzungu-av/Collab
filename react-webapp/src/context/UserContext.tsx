@@ -22,7 +22,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     // Получаем текущий URL приложения
     const currentUrl = window.location.origin;
     setBaseApiUrl(currentUrl);
-    // данные user-f получаем
+    // данные user-а получаем
     try {
       if (!window.Telegram?.WebApp) {
         throw new Error("Telegram WebApp API не доступен.");

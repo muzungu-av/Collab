@@ -23,11 +23,6 @@ export class PartnerPasscodeService {
     passcode: string,
     telegram_id: number,
   ): Promise<CheckPassCodeResult> {
-    // CheckPassCodeResult = {
-    //   check: boolean;
-    //   login_attempts: number;
-    //   blocked: boolean;
-    // }
     let res = this.repository.checkAndLinkPasscode(passcode, telegram_id);
     return res;
   }
