@@ -1,0 +1,12 @@
+{
+  "name": "docker-runner",
+  "scripts": {
+    "dev": "node start.mjs"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "execa": "^9.6.0",
+    "localtunnel": "^2.0.2",
+    "wait-on": "^7.0.1"
+  }
+}

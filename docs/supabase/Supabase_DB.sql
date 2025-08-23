@@ -115,7 +115,7 @@ USING (link_to_partner = current_setting('app.current_telegram_id')::bigint);
 
 
 -- ПОЛИТИКИ для MANAGER-ов
--- Для таблицы manager (только свои менеджеры, если применимо)
+-- Для таблицы manager (только свои менеджеры)
 CREATE POLICY "Partner access to own managers in manager table"
 ON public.manager
 FOR ALL

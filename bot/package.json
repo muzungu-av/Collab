@@ -1,0 +1,17 @@
+{
+  "name": "bot",
+  "version": "1.0.0",
+  "main": "bot.js",
+  "scripts": {
+    "start": "./start.sh",
+    "tunnel": "cloudflared tunnel --url http://localhost:5173"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "node-telegram-bot-api": "^0.66.0"
+  }
+}
