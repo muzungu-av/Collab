@@ -30,6 +30,8 @@ export class PartnerPasscodeSupabaseRepository
     if (error) {
       throw new Error(`Ошибка при получении passcodes: ${error.message}`);
     }
+    console.log('>>>> data =' + JSON.stringify(data));
+    console.log('>>>> error =' + JSON.stringify(error));
     return data.map((item) => {
       return item.passcode + '-' + item.is_used;
     });
@@ -45,11 +47,6 @@ export class PartnerPasscodeSupabaseRepository
       passcode_param: passcode,
       max_login_attempts_param: maxLoginAttempts,
     });
-
-    console.log('>>>>>data= ' + JSON.stringify(data));
-
-    console.log('>>>>>error= ' + JSON.stringify(error));
-
     if (error) {
       throw new Error(`Supabase RPC error: ${error.message}`);
     }

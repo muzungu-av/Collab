@@ -196,7 +196,10 @@ BEGIN
     pc.telegram_id,
     pc.login_attempts,
     pc.blocked_automatically,
-    pc.is_active,
+    CASE
+      WHEN passcode_exists AND NOT partner_blocked THEN TRUE
+      ELSE pc.is_active
+    END AS is_active,
     CASE
       WHEN pc.blocked_automatically THEN 'Превышено число попыток'
       WHEN NOT passcode_exists THEN 'Неверный passcode'
@@ -235,7 +238,7 @@ BEGIN
       'ok' AS status,
       TRUE AS success
     FROM public.partner p
-    WHERE p.telegram_id = telegram_id_param AND NOT p.blocked_automatically;
+    WHERE p.telegram_id = telegram_id_param;
   END IF;
 END;
 $$;
