@@ -54,7 +54,6 @@ async function main() {
 
     // Можно оставить localtunnel запущенным, чтобы туннель не закрывался
     // Для этого не закрываем ltProc
-    // Если хочешь завершить localtunnel вместе со скриптом — добавь обработчик
   } catch (err) {
     console.error("❌ Ошибка в процессе запуска:", err);
     process.exit(1);
