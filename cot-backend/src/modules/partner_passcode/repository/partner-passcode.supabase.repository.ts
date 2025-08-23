@@ -34,4 +34,26 @@ export class PartnerPasscodeSupabaseRepository
       return item.passcode + '-' + item.is_used;
     });
   }
+
+  async checkAndLinkPasscode(
+    passcode: string,
+    telegram_id: number,
+    maxLoginAttempts: number = 3,
+  ) {
+    const { data, error } = await this.supabase.rpc('handle_partner_passcode', {
+      telegram_id_param: telegram_id,
+      passcode_param: passcode,
+      max_login_attempts_param: maxLoginAttempts,
+    });
+
+    console.log('>>>>>data= ' + JSON.stringify(data));
+
+    console.log('>>>>>error= ' + JSON.stringify(error));
+
+    if (error) {
+      throw new Error(`Supabase RPC error: ${error.message}`);
+    }
+
+    return data[0]; // Возвращает первый элемент массива (см. структуру функции)
+  }
 }

@@ -5,21 +5,15 @@ import {
   ValidationPipe,
   UsePipes,
   Get,
+  Patch,
 } from '@nestjs/common';
 import { PartnerPasscodeService } from '../services/partner-passcode.service';
-import { IsBoolean, IsInt, IsOptional, Min } from 'class-validator';
-
-export class CreatePasscodesDto {
-  @IsInt({ message: 'count_passcodes должен быть целым числом' })
-  @Min(1, { message: 'count_passcodes должен быть не менее 1' })
-  count_passcodes: number;
-}
-
-export class GetPasscodesDto {
-  @IsOptional()
-  @IsBoolean({ message: 'is_used должен быть boolean типом' })
-  is_used: boolean;
-}
+import {
+  CheckPasscodeDto,
+  CreatePasscodesDto,
+  GetPasscodesDto,
+} from './dto/partner-passcode.dto';
+import { CheckPassCodeResult } from './dto/check-passcode-result.dto';
 
 @Controller('partner-passcode')
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
@@ -37,5 +31,15 @@ export class PartnerPasscodeController {
   @Get()
   async getAllPasscodes(@Body() dto: GetPasscodesDto): Promise<string[]> {
     return this.partnerPasscodeService.getPasscodes(dto?.is_used);
+  }
+
+  @Patch('/check')
+  async checkAndLinkPasscode(
+    @Body() dto: CheckPasscodeDto,
+  ): Promise<CheckPassCodeResult> {
+    return this.partnerPasscodeService.checkAndLinkPasscode(
+      dto.passcode,
+      dto.telegram_id,
+    );
   }
 }

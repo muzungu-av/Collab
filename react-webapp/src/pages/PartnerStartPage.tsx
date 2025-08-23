@@ -4,7 +4,7 @@ import OutlineButton from "../components/buttons/OutlineButton";
 import FilledButton from "../components/buttons/FilledButton";
 import { useNavigate } from "react-router-dom";
 
-const PartnerPage: React.FC = () => {
+const PartnerStartPage: React.FC = () => {
   const navigate = useNavigate();
   return (
     <CommonLayout>
@@ -16,7 +16,9 @@ const PartnerPage: React.FC = () => {
       <div className="simple-text">Если у вас его нет — обратитесь</div>
       <div className="simple-text">к администрации</div>
       <br />
-      <OutlineButton>Ввести код</OutlineButton>
+      <OutlineButton onClick={() => navigate("/partner-signup")}>
+        Ввести код
+      </OutlineButton>
       <FilledButton onClick={() => navigate("/admin-contact")}>
         Связаться администрацией
       </FilledButton>
@@ -24,4 +26,4 @@ const PartnerPage: React.FC = () => {
   );
 };
 
-export default PartnerPage;
+export default PartnerStartPage;

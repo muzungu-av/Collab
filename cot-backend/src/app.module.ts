@@ -14,7 +14,7 @@ import {
   imports: [
     ConfigModule.forRoot({
       isGlobal: true, // делает доступным везде без импорта
-      envFilePath: '.env.development.local', // путь до .env (смотри Dockerfile!)
+      envFilePath: '.env', // путь до .env (смотри Dockerfile!)
     }),
     UsersModule,
     AuthModule,

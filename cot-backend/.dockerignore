@@ -5,5 +5,4 @@ test
 *.log
 *.md
 .vscode
-.env
 .eslint*

@@ -1,6 +1,6 @@
 //ЭТО ГЛАВНАЯ СТРАНИЦА ВХОДА
 //но экспортируется AppWrapper ниже
-//ключевой объект App роутиться на "/" в AppWrapper
+//ключевой объект App роутится на "/" в AppWrapper
 
 import React, { useEffect, useState } from "react";
 import "./App.css";
@@ -12,67 +12,22 @@ import {
   Route,
   useNavigate,
 } from "react-router-dom";
-import PartnerPage from "./pages/PartnerPage";
+import PartnerPage from "./pages/PartnerStartPage";
+import PartnerSignUpPage from "./pages/PartnerSignUpPage";
 import AdminContact from "./pages/AdminContact";
 import OutlineButton from "./components/buttons/OutlineButton";
+import { UserProvider } from "./context/UserContext";
 
 const App: React.FC = () => {
-  const [baseApiUrl, setBaseApiUrl] = useState<string>("");
+  // const [baseApiUrl, setBaseApiUrl] = useState<string>("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Получаем текущий URL приложения
-    const currentUrl = window.location.origin;
-    setBaseApiUrl(currentUrl);
-    console.log("Current URL:", currentUrl);
-  }, []);
-
-  const [userInfo, setUserInfo] = useState<{
-    id?: string;
-    username?: string;
-  } | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [info, setInfo] = useState<string>(
-    "Скрипт загружен. Проверяем Telegram API..."
-  );
-
-  useEffect(() => {
-    try {
-      if (!window.Telegram?.WebApp) {
-        throw new Error(
-          "Telegram WebApp API не доступен. Откройте приложение внутри Telegram."
-        );
-      }
-
-      setInfo((prev) => prev + "\nTelegram API доступен.");
-      const tg = window.Telegram.WebApp;
-      tg.expand();
-      tg.ready();
-
-      setInfo((prev) => prev + "\nПриложение готово (tg.ready вызван).");
-
-      const user = tg.initDataUnsafe?.user;
-      if (user) {
-        setInfo(
-          (prev) =>
-            prev +
-            `\nСырые данные пользователя: ID = ${user.id || null}, Username = ${
-              user.username || "не указано"
-            }`
-        );
-        setUserInfo(user);
-      } else {
-        setInfo(
-          (prev) =>
-            prev + "\nДанные пользователя: не доступны (user is undefined)."
-        );
-      }
-    } catch (err) {
-      if (err instanceof Error) {
-        setError("Ошибка: " + err.message);
-      }
-    }
-  }, []);
+  // useEffect(() => {
+  //   // Получаем текущий URL приложения
+  //   const currentUrl = window.location.origin;
+  //   setBaseApiUrl(currentUrl);
+  //   console.log("Current URL:", currentUrl);
+  // }, []);
 
   // const handleButtonClick = async () => {
   //   try {
@@ -106,25 +61,28 @@ const App: React.FC = () => {
         <div className="simple-text">Выберите, как вы хотите</div>
         <div className="simple-text">использовать бота:</div>
         <OutlineButton>Я покупаю бота (менеджер)</OutlineButton>
-        <OutlineButton onClick={() => navigate("/partner")}>
+        <OutlineButton onClick={() => navigate("/partner-start")}>
           Я хочу стать партнёром
         </OutlineButton>
         <OutlineButton>У меня уже есть аккаунт</OutlineButton>
       </div>
 
-      <div style={{ color: "#765", fontSize: "10px" }}>{baseApiUrl}</div>
+      {/* <div style={{ color: "#765", fontSize: "10px" }}>{baseApiUrl}</div> */}
     </div>
   );
 };
 
 const AppWrapper = () => (
-  <Router>
-    <Routes>
-      <Route path="/" element={<App />} />
-      <Route path="/partner" element={<PartnerPage />} />
-      <Route path="/admin-contact" element={<AdminContact />} />
-    </Routes>
-  </Router>
+  <UserProvider>
+    <Router>
+      <Routes>
+        <Route path="/" element={<App />} />
+        <Route path="/admin-contact" element={<AdminContact />} />
+        <Route path="/partner-start" element={<PartnerPage />} />
+        <Route path="/partner-signup" element={<PartnerSignUpPage />} />
+      </Routes>
+    </Router>
+  </UserProvider>
 );
 
 export default AppWrapper;

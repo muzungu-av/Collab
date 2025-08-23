@@ -1,0 +1,48 @@
+/* Контейнер для инпута */
+.input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* Обертка для инпута с градиентной рамкой */
+.outline-input-wrapper {
+  width: 350px;
+  height: 55px;
+  position: relative;
+  border-radius: 8px;
+  padding: 2px;
+  background: linear-gradient(90deg, #fba220, #ffd28f);
+  overflow: hidden;
+}
+
+/* Сам инпут */
+.outline-input {
+  width: 100%;
+  height: 100%;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  color: #ff00ff;
+  text-align: center;
+  line-height: 55px;
+  background: linear-gradient(90deg, #231f1d 0%, #232327 100%);
+  border: none;
+  outline: none;
+  padding: 0 10px;
+  box-sizing: border-box;
+  border-radius: 6px; /* Немного меньше, чем у обертки, чтобы рамка была видна */
+}
+
+/* Градиентный плейсхолдер */
+.outline-input::placeholder {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 800;
+  background: linear-gradient(90deg, #fba220 0%, #ffd28f 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}

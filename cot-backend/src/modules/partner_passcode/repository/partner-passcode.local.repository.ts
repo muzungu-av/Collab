@@ -16,4 +16,13 @@ export class PartnerPasscodeLocalRepository
     console.warn('*** Не реализованный метод getPasscodes!  ***');
     return [];
   }
+
+  async checkAndLinkPasscode(
+    passcode: string,
+    telegram_id: number,
+    maxLoginAttempts: number = 3,
+  ) {
+    console.warn('*** Не реализованный метод checkAndLinkPasscode!  ***');
+    return [];
+  }
 }
