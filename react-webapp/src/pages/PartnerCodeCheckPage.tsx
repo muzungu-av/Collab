@@ -73,6 +73,10 @@ const PartnerSignUpPage: React.FC = () => {
     }
   };
 
+  const handleClear = () => {
+    setInputValue("");
+  };
+
   const handleNextStep = () => {
     // Логика для следующего шага
     navigate("/partner-signupfinish");
@@ -90,6 +94,13 @@ const PartnerSignUpPage: React.FC = () => {
         <OutlineInput
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
+          onClear={handleClear}
+          textColor={
+            verificationStatus === VerificationStatus.BLOCKED ||
+            verificationStatus === VerificationStatus.FALSE
+              ? "#ff5252"
+              : "#ffffff"
+          }
           placeholder="**********"
         />
 

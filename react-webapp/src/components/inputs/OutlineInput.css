@@ -25,13 +25,13 @@
   font-family: "Montserrat", sans-serif;
   font-weight: 500;
   font-size: 14px;
-  color: #ff00ff;
-  text-align: center;
+  color: #ffffff;
+  text-align: left;
   line-height: 55px;
   background: linear-gradient(90deg, #231f1d 0%, #232327 100%);
   border: none;
   outline: none;
-  padding: 0 10px;
+  padding: 0 35px 0 10px;
   box-sizing: border-box;
   border-radius: 6px; /* Немного меньше, чем у обертки, чтобы рамка была видна */
 }
@@ -45,4 +45,17 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   color: transparent;
+}
+
+/* Крестик */
+.clear-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #ff0000; /* Красный цвет крестика */
+  font-size: 18px;
+  background: transparent;
+  border: none;
 }

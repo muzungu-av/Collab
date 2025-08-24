@@ -1,15 +1,20 @@
 import React from "react";
 import "./OutlineInput.css";
+import closeIcon from "./close-icon.svg";
 
 interface InputProps {
   value: string;
+  textColor?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onClear: () => void;
   placeholder?: string;
 }
 
 const OutlineInput: React.FC<InputProps> = ({
   value,
+  textColor = "#ffffff",
   onChange,
+  onClear,
   placeholder,
 }) => {
   return (
@@ -21,7 +26,13 @@ const OutlineInput: React.FC<InputProps> = ({
           value={value}
           onChange={onChange}
           placeholder={placeholder}
+          style={{ color: textColor }}
         />
+        {value && (
+          <button className="clear-icon" onClick={onClear}>
+            <img src={closeIcon} alt="Clear" />
+          </button>
+        )}
       </div>
     </div>
   );
