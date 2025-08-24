@@ -1,6 +1,7 @@
 .result-text-message {
-  width: 137px;
+  width: auto;
   height: 19px;
+  color: #ffffff;
   font-family: "Montserrat", sans-serif;
   font-weight: 400;
   font-style: normal;
@@ -10,7 +11,7 @@
   margin-bottom: 10px;
   letter-spacing: 0%;
   text-align: center;
-  margin: 10px auto;
+  margin: 0px auto;
   display: block;
   justify-content: center;
   align-items: center;

@@ -7,11 +7,21 @@ import OutlineInput from "../components/inputs/OutlineInput";
 import TextBox from "../components/text_box/TextBox";
 import FilledButton from "../components/buttons/FilledButton";
 
+enum VerificationStatus {
+  TRUE = "TRUE",
+  UNDEFINED = "UNDEFINED",
+  FALSE = "FALSE",
+  BLOCKED = "BLOCKED",
+}
+
 const PartnerSignUpPage: React.FC = () => {
   const navigate = useNavigate();
   const { user, baseApiUrl } = getUser();
   const [inputValue, setInputValue] = useState<string>("");
-  const [isCodeVerified, setIsCodeVerified] = useState<boolean>(false);
+  const [verificationStatus, setVerificationStatus] =
+    useState<VerificationStatus>(VerificationStatus.UNDEFINED);
+  const [loginAttempts, setLoginAttempts] = useState<string>("");
+  const [maxLoginAttempts, setMaxLoginAttempts] = useState<string>("");
 
   const handleCheckPassCode = async () => {
     // Проверяем наличие всех необходимых данных перед отправкой
@@ -37,14 +47,29 @@ const PartnerSignUpPage: React.FC = () => {
       }
 
       const data = await response.json();
-      // Проверяем ответ от сервера
+
+      if (data && data.login_attempts) setLoginAttempts(data.login_attempts);
+      if (data && data.maxLoginAttempts)
+        setMaxLoginAttempts(data.maxLoginAttempts);
+
       if (data.blocked_automatically === false && data.is_active === true) {
-        setIsCodeVerified(true);
-      }
+        setVerificationStatus(VerificationStatus.TRUE);
+      } else if (
+        data.blocked_automatically === false &&
+        data.is_active === false
+      ) {
+        setVerificationStatus(VerificationStatus.FALSE);
+      } else if (
+        data.blocked_automatically === true &&
+        data.is_active === false
+      ) {
+        setVerificationStatus(VerificationStatus.BLOCKED);
+      } else setVerificationStatus(VerificationStatus.FALSE);
     } catch (error) {
       console.error("Ошибка при отправке запроса:", error);
-      // Здесь можно добавить логику обработки ошибки, например:
-      // alert("Произошла ошибка, попробуйте еще раз.");
+      alert(
+        "Произошла ошибка, попробуйте еще раз. (" + JSON.stringify(error) + ")"
+      );
     }
   };
 
@@ -67,19 +92,47 @@ const PartnerSignUpPage: React.FC = () => {
           onChange={(e) => setInputValue(e.target.value)}
           placeholder="**********"
         />
-        {!isCodeVerified ? (
+
+        {verificationStatus === VerificationStatus.UNDEFINED && (
           <OutlineButton onClick={handleCheckPassCode}>
             Проверить код
           </OutlineButton>
-        ) : (
-          <>
+        )}
+
+        {verificationStatus === VerificationStatus.TRUE && (
+          <div>
             <br />
             <TextBox>✅ Верный код</TextBox>
-
+            <br />
             <FilledButton onClick={handleNextStep}>
               Переход к регистрации
             </FilledButton>
-          </>
+          </div>
+        )}
+
+        {verificationStatus === VerificationStatus.FALSE && (
+          <div>
+            <br />
+            <TextBox>❌ Неверный код</TextBox>
+            <br />
+            <TextBox>
+              Попытка {loginAttempts} из {maxLoginAttempts}
+            </TextBox>
+            <br />
+            <OutlineButton onClick={handleCheckPassCode}>
+              Проверить код
+            </OutlineButton>
+          </div>
+        )}
+
+        {verificationStatus === VerificationStatus.BLOCKED && (
+          <div>
+            <br />
+            <TextBox>❌ Неверный код</TextBox>
+            <br />
+            <div className="simple-text"> Вы были заблокированы.</div>
+            <div className="simple-text"> Обратитесь в поддержку</div>
+          </div>
         )}
       </div>
     </CommonLayout>
