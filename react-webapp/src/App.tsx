@@ -13,10 +13,11 @@ import {
   useNavigate,
 } from "react-router-dom";
 import PartnerPage from "./pages/PartnerStartPage";
-import PartnerSignUpPage from "./pages/PartnerSignUpPage";
+import PartnerCodeCheckPage from "./pages/PartnerCodeCheckPage";
 import AdminContact from "./pages/AdminContact";
 import OutlineButton from "./components/buttons/OutlineButton";
 import { UserProvider } from "./context/UserContext";
+import PartnerSignUpFinishPage from "./pages/PartnerSignUpFinishPage";
 
 const App: React.FC = () => {
   // const [baseApiUrl, setBaseApiUrl] = useState<string>("");
@@ -79,7 +80,11 @@ const AppWrapper = () => (
         <Route path="/" element={<App />} />
         <Route path="/admin-contact" element={<AdminContact />} />
         <Route path="/partner-start" element={<PartnerPage />} />
-        <Route path="/partner-signup" element={<PartnerSignUpPage />} />
+        <Route path="/partner-codecheck" element={<PartnerCodeCheckPage />} />
+        <Route
+          path="/partner-signupfinish"
+          element={<PartnerSignUpFinishPage />}
+        />
       </Routes>
     </Router>
   </UserProvider>

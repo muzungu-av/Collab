@@ -10,8 +10,6 @@ export class UsersService {
   constructor(private config: ConfigService) {
     const url = this.config.get<string>('SUPABASE_URL');
     const key = this.config.get<string>('SUPABASE_SERVICE_ROLE_KEY');
-    console.log(`***** URL = ${url}`);
-    console.log(`***** key = ${key}`);
     if (!url) {
       throw new InternalServerErrorException(
         'Missing SUPABASE_URL in configuration',

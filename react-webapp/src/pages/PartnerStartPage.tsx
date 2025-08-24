@@ -16,7 +16,7 @@ const PartnerStartPage: React.FC = () => {
       <div className="simple-text">Если у вас его нет — обратитесь</div>
       <div className="simple-text">к администрации</div>
       <br />
-      <OutlineButton onClick={() => navigate("/partner-signup")}>
+      <OutlineButton onClick={() => navigate("/partner-codecheck")}>
         Ввести код
       </OutlineButton>
       <FilledButton onClick={() => navigate("/admin-contact")}>

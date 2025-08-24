@@ -40,7 +40,7 @@ export class PartnerPasscodeSupabaseRepository
   async checkAndLinkPasscode(
     passcode: string,
     telegram_id: number,
-    maxLoginAttempts: number = 3,
+    maxLoginAttempts: number,
   ) {
     const { data, error } = await this.supabase.rpc('handle_partner_passcode', {
       telegram_id_param: telegram_id,

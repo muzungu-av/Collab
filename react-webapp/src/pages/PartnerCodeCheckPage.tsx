@@ -4,11 +4,14 @@ import OutlineButton from "../components/buttons/OutlineButton";
 import { useNavigate } from "react-router-dom";
 import { getUser } from "../context/UserContext";
 import OutlineInput from "../components/inputs/OutlineInput";
+import TextBox from "../components/text_box/TextBox";
+import FilledButton from "../components/buttons/FilledButton";
 
 const PartnerSignUpPage: React.FC = () => {
   const navigate = useNavigate();
   const { user, baseApiUrl } = getUser();
   const [inputValue, setInputValue] = useState<string>("");
+  const [isCodeVerified, setIsCodeVerified] = useState<boolean>(false);
 
   const handleCheckPassCode = async () => {
     // Проверяем наличие всех необходимых данных перед отправкой
@@ -34,9 +37,10 @@ const PartnerSignUpPage: React.FC = () => {
       }
 
       const data = await response.json();
-      console.log("Успешный ответ от сервера:", data);
-      // Здесь можно добавить логику обработки успешного ответа, например:
-      // navigate("/success-page");
+      // Проверяем ответ от сервера
+      if (data.blocked_automatically === false && data.is_active === true) {
+        setIsCodeVerified(true);
+      }
     } catch (error) {
       console.error("Ошибка при отправке запроса:", error);
       // Здесь можно добавить логику обработки ошибки, например:
@@ -44,19 +48,39 @@ const PartnerSignUpPage: React.FC = () => {
     }
   };
 
+  const handleNextStep = () => {
+    // Логика для следующего шага
+    navigate("/partner-signupfinish");
+  };
+
   return (
     <CommonLayout>
       <div>
         <div className="welcome-text">Введите код</div>
-        <div>{`${baseApiUrl}/api/partner-passcode/check`}</div>
+        <br />
+        <br />
+        <div className="simple-text">Пожалуйста, введите ваш</div>
+        <div className="simple-text">уникальный код партнёра</div>
+        <br />
         <OutlineInput
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           placeholder="**********"
         />
-        <OutlineButton onClick={() => handleCheckPassCode()}>
-          Проверить код
-        </OutlineButton>
+        {!isCodeVerified ? (
+          <OutlineButton onClick={handleCheckPassCode}>
+            Проверить код
+          </OutlineButton>
+        ) : (
+          <>
+            <br />
+            <TextBox>✅ Верный код</TextBox>
+
+            <FilledButton onClick={handleNextStep}>
+              Переход к регистрации
+            </FilledButton>
+          </>
+        )}
       </div>
     </CommonLayout>
   );
