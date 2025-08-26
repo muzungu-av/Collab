@@ -15,6 +15,7 @@ export class PartnerSignUpService {
     EMAIL: string,
     WALLET: string,
   ): Promise<string> {
+    console.log('------_>  service ' + telegram_id);
     const result = this.partnerDomain.updateSignUpInfo(
       telegram_id,
       FIO,

@@ -12,6 +12,7 @@ export class PartnerSupabaseRepository implements IPartnerRepository {
     EMAIL: string,
     WALLET: string,
   ): Promise<string> {
+    console.log('------_>  Repository ' + telegram_id);
     const { data, error } = await this.supabase
       .from('partner')
       .upsert({
@@ -22,9 +23,11 @@ export class PartnerSupabaseRepository implements IPartnerRepository {
       .select();
 
     if (error) {
+      console.log('------_>  Repository ERROR' + JSON.stringify(error));
+
       throw new Error(`Failed to update partner info: ${error.message}`);
     }
-    console.log(JSON.stringify(data));
+    console.log('------_>  Repository data ' + JSON.stringify(data));
     return JSON.stringify(data);
   }
 }

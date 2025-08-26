@@ -46,4 +46,4 @@ import { PartnerDomain } from './partner/domain/partner.domain';
     },
   ],
 })
-export class PartnerPasscodeModule {}
+export class PartnerModule {}

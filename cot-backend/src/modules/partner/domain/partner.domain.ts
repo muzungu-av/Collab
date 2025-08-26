@@ -16,6 +16,7 @@ export class PartnerDomain {
     EMAIL: string,
     WALLET: string,
   ): Promise<string> {
+    console.log('------_>  Domain ' + telegram_id);
     return this.repository.updatePartnerInfo(telegram_id, FIO, EMAIL, WALLET);
   }
 }

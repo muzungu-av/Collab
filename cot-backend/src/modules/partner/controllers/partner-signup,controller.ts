@@ -15,6 +15,7 @@ export class PartnerSignUpController {
 
   @Patch('/signup')
   async CompletionOfSignUp(@Body() dto: PartnerSignUpDto): Promise<string> {
+    console.log('------_>  Controller ' + JSON.stringify(dto));
     return this.partnerSignUpService.completionOfSignUp(
       dto.telegram_id,
       dto.inputFIO,
