@@ -1,13 +1,10 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AuthModule } from './auth/auth.module';
+// import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { LoggerMiddleware } from './logger.middleware';
 import { AppController } from './app.controller';
-import {
-  PartnerPasscodeModule,
-  // SupabaseModule,
-} from './modules/partner_passcode/partner-passcode.module';
+import { PartnerPasscodeModule } from './modules/partner-passcode.module';
 
 @Module({
   controllers: [AppController],
@@ -17,7 +14,7 @@ import {
       envFilePath: '.env', // путь до .env (смотри Dockerfile!)
     }),
     UsersModule,
-    AuthModule,
+    // AuthModule,
     // SupabaseModule,
     PartnerPasscodeModule,
   ],

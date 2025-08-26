@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PartnerPasscodeDomain } from '../domain/partner-passcode.domain';
-import type { IPartnerPasscodeRepository } from '../repository/interfaces/partner-passcode.repository.interface';
-import { CheckPassCodeResult } from '../controllers/dto/check-passcode-result.dto';
 import { ConfigService } from '@nestjs/config';
+import type { IPartnerPasscodeRepository } from '../repository/interfaces/partner-passcode.repository.interface';
+import { CheckPassCodeResult } from '../controllers/dto/partner-passcode.dto';
 
 @Injectable()
 export class PartnerPasscodeService {

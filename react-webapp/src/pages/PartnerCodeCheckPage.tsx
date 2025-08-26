@@ -101,7 +101,7 @@ const PartnerSignUpPage: React.FC = () => {
               ? "#ff5252"
               : "#ffffff"
           }
-          placeholder="**********"
+          placeholder="Ввести код"
         />
 
         {verificationStatus === VerificationStatus.UNDEFINED && (

@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { PartnerPasscodeSupabaseRepository } from './repository/partner-passcode.supabase.repository';
-import { PartnerPasscodeLocalRepository } from './repository/partner-passcode.local.repository';
-import { EmptyPartnerPasscodeRepository } from './repository/partner-passcode.empty.repository';
-import { PartnerPasscodeService } from './services/partner-passcode.service';
-import { PartnerPasscodeController } from './controllers/partner-passcode.controller';
+import { PartnerPasscodeService } from './partner_passcode/services/partner-passcode.service';
+import { PartnerPasscodeController } from './partner_passcode/controllers/partner-passcode.controller';
+import { PartnerPasscodeLocalRepository } from './partner_passcode/repository/partner-passcode.local.repository';
+import { PartnerPasscodeSupabaseRepository } from './partner_passcode/repository/partner-passcode.supabase.repository';
+import { EmptyPartnerPasscodeRepository } from './partner_passcode/repository/partner-passcode.empty.repository';
 
 @Module({
   controllers: [PartnerPasscodeController],

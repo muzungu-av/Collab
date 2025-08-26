@@ -40,11 +40,7 @@
 .outline-input::placeholder {
   font-family: "Montserrat", sans-serif;
   font-weight: 800;
-  background: linear-gradient(90deg, #fba220 0%, #ffd28f 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: transparent;
+  color: #818181;
 }
 
 /* Крестик */
@@ -54,7 +50,6 @@
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
-  color: #ff0000; /* Красный цвет крестика */
   font-size: 18px;
   background: transparent;
   border: none;

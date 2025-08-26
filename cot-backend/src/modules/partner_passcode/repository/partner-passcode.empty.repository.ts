@@ -6,12 +6,11 @@ export class EmptyPartnerPasscodeRepository
   private msg =
     "Empty implementation of IPartnerPasscodeRepository is used! Check ENV's";
   async savePasscodes(passcodes: string[]): Promise<void> {
-    console.warn(this.msg);
+    throw new Error(this.msg);
   }
 
   async getPasscodes(is_used?: boolean): Promise<string[]> {
-    console.warn(this.msg);
-    return [];
+    throw new Error(this.msg);
   }
 
   async checkAndLinkPasscode(
@@ -19,7 +18,6 @@ export class EmptyPartnerPasscodeRepository
     telegram_id: number,
     maxLoginAttempts: number = 3,
   ) {
-    console.warn(this.msg);
-    return [];
+    throw new Error(this.msg);
   }
 }

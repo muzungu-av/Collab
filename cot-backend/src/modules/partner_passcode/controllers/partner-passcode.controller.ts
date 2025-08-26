@@ -7,13 +7,13 @@ import {
   Get,
   Patch,
 } from '@nestjs/common';
-import { PartnerPasscodeService } from '../services/partner-passcode.service';
 import {
   CheckPasscodeDto,
+  CheckPassCodeResult,
   CreatePasscodesDto,
   GetPasscodesDto,
 } from './dto/partner-passcode.dto';
-import { CheckPassCodeResult } from './dto/check-passcode-result.dto';
+import { PartnerPasscodeService } from '../services/partner-passcode.service';
 
 @Controller('partner-passcode')
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))

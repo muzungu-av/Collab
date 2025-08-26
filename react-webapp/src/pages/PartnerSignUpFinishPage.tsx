@@ -1,20 +1,97 @@
 import React, { useState } from "react";
 import CommonLayout from "../layouts/CommonLayout";
-import OutlineButton from "../components/buttons/OutlineButton";
 import { useNavigate } from "react-router-dom";
 import { getUser } from "../context/UserContext";
 import OutlineInput from "../components/inputs/OutlineInput";
+import FilledButton from "../components/buttons/FilledButton";
 
 const PartnerSignUpFinishPage: React.FC = () => {
   const navigate = useNavigate();
   const { user, baseApiUrl } = getUser();
-  const [inputValue, setInputValue] = useState<string>("");
-  const [isCodeVerified, setIsCodeVerified] = useState<boolean>(false);
+  const [inputFIO, setInputFIO] = useState<string>("");
+  const [inputEMAIL, setInputEMAIL] = useState<string>("");
+  const [inputWALLET, setInputWALLET] = useState<string>("");
+
+  const handleClearFIO = () => {
+    setInputFIO("");
+  };
+  const handleClearEMAIL = () => {
+    setInputEMAIL("");
+  };
+  const handleClearWALLET = () => {
+    setInputWALLET("");
+  };
+  const handler = async () => {
+    // Проверяем наличие всех необходимых данных перед отправкой
+    if (!user?.id || !inputFIO || !inputEMAIL || !inputWALLET) {
+      alert("Некорректные данные пользователя или код.");
+      return;
+    }
+    try {
+      const userData = JSON.stringify({
+        inputFIO: inputFIO,
+        inputEMAIL: inputEMAIL,
+        inputWALLET: inputWALLET,
+        telegram_id: user.id,
+      });
+
+      alert(`${baseApiUrl}/api/partner/signup`);
+      alert(userData);
+      const response = await fetch(`${baseApiUrl}/api/partner/signup`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: userData,
+      });
+
+      alert(JSON.stringify(response));
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      alert(JSON.stringify(data));
+      navigate("/");
+    } catch (error) {
+      console.error("Ошибка при отправке запроса:", error);
+      alert(
+        "Произошла ошибка, попробуйте еще раз. (" + JSON.stringify(error) + ")"
+      );
+    }
+  };
 
   return (
-    <CommonLayout>
+    <CommonLayout showBackButton={false}>
       <div>
         <div className="welcome-text">Регистрация партнёра</div>
+        <br />
+        <div className="simple-text">Пожалуйста, заполните данные для</div>
+        <div className="simple-text">участия в партнёрской программе</div>
+        <br />
+        <OutlineInput
+          value={inputFIO}
+          onChange={(e) => setInputFIO(e.target.value)}
+          onClear={handleClearFIO}
+          textColor="#FFFFFF"
+          placeholder="ФИО"
+        />
+        <OutlineInput
+          value={inputEMAIL}
+          onChange={(e) => setInputEMAIL(e.target.value)}
+          onClear={handleClearEMAIL}
+          textColor="#FFFFFF"
+          placeholder="Email"
+        />
+        <OutlineInput
+          value={inputWALLET}
+          onChange={(e) => setInputWALLET(e.target.value)}
+          onClear={handleClearWALLET}
+          textColor="#FFFFFF"
+          placeholder="Номер кошелька (карта / криптовалюта)"
+        />
+        <br />
+        <FilledButton onClick={handler}>Завершить регистрацию</FilledButton>
       </div>
     </CommonLayout>
   );

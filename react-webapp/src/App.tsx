@@ -23,33 +23,6 @@ const App: React.FC = () => {
   // const [baseApiUrl, setBaseApiUrl] = useState<string>("");
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   // Получаем текущий URL приложения
-  //   const currentUrl = window.location.origin;
-  //   setBaseApiUrl(currentUrl);
-  //   console.log("Current URL:", currentUrl);
-  // }, []);
-
-  // const handleButtonClick = async () => {
-  //   try {
-  //     const response = await fetch(`${baseApiUrl}/api/profile`, {
-  //       method: "POST",
-  //       credentials: "include", // Если куки для аутентификации
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ user: "abs" }),
-  //     });
-  //     if (!response.ok) {
-  //       throw new Error("Ошибка при запросе профиля");
-  //     }
-  //     const data = await response.json();
-  //     console.log("Профиль пользователя:", data);
-  //   } catch (error) {
-  //     console.error("Ошибка:", error);
-  //   }
-  // };
-
   return (
     <div className="App">
       <img src={head_logo} alt="Логотип" className="head_logo" />
