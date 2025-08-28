@@ -5,12 +5,13 @@ import { IPartnerRepository } from './interfaces/partner.repository.interface';
 @Injectable()
 export class PartnerLocalRepository implements IPartnerRepository {
   constructor() {}
-  updatePartnerInfo(
-    telegram_id: number,
-    FIO: string,
-    EMAIL: string,
-    WALLET: string,
-  ): Promise<string> {
+  updatePartnerInfoAndWallet(
+    telegram_id: bigint,
+    fio: string,
+    email: string,
+    wallet: string,
+    wallet_type: string,
+  ): Promise<boolean> {
     throw new Error('Method not implemented.');
   }
 }

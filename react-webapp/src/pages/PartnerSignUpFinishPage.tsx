@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { getUser } from "../context/UserContext";
 import OutlineInput from "../components/inputs/OutlineInput";
 import FilledButton from "../components/buttons/FilledButton";
+import { encodeTelegramId } from "../utils/RequestEncoder";
 
 const PartnerSignUpFinishPage: React.FC = () => {
   const navigate = useNavigate();
@@ -28,15 +29,16 @@ const PartnerSignUpFinishPage: React.FC = () => {
       return;
     }
     try {
+      let r = encodeTelegramId(String(user?.id));
       const userData = JSON.stringify({
-        inputFIO: inputFIO,
-        inputEMAIL: inputEMAIL,
-        inputWALLET: inputWALLET,
-        telegram_id: user.id,
+        fio: inputFIO,
+        email: inputEMAIL,
+        wallet: inputWALLET,
+        telegram_id: user?.id,
+        wallet_type: "TON",
+        signed_id: r,
       });
 
-      alert(`${baseApiUrl}/api/partner/signup`);
-      alert(userData);
       const response = await fetch(`${baseApiUrl}/api/partner/signup`, {
         method: "PATCH",
         headers: {
@@ -45,19 +47,15 @@ const PartnerSignUpFinishPage: React.FC = () => {
         body: userData,
       });
 
-      alert(JSON.stringify(response));
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
-      alert(JSON.stringify(data));
+      alert("Данные сохранены");
       navigate("/");
     } catch (error) {
-      console.error("Ошибка при отправке запроса:", error);
-      alert(
-        "Произошла ошибка, попробуйте еще раз. (" + JSON.stringify(error) + ")"
-      );
+      alert("Произошла ошибка, попробуйте еще раз");
     }
   };
 

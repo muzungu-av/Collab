@@ -1,8 +1,9 @@
 export interface IPartnerRepository {
-  updatePartnerInfo(
-    telegram_id: number,
-    FIO: string,
-    EMAIL: string,
-    WALLET: string,
-  ): Promise<string>;
+  updatePartnerInfoAndWallet(
+    telegram_id: bigint,
+    fio: string,
+    email: string,
+    wallet: string,
+    wallet_type: string,
+  ): Promise<boolean>;
 }

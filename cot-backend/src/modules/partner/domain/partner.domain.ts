@@ -11,12 +11,18 @@ export class PartnerDomain {
   ) {}
 
   async updateSignUpInfo(
-    telegram_id: number,
-    FIO: string,
-    EMAIL: string,
-    WALLET: string,
-  ): Promise<string> {
-    console.log('------_>  Domain ' + telegram_id);
-    return this.repository.updatePartnerInfo(telegram_id, FIO, EMAIL, WALLET);
+    telegram_id: bigint,
+    fio: string,
+    email: string,
+    wallet: string,
+    wallet_type: string,
+  ): Promise<boolean> {
+    return this.repository.updatePartnerInfoAndWallet(
+      telegram_id,
+      fio,
+      email,
+      wallet,
+      wallet_type,
+    );
   }
 }

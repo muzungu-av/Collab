@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { PartnerSupabaseRepository } from './partner/repository/partner.supabase.repository';
 import { PartnerLocalRepository } from './partner/repository/partner.local.repository';
@@ -7,8 +7,20 @@ import { EmptyPartnerRepository } from './partner/repository/partner.empty.repos
 import { PartnerSignUpService } from './partner/services/partner-signup.service';
 import { PartnerSignUpController } from './partner/controllers/partner-signup,controller';
 import { PartnerDomain } from './partner/domain/partner.domain';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
+  imports: [
+    ConfigModule.forRoot(),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: { expiresIn: '1d' },
+      }),
+      inject: [ConfigService],
+    }),
+  ],
   controllers: [PartnerSignUpController],
   providers: [
     PartnerSignUpService,

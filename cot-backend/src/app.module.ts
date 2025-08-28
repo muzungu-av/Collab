@@ -10,7 +10,7 @@ import { PartnerModule } from './modules/partner.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true, // делает доступным везде без импорта
-      envFilePath: '.env', // путь до .env (смотри Dockerfile!)
+      envFilePath: '.env.development.local', // путь до .env (смотри Dockerfile!)
     }),
     PartnerModule,
     PartnerPasscodeModule,

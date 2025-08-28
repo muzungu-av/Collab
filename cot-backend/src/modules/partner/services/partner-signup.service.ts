@@ -1,27 +1,33 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PartnerDomain } from '../domain/partner.domain';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class PartnerSignUpService {
   constructor(
     private readonly config: ConfigService,
     private readonly partnerDomain: PartnerDomain,
+    private readonly jwtService: JwtService,
   ) {}
 
   async completionOfSignUp(
-    telegram_id: number,
-    FIO: string,
-    EMAIL: string,
-    WALLET: string,
-  ): Promise<string> {
-    console.log('------_>  service ' + telegram_id);
-    const result = this.partnerDomain.updateSignUpInfo(
+    telegram_id: bigint,
+    fio: string,
+    email: string,
+    wallet: string,
+    wallet_type: string = 'TON',
+  ): Promise<{ token: string; result: boolean }> {
+    const result = await this.partnerDomain.updateSignUpInfo(
       telegram_id,
-      FIO,
-      EMAIL,
-      WALLET,
+      fio,
+      email,
+      wallet,
+      wallet_type,
     );
-    return result;
+    // Генерируем JWT-токен с telegram_id
+    // const sign_id = this.encodeTelegramId(BigInt(telegram_id));
+    const token = this.jwtService.sign({ telegram_id });
+    return { token, result: result };
   }
 }
