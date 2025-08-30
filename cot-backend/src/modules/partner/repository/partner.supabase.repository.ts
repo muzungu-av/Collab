@@ -24,7 +24,6 @@ export class PartnerSupabaseRepository implements IPartnerRepository {
           p_wallet_type: walletType,
         },
       );
-      console.log('update_partner_and_wallet:', data);
       if (error) throw error;
       return data;
     } catch (error) {
@@ -33,27 +32,3 @@ export class PartnerSupabaseRepository implements IPartnerRepository {
     }
   }
 }
-
-// async updatePartnerInfo(
-//   telegram_id: number,
-//   fio: string,
-//   email: string,
-//   wallet: string,
-// ): Promise<boolean> {
-//   const { data, error } = await this.supabase
-//     .from('partner')
-//     .update({
-//       email: email,
-//       username: fio,
-//     })
-//     .eq('telegram_id', telegram_id)
-//     .select();
-//   console.log('>>> updatePartnerInfo = ' + telegram_id);
-//   console.log(JSON.stringify(data));
-//   console.log(JSON.stringify(error));
-//   if (error) {
-//     throw new Error(`Failed to update partner info: ${error.message}`);
-//   }
-
-//   return true;
-// }

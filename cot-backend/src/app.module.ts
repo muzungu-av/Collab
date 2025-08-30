@@ -1,19 +1,20 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { LoggerMiddleware } from './logger.middleware';
-import { AppController } from './app.controller';
 import { PartnerPasscodeModule } from './modules/partner-passcode.module';
 import { PartnerModule } from './modules/partner.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  controllers: [AppController],
+  controllers: [],
   imports: [
     ConfigModule.forRoot({
       isGlobal: true, // делает доступным везде без импорта
-      envFilePath: '.env.development.local', // путь до .env (смотри Dockerfile!)
+      envFilePath: '.env', // путь до .env (смотри Dockerfile!)
     }),
     PartnerModule,
     PartnerPasscodeModule,
+    AuthModule,
   ],
 })
 // export class AppModule {}

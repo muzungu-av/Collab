@@ -51,9 +51,9 @@ const PartnerSignUpFinishPage: React.FC = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data = await response.json();
+      await response.json();
       alert("Данные сохранены");
-      navigate("/");
+      navigate("/partner");
     } catch (error) {
       alert("Произошла ошибка, попробуйте еще раз");
     }

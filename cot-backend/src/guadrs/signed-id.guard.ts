@@ -14,11 +14,13 @@ export class SignedTelegramIdGuard implements CanActivate {
     if (!body?.signed_id && !body?.telegram_id) {
       throw new BadRequestException('Поле telegram_id не подписано.');
     }
-    const signid = this.encodeTelegramId(BigInt(body.telegram_id));
+    const signid = SignedTelegramIdGuard.encodeTelegramId(
+      BigInt(body.telegram_id),
+    );
     return body?.signed_id == signid;
   }
 
-  encodeTelegramId(telegramId: bigint) {
+  public static encodeTelegramId(telegramId: bigint) {
     const SECRET_XOR = BigInt('0x139a8e71d'); //константа
     const xored = telegramId ^ SECRET_XOR;
     return xored.toString(29); // Перевод в 29-ричную систему

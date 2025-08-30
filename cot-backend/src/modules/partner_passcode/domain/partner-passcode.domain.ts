@@ -17,7 +17,6 @@ export class PartnerPasscodeDomain {
     for (let i = 0; i < count; i++) {
       passcodes.push(this.generatePasscode());
     }
-    console.log(JSON.stringify(passcodes));
     return passcodes;
   }
 

@@ -30,8 +30,7 @@ export class PartnerPasscodeSupabaseRepository
     if (error) {
       throw new Error(`Ошибка при получении passcodes: ${error.message}`);
     }
-    console.log('>>>> data =' + JSON.stringify(data));
-    console.log('>>>> error =' + JSON.stringify(error));
+
     return data.map((item) => {
       return item.passcode + '-' + item.is_used;
     });

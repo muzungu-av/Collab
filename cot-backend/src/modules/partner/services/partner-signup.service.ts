@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PartnerDomain } from '../domain/partner.domain';
 import { JwtService } from '@nestjs/jwt';
+import { SignedTelegramIdGuard } from 'src/guadrs/signed-id.guard';
 
 @Injectable()
 export class PartnerSignUpService {

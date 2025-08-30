@@ -5,22 +5,27 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import head_logo from "./assets/head_logo.png";
-
+import { getUser } from "./context/UserContext";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   useNavigate,
+  Navigate,
 } from "react-router-dom";
-import PartnerPage from "./pages/PartnerStartPage";
+import PartnerPage from "./pages/PartnerPage";
 import PartnerCodeCheckPage from "./pages/PartnerCodeCheckPage";
 import AdminContact from "./pages/AdminContact";
 import OutlineButton from "./components/buttons/OutlineButton";
 import { UserProvider } from "./context/UserContext";
 import PartnerSignUpFinishPage from "./pages/PartnerSignUpFinishPage";
+import PartnerStartPage from "./pages/PartnerStartPage";
+import UserDetectedErrorPage from "./pages/UserDetectedErrorPage";
+import BlockPage from "./pages/BlockPage";
+import ErrorPage from "./pages/ErrorPage";
 
 const App: React.FC = () => {
-  // const [baseApiUrl, setBaseApiUrl] = useState<string>("");
+  const [baseApiUrl, setBaseApiUrl] = useState<string>("");
   const navigate = useNavigate();
 
   return (
@@ -46,21 +51,64 @@ const App: React.FC = () => {
   );
 };
 
-const AppWrapper = () => (
-  <UserProvider>
-    <Router>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/admin-contact" element={<AdminContact />} />
-        <Route path="/partner-start" element={<PartnerPage />} />
-        <Route path="/partner-codecheck" element={<PartnerCodeCheckPage />} />
-        <Route
-          path="/partner-signupfinish"
-          element={<PartnerSignUpFinishPage />}
-        />
-      </Routes>
-    </Router>
-  </UserProvider>
-);
+interface AppWrapperProps {
+  renderPath?: React.ReactNode;
+  errorMsg?: string;
+}
+
+const AppWrapper: React.FC<AppWrapperProps> = ({ renderPath, errorMsg }) => {
+  const isUserDetectedError = renderPath === "/user-detected-error";
+  const isUserBlocked = renderPath === "/user-blocked";
+  const isError = renderPath === "/error";
+  const isPartner = renderPath === "/partner"; //авто-вход на страницу партнера
+
+  // условный роутинг - проверка на условия всяких нестандартных случаев
+  const renderErrorRoutes = () => (
+    <>
+      {isUserDetectedError && (
+        <Route path="/" element={<UserDetectedErrorPage />} />
+      )}
+      {isUserBlocked && <Route path="/" element={<BlockPage />} />}
+      {isError && <Route path="/" element={<ErrorPage message={errorMsg} />} />}
+    </>
+  );
+
+  //авто-вход на страницу партнера
+  const renderParnerRootRoutes = () => (
+    <>{isPartner && <Route path="/" element={<PartnerPage />} />}</>
+  );
+
+  //авто-вход на главную страницу тут (дефолтный случай)
+  // безусловный роутинг
+  const renderDefaultRoutes = () => (
+    <>
+      <Route path="/" element={<App />} />
+      <Route path="/admin-contact" element={<AdminContact />} />
+      <Route path="/partner-start" element={<PartnerStartPage />} />
+      <Route path="/partner-codecheck" element={<PartnerCodeCheckPage />} />
+      <Route
+        path="/partner-signupfinish"
+        element={<PartnerSignUpFinishPage />}
+      />
+      <Route path="/partner" element={<PartnerPage />} />
+      <Route path="/user-detected-error" element={<UserDetectedErrorPage />} />
+    </>
+  );
+  return (
+    <UserProvider>
+      <Router>
+        <Routes>
+          {renderErrorRoutes()}
+          {renderParnerRootRoutes()}
+          {!isUserDetectedError &&
+            !isUserBlocked &&
+            !isError &&
+            !isPartner &&
+            renderDefaultRoutes()}
+        </Routes>
+      </Router>
+    </UserProvider>
+  );
+};
 
 export default AppWrapper;

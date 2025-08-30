@@ -1,12 +1,12 @@
 import React, { createContext, useContext, ReactNode } from "react";
 
-interface User {
+interface UserCtx {
   id?: string;
   username?: string;
 }
 
 interface UserContextType {
-  user: User | null;
+  user: UserCtx | null;
   baseApiUrl: string | null;
 }
 
@@ -15,7 +15,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const UserProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [user, setUser] = React.useState<User | null>(null);
+  const [user, setUser] = React.useState<UserCtx | null>(null);
   const [baseApiUrl, setBaseApiUrl] = React.useState<string>("");
 
   React.useEffect(() => {

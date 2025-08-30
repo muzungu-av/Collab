@@ -1,9 +1,86 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import AppWrapper from "./App";
+import { getUser } from "./context/UserContext";
+import BlockPage from "./pages/BlockPage";
+import UserDetectedErrorPage from "./pages/UserDetectedErrorPage";
+import PartnerPage from "./pages/PartnerPage";
+import { encodeTelegramId } from "./utils/RequestEncoder";
 
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <AppWrapper />
-  </StrictMode>
-);
+interface CheckPartnerAccessResult {
+  renderPath: string;
+  errorMsg?: string;
+}
+
+// Функция для проверки доступа
+const checkPartnerAccess = async (
+  id: string | undefined
+): Promise<CheckPartnerAccessResult> => {
+  if (!id) {
+    console.warn("ID пользователя не определен!");
+    return { renderPath: "/user-detected-error" };
+  }
+
+  try {
+    const signed = encodeTelegramId(id);
+    const userData = JSON.stringify({
+      telegram_id: id,
+      signed_id: signed,
+    });
+
+    const currentUrl = window.location.origin;
+    const response = await fetch(`${currentUrl}/api/whoami`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: userData,
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const resp = await response.json();
+
+    // Обработка статусов ответа
+    switch (resp.status) {
+      case "found":
+        return { renderPath: "/partner" };
+      case "blocked":
+        return { renderPath: "/user-blocked" };
+      case "not_found":
+        return { renderPath: "/" };
+      case "error":
+        return {
+          renderPath: "/error",
+          errorMsg: resp.message || "Неизвестная ошибка",
+        };
+      default:
+        return { renderPath: "/error", errorMsg: "Неизвестный статус ответа" };
+    }
+  } catch (error) {
+    console.error("Ошибка при проверке доступа:", error);
+    return {
+      renderPath: "/error",
+      errorMsg: error instanceof Error ? error.message : "Неизвестная ошибка",
+    };
+  }
+};
+
+// Асинхронная функция для рендеринга
+async function renderApp() {
+  const tg = window.Telegram.WebApp;
+  const userData = tg.initDataUnsafe?.user;
+  const userId = userData?.id?.toString();
+  const { renderPath, errorMsg } = await checkPartnerAccess(userId);
+  const root = document.getElementById("root");
+  if (!root) return;
+
+  createRoot(root).render(
+    <StrictMode>
+      <AppWrapper renderPath={renderPath} errorMsg={errorMsg} />
+    </StrictMode>
+  );
+}
+renderApp();
