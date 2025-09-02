@@ -5,5 +5,6 @@ export interface IPartnerRepository {
     email: string,
     wallet: string,
     wallet_type: string,
+    referral_link: string,
   ): Promise<boolean>;
 }

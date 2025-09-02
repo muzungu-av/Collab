@@ -1,7 +1,7 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { AuthUser } from './domain/auth-users.entity';
-import type { IAuthUserRepository } from './repository/auth-user.repository.interface';
-import { AuthUserResponseDto } from './dto/auth-user-response.dto';
+import { AuthUser } from '../domain/auth-users.entity';
+import type { IAuthUserRepository } from '../repository/auth-user.repository.interface';
+import { AuthUserResponseDto } from '../controllers/dto/auth-user-response.dto';
 
 @Injectable()
 export class WhoAmIService {
@@ -19,17 +19,17 @@ export class WhoAmIService {
         return { status: 'not_found' };
       }
 
-      const user = await this.authUserRepository.findByTelegramId(
+      const user = await this.authUserRepository.findPartnerByTelegramId(
         telegramId,
         signedId,
       );
 
       if (!user) {
-        return { status: 'not_found' };
+        return { status: 'not_found' }; // ненайден
       }
 
       if (!user.is_active || user.blocked_automatically) {
-        return { status: 'blocked' };
+        return { status: 'blocked' }; // найден заблокирован
       }
 
       user.signing(telegramId);
@@ -38,14 +38,9 @@ export class WhoAmIService {
         throw new BadRequestException('Invalid signature');
       }
 
-      return { status: 'found', user };
+      return { status: 'found', user }; // найден все ок
     } catch (error) {
-      return { status: 'error', message: error.message };
+      return { status: 'error', message: error.message }; // ошибка
     }
-
-    // найден все ок
-    // найден заблокирован
-    // ненайден
-    // ошибка
   }
 }

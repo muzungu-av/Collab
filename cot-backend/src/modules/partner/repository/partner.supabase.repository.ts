@@ -12,6 +12,7 @@ export class PartnerSupabaseRepository implements IPartnerRepository {
     EMAIL: string,
     WALLET: string,
     walletType: string,
+    referral_link: string,
   ): Promise<any> {
     try {
       const { data, error } = await this.supabase.rpc(
@@ -22,6 +23,7 @@ export class PartnerSupabaseRepository implements IPartnerRepository {
           p_email: EMAIL,
           p_wallet_address: WALLET,
           p_wallet_type: walletType,
+          p_referral_link: referral_link,
         },
       );
       if (error) throw error;

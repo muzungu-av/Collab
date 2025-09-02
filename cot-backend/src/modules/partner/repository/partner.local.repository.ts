@@ -11,6 +11,7 @@ export class PartnerLocalRepository implements IPartnerRepository {
     email: string,
     wallet: string,
     wallet_type: string,
+    referral_link: string,
   ): Promise<boolean> {
     throw new Error('Method not implemented.');
   }

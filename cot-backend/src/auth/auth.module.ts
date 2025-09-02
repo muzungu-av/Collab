@@ -4,9 +4,11 @@ import { PassportModule } from '@nestjs/passport';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './jwt.strategy';
 import { AuthUserController } from './controllers/auth-user.controller';
-import { WhoAmIService } from './whoami.service';
+import { WhoAmIService } from './services/whoami.service';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { SupabaseAuthUserRepository } from './repository/auth-user.repository';
+import { UserController } from './controllers/user.controller';
+import { UserService } from './services/user.service';
 
 @Module({
   imports: [
@@ -23,6 +25,7 @@ import { SupabaseAuthUserRepository } from './repository/auth-user.repository';
   ],
   providers: [
     WhoAmIService,
+    UserService,
     JwtStrategy,
     {
       provide: 'SUPABASE_CLIENT',
@@ -45,6 +48,6 @@ import { SupabaseAuthUserRepository } from './repository/auth-user.repository';
       },
     },
   ],
-  controllers: [AuthUserController],
+  controllers: [AuthUserController, UserController],
 })
 export class AuthModule {}

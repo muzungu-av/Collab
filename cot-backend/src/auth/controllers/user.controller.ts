@@ -1,0 +1,22 @@
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { UserService } from '../services/user.service';
+import { AuthUserResponseDto } from './dto/auth-user-response.dto';
+import { WhoAmIDto } from './dto/telegram.auth.dto';
+import { SignedTelegramIdGuard } from 'src/guadrs/signed-id.guard';
+
+@Controller('user')
+export class UserController {
+  constructor(private readonly userService: UserService) {}
+
+  @Post('ami')
+  @UseGuards(SignedTelegramIdGuard)
+  async getUserByTelegramId(
+    /*
+     * в этом body 'signed_id' далее не передается и не используется в нижележащие слои
+     * так как оно будет проверенно один раз в SignedTelegramIdGuard и нужно только на этапе валидации запроса
+     */
+    @Body() body: WhoAmIDto,
+  ): Promise<AuthUserResponseDto> {
+    return this.userService.getAnyUserByTelegramId(body.telegram_id);
+  }
+}

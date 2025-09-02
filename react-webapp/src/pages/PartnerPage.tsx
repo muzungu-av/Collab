@@ -9,28 +9,37 @@ const PartnerPage: React.FC = () => {
   const navigate = useNavigate();
   const { user, baseApiUrl } = getUser();
 
-  // const handleClearFIO = () => {
-  //   setInputFIO("");
-  // };
   // const handleClearEMAIL = () => {
   //   setInputEMAIL("");
   // };
   // const handleClearWALLET = () => {
   //   setInputWALLET("");
   // };
-  const handler = async () => {
-    navigate("/");
+  const handleRefLink = () => {
+    navigate("/ref-link");
   };
-
+  const handleRequestPayment = () => {
+    navigate("/partner-request-payment");
+  };
+  const handleStatistic = () => {
+    navigate("/partner-statistic");
+  };
+  const handleSupport = () => {
+    navigate("/partner-support");
+  };
   return (
     <CommonLayout showBackButton={false}>
       <div>
         <div className="welcome-text">Личный кабинет</div>
         <br />
-        <OutlineButton onClick={handler}>Моя реферальная ссылка</OutlineButton>
-        <OutlineButton onClick={handler}>Запросиить выплату</OutlineButton>
-        <OutlineButton onClick={handler}>Статистика</OutlineButton>
-        <OutlineButton onClick={handler}>Поддержка</OutlineButton>
+        <OutlineButton onClick={handleRefLink}>
+          Моя реферальная ссылка
+        </OutlineButton>
+        <OutlineButton onClick={handleRequestPayment}>
+          Запросиить выплату
+        </OutlineButton>
+        <OutlineButton onClick={handleStatistic}>Статистика</OutlineButton>
+        <OutlineButton onClick={handleSupport}>Поддержка</OutlineButton>
       </div>
     </CommonLayout>
   );

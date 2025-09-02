@@ -23,6 +23,7 @@ import PartnerStartPage from "./pages/PartnerStartPage";
 import UserDetectedErrorPage from "./pages/UserDetectedErrorPage";
 import BlockPage from "./pages/BlockPage";
 import ErrorPage from "./pages/ErrorPage";
+import ReferralLinkPage from "./pages/ReferralLinkPage";
 
 const App: React.FC = () => {
   const [baseApiUrl, setBaseApiUrl] = useState<string>("");
@@ -75,7 +76,10 @@ const AppWrapper: React.FC<AppWrapperProps> = ({ renderPath, errorMsg }) => {
 
   //авто-вход на страницу партнера
   const renderParnerRootRoutes = () => (
-    <>{isPartner && <Route path="/" element={<PartnerPage />} />}</>
+    <>
+      {isPartner && <Route path="/" element={<PartnerPage />} />}
+      {isPartner && <Route path="/ref-link" element={<ReferralLinkPage />} />}
+    </>
   );
 
   //авто-вход на главную страницу тут (дефолтный случай)

@@ -16,6 +16,7 @@ export class PartnerDomain {
     email: string,
     wallet: string,
     wallet_type: string,
+    referral_link: string,
   ): Promise<boolean> {
     return this.repository.updatePartnerInfoAndWallet(
       telegram_id,
@@ -23,6 +24,7 @@ export class PartnerDomain {
       email,
       wallet,
       wallet_type,
+      referral_link,
     );
   }
 }

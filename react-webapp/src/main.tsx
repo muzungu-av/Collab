@@ -1,10 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import AppWrapper from "./App";
-import { getUser } from "./context/UserContext";
-import BlockPage from "./pages/BlockPage";
-import UserDetectedErrorPage from "./pages/UserDetectedErrorPage";
-import PartnerPage from "./pages/PartnerPage";
 import { encodeTelegramId } from "./utils/RequestEncoder";
 
 interface CheckPartnerAccessResult {

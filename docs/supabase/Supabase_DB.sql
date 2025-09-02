@@ -325,12 +325,18 @@ BEGIN
 END;
 $$;
 
+
+/*
+ * завершает регистрацию partner вводятся атрибуты
+ */
+
 CREATE OR REPLACE FUNCTION public.update_partner_and_wallet(
   p_telegram_id BIGINT,
   p_username TEXT,
   p_email TEXT,
   p_wallet_address VARCHAR(64),
-  p_wallet_type VARCHAR(20)
+  p_wallet_type VARCHAR(20),
+  p_referral_link VARCHAR(16)
 )
 RETURNS TABLE (
   result BOOLEAN,
@@ -348,7 +354,8 @@ BEGIN
     'p_username: ' || COALESCE(p_username, 'NULL'),
     'p_email: ' || COALESCE(p_email, 'NULL'),
     'p_wallet_address: ' || COALESCE(p_wallet_address, 'NULL'),
-    'p_wallet_type: ' || COALESCE(p_wallet_type, 'NULL')
+    'p_wallet_type: ' || COALESCE(p_wallet_type, 'NULL'),
+    'p_referral_link: ' || COALESCE(p_referral_link, 'NULL')
   ];
 
   -- Устанавливаем контекст пользователя для RLS
@@ -359,7 +366,9 @@ BEGIN
     UPDATE public.partner
     SET
       username = p_username,
-      email = p_email
+      email = p_email,
+      referral_link= p_referral_link
+
     WHERE p_telegram_id = current_setting('app.current_telegram_id')::bigint;
 
     -- Вставляем запись в wallets
@@ -397,8 +406,6 @@ BEGIN
 END;
 $$;
 
-
-
 -- включаем RLS
 ALTER TABLE public.wallets ENABLE ROW LEVEL SECURITY;
 
@@ -410,11 +417,96 @@ USING (
 );
 
 
+-- связь менеджер - парнер
+
+--В таблице partner поле referral_link будет уникальным.
+--В таблице manager поле partner_referral_link будет ссылаться на referral_link в таблице partner.
+--Если партнер удаляется, то у всех его менеджеров поле partner_referral_link станет NULL.
+ALTER TABLE public.partner
+ADD COLUMN referral_link VARCHAR(16) UNIQUE;
+ALTER TABLE public.partner
+ADD CONSTRAINT unique_referral_link UNIQUE (referral_link);
+
+
+ALTER TABLE public.manager
+ADD COLUMN partner_referral_link VARCHAR(16) NULL;
+ALTER TABLE public.manager
+ADD CONSTRAINT fk_manager_partner
+FOREIGN KEY (partner_referral_link)
+REFERENCES public.partner(referral_link)
+ON DELETE SET NULL;
 
 
 
-
-
+/*
+* Функция ищет пользователя по telegram_id в таблицах admin, manager и partner и возвращает объединённый результат со всеми полями, 
+* включая NULL для отсутствующих значений.
+* Для таблицы partner учитываются только активные (is_active = true) и не заблокированные (blocked_automatically = false) пользователи.
+*/
+CREATE OR REPLACE FUNCTION public.find_any_user_by_telegram_id(telegram_id_param BIGINT)
+RETURNS TABLE (
+    telegram_id BIGINT,
+    created_at TIMESTAMPTZ,
+    username VARCHAR(50),
+    email VARCHAR(100),
+    phone VARCHAR(20),
+    is_active BOOLEAN,
+    blocked_automatically BOOLEAN,
+    login_attempts INTEGER,
+    referral_link VARCHAR(16),
+    partner_referral_link VARCHAR(16),
+    user_type TEXT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        a.telegram_id,
+        a.created_at,
+        a.username,
+        a.email,
+        a.phone,
+        NULL::BOOLEAN AS is_active,
+        NULL::BOOLEAN AS blocked_automatically,
+        NULL::INTEGER AS login_attempts,
+        NULL::VARCHAR(16) AS referral_link,
+        NULL::VARCHAR(16) AS partner_referral_link,
+        'admin' AS user_type
+    FROM public.admin a
+    WHERE a.telegram_id = telegram_id_param
+    UNION ALL
+    SELECT
+        m.telegram_id,
+        m.created_at,
+        m.username,
+        m.email,
+        m.phone,
+        NULL::BOOLEAN AS is_active,
+        NULL::BOOLEAN AS blocked_automatically,
+        NULL::INTEGER AS login_attempts,
+        NULL::VARCHAR(16) AS referral_link,
+        m.partner_referral_link,
+        'manager' AS user_type
+    FROM public.manager m
+    WHERE m.telegram_id = telegram_id_param
+    UNION ALL
+    SELECT
+        p.telegram_id,
+        p.created_at,
+        p.username,
+        p.email,
+        p.phone,
+        p.is_active,
+        p.blocked_automatically,
+        p.login_attempts,
+        p.referral_link,
+        NULL::VARCHAR(16) AS partner_referral_link,
+        'partner' AS user_type
+    FROM public.partner p
+    WHERE p.telegram_id = telegram_id_param
+      AND p.is_active = TRUE
+      AND p.blocked_automatically = FALSE;
+END;
+$$ LANGUAGE plpgsql;
 
 
 
