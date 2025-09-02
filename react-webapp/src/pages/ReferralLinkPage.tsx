@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import CommonLayout from "../layouts/CommonLayout";
 import { useNavigate } from "react-router-dom";
-import { getUser } from "../context/UserContext";
+import { useAuthUser } from "../context/UserContext";
 import { encodeTelegramId } from "../utils/RequestEncoder";
 import CopyIconButton from "../components/buttons/CopyIconButton";
 
 const ReferralLinkPage: React.FC = () => {
   const navigate = useNavigate();
-  const { user, baseApiUrl } = getUser();
+  const { authUser, baseApiUrl } = useAuthUser();
   const [referralLink, setReferralLink] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -25,15 +25,15 @@ const ReferralLinkPage: React.FC = () => {
 
   useEffect(() => {
     const fetchReferralLink = async () => {
-      if (!user?.id) {
+      if (!authUser?.telegram_id) {
         setError("Telegram ID не найден");
         return;
       }
 
       setLoading(true);
-      const signed = encodeTelegramId(user.id);
+      const signed = encodeTelegramId(authUser.telegram_id);
       const userData = JSON.stringify({
-        telegram_id: user.id,
+        telegram_id: authUser.telegram_id,
         signed_id: signed,
       });
       try {

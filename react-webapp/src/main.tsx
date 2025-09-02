@@ -10,7 +10,7 @@ interface CheckPartnerAccessResult {
 
 // Функция для проверки доступа
 const checkPartnerAccess = async (
-  id: string | undefined
+  id: number | undefined
 ): Promise<CheckPartnerAccessResult> => {
   if (!id) {
     console.warn("ID пользователя не определен!");
@@ -68,14 +68,18 @@ const checkPartnerAccess = async (
 async function renderApp() {
   const tg = window.Telegram.WebApp;
   const userData = tg.initDataUnsafe?.user;
-  const userId = userData?.id?.toString();
+  const userId = Number(userData?.id);
   const { renderPath, errorMsg } = await checkPartnerAccess(userId);
   const root = document.getElementById("root");
   if (!root) return;
 
   createRoot(root).render(
     <StrictMode>
-      <AppWrapper renderPath={renderPath} errorMsg={errorMsg} />
+      <AppWrapper
+        renderPath={renderPath}
+        errorMsg={errorMsg}
+        telegram_id={userId}
+      />
     </StrictMode>
   );
 }

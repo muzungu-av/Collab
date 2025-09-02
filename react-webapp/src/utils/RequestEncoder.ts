@@ -1,4 +1,4 @@
-export function encodeTelegramId(telegramId: string): string {
+export function encodeTelegramId(telegramId: number): string {
   const tid = BigInt(telegramId);
   const SECRET_XOR: bigint = BigInt(0x139a8e71d);
   const xored: bigint = tid ^ SECRET_XOR;

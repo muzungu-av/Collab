@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import CommonLayout from "../layouts/CommonLayout";
 import OutlineButton from "../components/buttons/OutlineButton";
 import { useNavigate } from "react-router-dom";
-import { getUser } from "../context/UserContext";
+import { useAuthUser } from "../context/UserContext";
 import OutlineInput from "../components/inputs/OutlineInput";
 import TextBox from "../components/text_box/TextBox";
 import FilledButton from "../components/buttons/FilledButton";
@@ -16,7 +16,7 @@ enum VerificationStatus {
 
 const PartnerSignUpPage: React.FC = () => {
   const navigate = useNavigate();
-  const { user, baseApiUrl } = getUser();
+  const { authUser, baseApiUrl } = useAuthUser();
   const [inputValue, setInputValue] = useState<string>("");
   const [verificationStatus, setVerificationStatus] =
     useState<VerificationStatus>(VerificationStatus.UNDEFINED);
@@ -25,14 +25,14 @@ const PartnerSignUpPage: React.FC = () => {
 
   const handleCheckPassCode = async () => {
     // Проверяем наличие всех необходимых данных перед отправкой
-    if (!user?.id || !inputValue) {
+    if (!authUser?.telegram_id || !inputValue) {
       alert("Некорректные данные пользователя или код.");
       return;
     }
     try {
       const userData = JSON.stringify({
         passcode: inputValue,
-        telegram_id: user.id,
+        telegram_id: authUser.telegram_id,
       });
       const response = await fetch(`${baseApiUrl}/api/partner-passcode/check`, {
         method: "PATCH",
@@ -47,7 +47,6 @@ const PartnerSignUpPage: React.FC = () => {
       }
 
       const data = await response.json();
-
       if (data && data.login_attempts) setLoginAttempts(data.login_attempts);
       if (data && data.maxLoginAttempts)
         setMaxLoginAttempts(data.maxLoginAttempts);

@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { IPartnerPasscodeRepository } from './interfaces/partner-passcode.repository.interface';
-import { console } from 'inspector';
 
 @Injectable()
 export class PartnerPasscodeSupabaseRepository

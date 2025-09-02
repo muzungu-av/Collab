@@ -2,16 +2,14 @@
 //но экспортируется AppWrapper ниже
 //ключевой объект App роутится на "/" в AppWrapper
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import "./App.css";
 import head_logo from "./assets/head_logo.png";
-import { getUser } from "./context/UserContext";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   useNavigate,
-  Navigate,
 } from "react-router-dom";
 import PartnerPage from "./pages/PartnerPage";
 import PartnerCodeCheckPage from "./pages/PartnerCodeCheckPage";
@@ -26,7 +24,6 @@ import ErrorPage from "./pages/ErrorPage";
 import ReferralLinkPage from "./pages/ReferralLinkPage";
 
 const App: React.FC = () => {
-  const [baseApiUrl, setBaseApiUrl] = useState<string>("");
   const navigate = useNavigate();
 
   return (
@@ -55,9 +52,14 @@ const App: React.FC = () => {
 interface AppWrapperProps {
   renderPath?: React.ReactNode;
   errorMsg?: string;
+  telegram_id?: number;
 }
 
-const AppWrapper: React.FC<AppWrapperProps> = ({ renderPath, errorMsg }) => {
+const AppWrapper: React.FC<AppWrapperProps> = ({
+  renderPath,
+  errorMsg,
+  telegram_id,
+}) => {
   const isUserDetectedError = renderPath === "/user-detected-error";
   const isUserBlocked = renderPath === "/user-blocked";
   const isError = renderPath === "/error";
@@ -99,7 +101,7 @@ const AppWrapper: React.FC<AppWrapperProps> = ({ renderPath, errorMsg }) => {
     </>
   );
   return (
-    <UserProvider>
+    <UserProvider telegram_id={telegram_id}>
       <Router>
         <Routes>
           {renderErrorRoutes()}

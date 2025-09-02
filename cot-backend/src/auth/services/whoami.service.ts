@@ -1,5 +1,4 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { AuthUser } from '../domain/auth-users.entity';
 import type { IAuthUserRepository } from '../repository/auth-user.repository.interface';
 import { AuthUserResponseDto } from '../controllers/dto/auth-user-response.dto';
 

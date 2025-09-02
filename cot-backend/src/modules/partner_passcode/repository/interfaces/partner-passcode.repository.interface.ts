@@ -6,5 +6,4 @@ export interface IPartnerPasscodeRepository {
     telegram_id: number,
     maxLoginAttempts: number,
   );
-  // ... другие методы
 }

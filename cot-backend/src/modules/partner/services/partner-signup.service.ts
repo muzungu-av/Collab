@@ -1,8 +1,7 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PartnerDomain } from '../domain/partner.domain';
 import { JwtService } from '@nestjs/jwt';
-import { SignedTelegramIdGuard } from 'src/guadrs/signed-id.guard';
 import { PartnerPasscodeDomain } from 'src/modules/partner_passcode/domain/partner-passcode.domain';
 
 @Injectable()

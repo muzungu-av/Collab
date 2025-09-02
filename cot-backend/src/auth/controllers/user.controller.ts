@@ -12,7 +12,7 @@ export class UserController {
   @UseGuards(SignedTelegramIdGuard)
   async getUserByTelegramId(
     /*
-     * в этом body 'signed_id' далее не передается и не используется в нижележащие слои
+     * в этом body 'signed_id' далее не передается и не используется в нижележащих слоях
      * так как оно будет проверенно один раз в SignedTelegramIdGuard и нужно только на этапе валидации запроса
      */
     @Body() body: WhoAmIDto,

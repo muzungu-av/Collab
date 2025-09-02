@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import CommonLayout from "../layouts/CommonLayout";
 import { useNavigate } from "react-router-dom";
-import { getUser } from "../context/UserContext";
+import { useAuthUser } from "../context/UserContext";
 import { encodeTelegramId } from "../utils/RequestEncoder";
 import OutlineButton from "../components/buttons/OutlineButton";
 
 const PartnerPage: React.FC = () => {
   const navigate = useNavigate();
-  const { user, baseApiUrl } = getUser();
+  const { authUser, baseApiUrl } = useAuthUser();
 
   // const handleClearEMAIL = () => {
   //   setInputEMAIL("");
