@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import CommonLayout from "../layouts/CommonLayout";
+import CommonLayout from "../../layouts/CommonLayout";
 import { useNavigate } from "react-router-dom";
-import { useAuthUser } from "../context/UserContext";
-import OutlineInput from "../components/inputs/OutlineInput";
-import FilledButton from "../components/buttons/FilledButton";
-import { encodeTelegramId } from "../utils/RequestEncoder";
+import { useAuthUser } from "../../context/UserContext";
+import OutlineInput from "../../components/inputs/OutlineInput";
+import FilledButton from "../../components/buttons/FilledButton";
+import { encodeTelegramId } from "../../utils/RequestEncoder";
 
 const PartnerSignUpFinishPage: React.FC = () => {
   const navigate = useNavigate();
@@ -29,14 +29,13 @@ const PartnerSignUpFinishPage: React.FC = () => {
       return;
     }
     try {
-      let r = encodeTelegramId(authUser?.telegram_id);
       const userData = JSON.stringify({
         fio: inputFIO,
         email: inputEMAIL,
         wallet: inputWALLET,
         telegram_id: authUser?.telegram_id,
         wallet_type: "TON",
-        signed_id: r,
+        signed_id: authUser?.signed_id,
       });
 
       const response = await fetch(`${baseApiUrl}/api/partner/signup`, {

@@ -16,23 +16,22 @@ import {
 import { PartnerPasscodeService } from '../services/partner-passcode.service';
 
 @Controller('partner-passcode')
-@UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 export class PartnerPasscodeController {
   constructor(
     private readonly partnerPasscodeService: PartnerPasscodeService,
   ) {}
-
+  //todo защита
   @Post()
   async createSomePasscodes(@Body() dto: CreatePasscodesDto) {
     await this.partnerPasscodeService.createPasscodes(dto.count_passcodes);
     return { success: true };
   }
-
+  //todo защита
   @Get()
   async getAllPasscodes(@Body() dto: GetPasscodesDto): Promise<string[]> {
     return this.partnerPasscodeService.getPasscodes(dto?.is_used);
   }
-
+  //todo защита
   @Patch('/check')
   async checkAndLinkPasscode(
     @Body() dto: CheckPasscodeDto,

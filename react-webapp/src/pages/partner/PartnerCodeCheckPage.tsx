@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import CommonLayout from "../layouts/CommonLayout";
-import OutlineButton from "../components/buttons/OutlineButton";
+import CommonLayout from "../../layouts/CommonLayout";
+import OutlineButton from "../../components/buttons/OutlineButton";
 import { useNavigate } from "react-router-dom";
-import { useAuthUser } from "../context/UserContext";
-import OutlineInput from "../components/inputs/OutlineInput";
-import TextBox from "../components/text_box/TextBox";
-import FilledButton from "../components/buttons/FilledButton";
+import { useAuthUser } from "../../context/UserContext";
+import OutlineInput from "../../components/inputs/OutlineInput";
+import TextBox from "../../components/text_box/TextBox";
+import FilledButton from "../../components/buttons/FilledButton";
 
 enum VerificationStatus {
   TRUE = "TRUE",

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import CommonLayout from "../layouts/CommonLayout";
+import CommonLayout from "../../layouts/CommonLayout";
 import { useNavigate } from "react-router-dom";
-import { useAuthUser } from "../context/UserContext";
-import { encodeTelegramId } from "../utils/RequestEncoder";
-import CopyIconButton from "../components/buttons/CopyIconButton";
+import { useAuthUser } from "../../context/UserContext";
+import { encodeTelegramId } from "../../utils/RequestEncoder";
+import CopyIconButton from "../../components/buttons/CopyIconButton";
 
 const ReferralLinkPage: React.FC = () => {
   const navigate = useNavigate();
@@ -31,10 +31,9 @@ const ReferralLinkPage: React.FC = () => {
       }
 
       setLoading(true);
-      const signed = encodeTelegramId(authUser.telegram_id);
       const userData = JSON.stringify({
         telegram_id: authUser.telegram_id,
-        signed_id: signed,
+        signed_id: authUser.signed_id,
       });
       try {
         const response = await fetch(`${baseApiUrl}/api/user/ami`, {

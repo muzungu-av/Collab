@@ -11,7 +11,6 @@ import { PartnerSignUpDto } from './dto/partner-signup.dto';
 import { SignedTelegramIdGuard } from 'src/guadrs/signed-id.guard';
 
 @Controller('/partner')
-@UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 export class PartnerSignUpController {
   constructor(private readonly partnerSignUpService: PartnerSignUpService) {}
 

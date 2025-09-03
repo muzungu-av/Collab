@@ -11,17 +11,17 @@ import {
   Route,
   useNavigate,
 } from "react-router-dom";
-import PartnerPage from "./pages/PartnerPage";
-import PartnerCodeCheckPage from "./pages/PartnerCodeCheckPage";
+import PartnerPage from "./pages/partner/PartnerPage";
+import PartnerCodeCheckPage from "./pages/partner/PartnerCodeCheckPage";
 import AdminContact from "./pages/AdminContact";
 import OutlineButton from "./components/buttons/OutlineButton";
 import { UserProvider } from "./context/UserContext";
-import PartnerSignUpFinishPage from "./pages/PartnerSignUpFinishPage";
-import PartnerStartPage from "./pages/PartnerStartPage";
+import PartnerSignUpFinishPage from "./pages/partner/PartnerSignUpFinishPage";
+import PartnerStartPage from "./pages/partner/PartnerStartPage";
 import UserDetectedErrorPage from "./pages/UserDetectedErrorPage";
 import BlockPage from "./pages/BlockPage";
 import ErrorPage from "./pages/ErrorPage";
-import ReferralLinkPage from "./pages/ReferralLinkPage";
+import ReferralLinkPage from "./pages/partner/ReferralLinkPage";
 
 const App: React.FC = () => {
   const navigate = useNavigate();
@@ -81,6 +81,7 @@ const AppWrapper: React.FC<AppWrapperProps> = ({
     <>
       {isPartner && <Route path="/" element={<PartnerPage />} />}
       {isPartner && <Route path="/ref-link" element={<ReferralLinkPage />} />}
+      {isPartner && <Route path="/admin-contact" element={<AdminContact />} />}
     </>
   );
 

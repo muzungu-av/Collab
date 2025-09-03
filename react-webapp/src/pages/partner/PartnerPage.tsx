@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import CommonLayout from "../layouts/CommonLayout";
+import CommonLayout from "../../layouts/CommonLayout";
 import { useNavigate } from "react-router-dom";
-import { useAuthUser } from "../context/UserContext";
-import { encodeTelegramId } from "../utils/RequestEncoder";
-import OutlineButton from "../components/buttons/OutlineButton";
+import { useAuthUser } from "../../context/UserContext";
+import { encodeTelegramId } from "../../utils/RequestEncoder";
+import OutlineButton from "../../components/buttons/OutlineButton";
 
 const PartnerPage: React.FC = () => {
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ const PartnerPage: React.FC = () => {
     navigate("/partner-statistic");
   };
   const handleSupport = () => {
-    navigate("/partner-support");
+    navigate("/admin-contact");
   };
   return (
     <CommonLayout showBackButton={false}>
@@ -36,7 +36,7 @@ const PartnerPage: React.FC = () => {
           Моя реферальная ссылка
         </OutlineButton>
         <OutlineButton onClick={handleRequestPayment}>
-          Запросиить выплату
+          Запросить выплату
         </OutlineButton>
         <OutlineButton onClick={handleStatistic}>Статистика</OutlineButton>
         <OutlineButton onClick={handleSupport}>Поддержка</OutlineButton>

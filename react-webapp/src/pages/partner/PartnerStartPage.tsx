@@ -1,7 +1,7 @@
 import React from "react";
-import CommonLayout from "../layouts/CommonLayout";
-import OutlineButton from "../components/buttons/OutlineButton";
-import FilledButton from "../components/buttons/FilledButton";
+import CommonLayout from "../../layouts/CommonLayout";
+import OutlineButton from "../../components/buttons/OutlineButton";
+import FilledButton from "../../components/buttons/FilledButton";
 import { useNavigate } from "react-router-dom";
 
 const PartnerStartPage: React.FC = () => {

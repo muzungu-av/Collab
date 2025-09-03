@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   // const app = await NestFactory.create(AppModule);
@@ -29,6 +29,8 @@ async function bootstrap() {
     origin: webappUrl,
     credentials: true,
   });
+  // включаем проверку dto в запросах глобально
+  app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
   app.setGlobalPrefix('api'); //все запросы должны отправляться на /api
   app.useLogger(new Logger());
   await app.listen(PORT);
