@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { IPartnerRepository } from './interfaces/partner.repository.interface';
 
-//todo реализовать Все методы для локальной БД
+//to-do реализовать Все методы для локальной БД
 @Injectable()
 export class PartnerLocalRepository implements IPartnerRepository {
   constructor() {}

@@ -25,14 +25,13 @@ const checkPartnerAccess = async (
     });
 
     const currentUrl = window.location.origin;
-    const response = await fetch(`${currentUrl}/api/whoami`, {
+    const response = await fetch(`${currentUrl}/api/user/whoami`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: userData,
     });
-
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }

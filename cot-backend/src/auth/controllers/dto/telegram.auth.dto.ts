@@ -1,9 +1,9 @@
-import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsNumber } from 'class-validator';
 
 export class WhoAmIDto {
-  @IsString()
+  @IsNumber()
   @IsNotEmpty()
-  telegram_id: string;
+  telegram_id: number;
 
   @IsString()
   @IsOptional()

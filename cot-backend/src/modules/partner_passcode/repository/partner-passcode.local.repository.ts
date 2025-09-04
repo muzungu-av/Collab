@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { IPartnerPasscodeRepository } from './interfaces/partner-passcode.repository.interface';
 
-//todo реализовать Все методы для локальной БД
+//to-do реализовать Все методы для локальной БД
 @Injectable()
 export class PartnerPasscodeLocalRepository
   implements IPartnerPasscodeRepository

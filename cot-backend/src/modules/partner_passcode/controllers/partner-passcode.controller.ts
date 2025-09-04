@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Post,
-  Body,
-  ValidationPipe,
-  UsePipes,
-  Get,
-  Patch,
-} from '@nestjs/common';
+import { Controller, Post, Body, Get, Patch } from '@nestjs/common';
 import {
   CheckPasscodeDto,
   CheckPassCodeResult,

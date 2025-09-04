@@ -76,9 +76,9 @@ const AppWrapper: React.FC<AppWrapperProps> = ({
     </>
   );
 
-  //авто-вход на страницу партнера
   const renderParnerRootRoutes = () => (
     <>
+      {/* эта страница для авто-входа */}
       {isPartner && <Route path="/" element={<PartnerPage />} />}
       {isPartner && <Route path="/ref-link" element={<ReferralLinkPage />} />}
       {isPartner && <Route path="/admin-contact" element={<AdminContact />} />}
@@ -86,7 +86,7 @@ const AppWrapper: React.FC<AppWrapperProps> = ({
   );
 
   //авто-вход на главную страницу тут (дефолтный случай)
-  // безусловный роутинг
+  // безусловный роутинг для всех
   const renderDefaultRoutes = () => (
     <>
       <Route path="/" element={<App />} />

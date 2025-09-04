@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Post, UseGuards } from '@nestjs/common';
 import { UserService } from '../services/user.service';
 import { AuthUserResponseDto } from './dto/auth-user-response.dto';
 import { WhoAmIDto } from './dto/telegram.auth.dto';
@@ -8,7 +8,7 @@ import { SignedTelegramIdGuard } from 'src/guadrs/signed-id.guard';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post('ami')
+  @Post('/whoami')
   @UseGuards(SignedTelegramIdGuard)
   async getUserByTelegramId(
     /*
@@ -18,5 +18,16 @@ export class UserController {
     @Body() body: WhoAmIDto,
   ): Promise<AuthUserResponseDto> {
     return this.userService.getAnyUserByTelegramId(body.telegram_id);
+  }
+
+  @Delete()
+  @UseGuards(SignedTelegramIdGuard)
+  async deletePartnerTelegramIdByTelegramId(
+    @Body() body: WhoAmIDto,
+  ): Promise<{ success: boolean }> {
+    const result = await this.userService.deletePartnerByTelegramId(
+      body.telegram_id,
+    );
+    return { success: result };
   }
 }

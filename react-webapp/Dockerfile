@@ -4,9 +4,12 @@ WORKDIR /app
 
 # Копируем только package.json и устанавливаем зависимости
 COPY package.json ./
+RUN if [ -f yarn.lock ]; then .yarnrc ./; fi
 # Пробуем скопировать yarn.lock (если существует)
 RUN if [ -f yarn.lock ]; then cp yarn.lock ./; fi
-RUN if [ -f yarn.lock ]; then yarn install --frozen-lockfile; else yarn install --immutable; fi
+# RUN if [ -f yarn.lock ]; then yarn install --frozen-lockfile --network-timeout 1000000; else yarn install --immutable --network-timeout 1000000; fi
+RUN if [ -f yarn.lock ]; then yarn install --frozen-lockfile --prefer-offline --network-timeout 1000000; else yarn install --immutable --prefer-offline --network-timeout 1000000; fi
+
 # Копируем весь код и собираем
 COPY .env.development ./.env
 COPY . .

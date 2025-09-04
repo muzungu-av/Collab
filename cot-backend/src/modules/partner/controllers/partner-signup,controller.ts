@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Body,
-  ValidationPipe,
-  UsePipes,
-  Patch,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Body, Patch, UseGuards } from '@nestjs/common';
 import { PartnerSignUpService } from '../../partner/services/partner-signup.service';
 import { PartnerSignUpDto } from './dto/partner-signup.dto';
 import { SignedTelegramIdGuard } from 'src/guadrs/signed-id.guard';

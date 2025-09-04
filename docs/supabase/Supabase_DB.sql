@@ -368,8 +368,8 @@ BEGIN
       username = p_username,
       email = p_email,
       referral_link= p_referral_link
-
-    WHERE p_telegram_id = current_setting('app.current_telegram_id')::bigint;
+    -- тут важно сравнивать telegram_id из таблицы а не из параметра функции (p_telegram_id)
+    WHERE telegram_id = current_setting('app.current_telegram_id')::bigint;
 
     -- Вставляем запись в wallets
     INSERT INTO public.wallets (
@@ -424,8 +424,6 @@ USING (
 --Если партнер удаляется, то у всех его менеджеров поле partner_referral_link станет NULL.
 ALTER TABLE public.partner
 ADD COLUMN referral_link VARCHAR(16) UNIQUE;
-ALTER TABLE public.partner
-ADD CONSTRAINT unique_referral_link UNIQUE (referral_link);
 
 
 ALTER TABLE public.manager

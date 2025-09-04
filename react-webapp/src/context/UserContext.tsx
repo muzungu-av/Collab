@@ -61,7 +61,7 @@ export const UserProvider: React.FC<{
         });
 
         const currentUrl = window.location.origin;
-        fetch(`${currentUrl}/api/whoami`, {
+        fetch(`${currentUrl}/api/user/whoami`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import type { IAuthUserRepository } from '../repository/auth-user.repository.interface';
 import { AuthUserResponseDto } from '../controllers/dto/auth-user-response.dto';
+import { AuthUser } from '../domain/auth-users.entity';
 
 @Injectable()
 export class UserService {
@@ -10,25 +11,23 @@ export class UserService {
   ) {}
 
   async getAnyUserByTelegramId(
-    telegramId: string,
+    telegramId: number,
   ): Promise<AuthUserResponseDto> {
     try {
-      console.log('>>>>>>1 getAnyUserByTelegramId ');
       const tid = BigInt(telegramId);
-      console.log('>>>>>>2 getAnyUserByTelegramId - ' + tid);
-      const users =
+      const user =
         await this.userRepository.findAnyUserByTelegramId(telegramId);
-      console.log('>>>>>>3 getAnyUserByTelegramId - ' + JSON.stringify(users));
 
-      if (!users) {
+      if (!user || !(user instanceof AuthUser)) {
         return { status: 'not_found', message: 'Пользователь не найден.' };
       }
 
-      if (users.length > 1) {
-        return { status: 'error', message: 'Найдено несколько пользователей.' };
-      }
-
-      const user = users[0];
+      // if (!user.is_active) {    только у партнеров пока есть блокировка
+      //   return {
+      //     status: 'blocked',
+      //     message: 'Пользователь заблокирован или неактивен.',
+      //   };
+      // }
 
       if (
         user.user_type === 'partner' &&
@@ -44,5 +43,9 @@ export class UserService {
     } catch (error) {
       return { status: 'error', message: error.message };
     }
+  }
+
+  async deletePartnerByTelegramId(telegramId: number): Promise<boolean> {
+    return this.userRepository.deletePartnerById(telegramId);
   }
 }

@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package.json ./
 # Пробуем скопировать yarn.lock (если существует)
 RUN if [ -f yarn.lock ]; then cp yarn.lock ./; fi
-RUN if [ -f yarn.lock ]; then yarn install --frozen-lockfile; else yarn install; fi
+RUN if [ -f yarn.lock ]; then yarn install --prefer-offline --frozen-lockfile; else yarn install --prefer-offline ; fi
 
 # Копируем исходники и конфиги (всё в одном слое)
 COPY tsconfig.json tsconfig.build.json nest-cli.json ./

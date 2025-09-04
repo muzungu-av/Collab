@@ -31,12 +31,13 @@ const ReferralLinkPage: React.FC = () => {
       }
 
       setLoading(true);
+      const signed = encodeTelegramId(authUser.telegram_id);
       const userData = JSON.stringify({
-        telegram_id: authUser.telegram_id,
-        signed_id: authUser.signed_id,
+        telegram_id: Number(authUser.telegram_id),
+        signed_id: signed,
       });
       try {
-        const response = await fetch(`${baseApiUrl}/api/user/ami`, {
+        const response = await fetch(`${baseApiUrl}/api/user/whoami`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -49,7 +50,6 @@ const ReferralLinkPage: React.FC = () => {
         }
 
         const result = await response.json();
-        console.log(JSON.stringify(result));
         if (result.user?.referral_link) {
           setReferralLink(result.user?.referral_link);
         } else {
@@ -64,10 +64,6 @@ const ReferralLinkPage: React.FC = () => {
 
     fetchReferralLink();
   }, []);
-
-  const handler = async () => {
-    navigate("/");
-  };
 
   return (
     <CommonLayout showBackButton={true}>
