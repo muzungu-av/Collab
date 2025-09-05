@@ -39,17 +39,18 @@ export class SupabaseAuthUserRepository implements IAuthUserRepository {
     }
   }
 
-  //todo перенести в функцию ради RLS
   async deletePartnerById(telegramId: number): Promise<boolean> {
-    const { error } = await this.supabase
-      .from('partner')
-      .delete()
-      .eq('telegram_id', telegramId);
+    const { data, error } = await this.supabase.rpc(
+      'delete_partner_by_telegram_id',
+      {
+        p_telegram_id: telegramId,
+      },
+    );
 
     if (error) {
       throw new Error(`Failed to delete record: ${error.message}`);
     }
 
-    return true;
+    return data;
   }
 }

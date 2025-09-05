@@ -46,6 +46,10 @@ export class UserService {
   }
 
   async deletePartnerByTelegramId(telegramId: number): Promise<boolean> {
-    return this.userRepository.deletePartnerById(telegramId);
+    try {
+      return this.userRepository.deletePartnerById(telegramId);
+    } catch (error) {
+      return false;
+    }
   }
 }

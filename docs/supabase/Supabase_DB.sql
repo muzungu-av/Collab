@@ -507,6 +507,20 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+/* удаляет партнера по его telegram_id*/
+CREATE OR REPLACE FUNCTION public.delete_partner_by_telegram_id(p_telegram_id BIGINT)
+RETURNS BOOLEAN AS $$
+BEGIN
+    -- Устанавливаем контекст RLS (например, telegram_id текущего пользователя)
+    PERFORM set_current_telegram_id(p_telegram_id);
+
+    -- Удаляем запись (RLS автоматически применит фильтрацию)
+    DELETE FROM public.partner
+    WHERE telegram_id = p_telegram_id;
+
+    RETURN FOUND;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
 
 
