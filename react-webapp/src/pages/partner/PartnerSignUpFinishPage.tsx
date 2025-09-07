@@ -8,7 +8,7 @@ import { encodeTelegramId } from "../../utils/RequestEncoder";
 
 const PartnerSignUpFinishPage: React.FC = () => {
   const navigate = useNavigate();
-  const { authUser, baseApiUrl, updateAuthUser } = useAuthUser();
+  const { baseApiUrl, getTelegramId } = useAuthUser();
   const [inputFIO, setInputFIO] = useState<string>("");
   const [inputEMAIL, setInputEMAIL] = useState<string>("");
   const [inputWALLET, setInputWALLET] = useState<string>("");
@@ -45,18 +45,19 @@ const PartnerSignUpFinishPage: React.FC = () => {
   };
 
   const handler = async () => {
+    let telegramId = getTelegramId();
     // Проверяем наличие всех необходимых данных перед отправкой
-    if (!authUser?.telegram_id || !inputFIO || !inputEMAIL || !inputWALLET) {
+    if (!telegramId || !inputFIO || !inputEMAIL || !inputWALLET) {
       alert("Некорректные данные пользователя или код.");
       return;
     }
     try {
-      const signed = encodeTelegramId(authUser.telegram_id);
+      const signed = encodeTelegramId(telegramId!);
       const userData = JSON.stringify({
         fio: inputFIO,
         email: inputEMAIL,
         wallet: inputWALLET,
-        telegram_id: authUser?.telegram_id,
+        telegram_id: telegramId,
         wallet_type: "TON",
         signed_id: signed,
       });
@@ -84,7 +85,7 @@ const PartnerSignUpFinishPage: React.FC = () => {
 
         /* удаляем недоконца создавшегося пользователя-партнера */
         try {
-          await removeUserData(authUser?.telegram_id, signed);
+          await removeUserData(telegramId!, signed);
         } catch (error) {
           alert("Ошибка во время отмены операции:" + error);
         }
@@ -94,7 +95,7 @@ const PartnerSignUpFinishPage: React.FC = () => {
           "Произошла ошибка обновления данных. Возможно email,phone уже существуют."
         );
         /* удаляем недоконца создавшегося пользователя-партнера */
-        await removeUserData(authUser?.telegram_id, signed);
+        await removeUserData(telegramId!, signed);
         window.location.href = "/";
       }
 
@@ -108,8 +109,6 @@ const PartnerSignUpFinishPage: React.FC = () => {
       window.location.href = "/";
     }
   };
-
-  //todo по использованному коду можно еще раз зайти
 
   return (
     <CommonLayout showBackButton={false}>

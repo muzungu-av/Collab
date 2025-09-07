@@ -37,11 +37,12 @@ const checkPartnerAccess = async (
     }
 
     const resp = await response.json();
-
     // Обработка статусов ответа
     switch (resp.status) {
       case "found":
         return { renderPath: "/partner" };
+      case "signup-continue":
+        return { renderPath: "/signup-continue" };
       case "blocked":
         return { renderPath: "/user-blocked" };
       case "not_found":

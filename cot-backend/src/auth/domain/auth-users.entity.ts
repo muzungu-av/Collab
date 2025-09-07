@@ -1,7 +1,7 @@
 import { SignedTelegramIdGuard } from 'src/guadrs/signed-id.guard';
 
 export class AuthUser {
-  telegram_id: string;
+  telegram_id: number;
   username: string | null;
   is_active: boolean;
   blocked_automatically: boolean;

@@ -13,10 +13,15 @@ enum VerificationStatus {
   FALSE = "FALSE",
   BLOCKED = "BLOCKED",
 }
+/*
+Cчётчик попыток увеличивается даже при успешном вводе.
+В результате после, например, двух ошибок и одного правильного ответа может сработать блокировка,
+если пользователь прерывал процесс.
+ */
 
 const PartnerSignUpPage: React.FC = () => {
   const navigate = useNavigate();
-  const { authUser, baseApiUrl } = useAuthUser();
+  const { baseApiUrl, getTelegramId } = useAuthUser();
   const [inputValue, setInputValue] = useState<string>("");
   const [verificationStatus, setVerificationStatus] =
     useState<VerificationStatus>(VerificationStatus.UNDEFINED);
@@ -24,15 +29,16 @@ const PartnerSignUpPage: React.FC = () => {
   const [maxLoginAttempts, setMaxLoginAttempts] = useState<string>("");
 
   const handleCheckPassCode = async () => {
+    let telegramId = getTelegramId();
     // Проверяем наличие всех необходимых данных перед отправкой
-    if (!authUser?.telegram_id || !inputValue) {
+    if (!telegramId || !inputValue) {
       alert("Некорректные данные пользователя или код.");
       return;
     }
     try {
       const userData = JSON.stringify({
         passcode: inputValue,
-        telegram_id: authUser.telegram_id,
+        telegram_id: telegramId,
       });
       const response = await fetch(`${baseApiUrl}/api/partner-passcode/check`, {
         method: "PATCH",

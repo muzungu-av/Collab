@@ -171,12 +171,12 @@ DECLARE
   passcode_exists BOOLEAN;
   partner_blocked BOOLEAN;
 BEGIN
-  -- Проверяем, существует ли passcode
-  SELECT EXISTS (SELECT 1 FROM public.partner_passcode pp WHERE pp.passcode = passcode_param) INTO passcode_exists;
-
+  -- Проверяем, существует ли свободный passcode
+  SELECT EXISTS (SELECT 1 FROM public.partner_passcode pp WHERE pp.passcode = passcode_param AND pp.is_used = FALSE) INTO passcode_exists;
   -- Проверяем, заблокирован ли пользователь
   SELECT EXISTS (SELECT 1 FROM public.partner p WHERE p.telegram_id = telegram_id_param AND p.blocked_automatically) INTO partner_blocked;
 
+  -- Обновляем или создаём пользователя
   RETURN QUERY
   WITH updated_partner AS (
     UPDATE public.partner p
@@ -200,6 +200,7 @@ BEGIN
     UNION ALL
     SELECT * FROM inserted_partner
   )
+  -- Возвращаем актуальные данные пользователя
   SELECT
     pc.telegram_id,
     pc.login_attempts,
@@ -226,17 +227,18 @@ BEGIN
     OR
     (passcode_exists AND pc.login_attempts < max_login_attempts_param AND NOT partner_blocked);
 
+  -- Если код верный и пользователь не заблокирован, активируем его
   IF passcode_exists AND NOT partner_blocked THEN
     UPDATE public.partner_passcode pp
     SET
       is_used = TRUE,
       link_to_partner = telegram_id_param
     WHERE pp.passcode = passcode_param;
-
     UPDATE public.partner p
     SET is_active = TRUE
     WHERE p.telegram_id = telegram_id_param AND NOT p.blocked_automatically;
 
+    -- Возвращаем обновлённые данные
     RETURN QUERY
     SELECT
       p.telegram_id,
@@ -500,9 +502,7 @@ BEGIN
         NULL::VARCHAR(16) AS partner_referral_link,
         'partner' AS user_type
     FROM public.partner p
-    WHERE p.telegram_id = telegram_id_param
-      AND p.is_active = TRUE
-      AND p.blocked_automatically = FALSE;
+    WHERE p.telegram_id = telegram_id_param;
 END;
 $$ LANGUAGE plpgsql;
 

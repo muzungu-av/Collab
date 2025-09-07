@@ -7,7 +7,6 @@ import OutlineButton from "../../components/buttons/OutlineButton";
 
 const PartnerPage: React.FC = () => {
   const navigate = useNavigate();
-  const { authUser, baseApiUrl } = useAuthUser();
 
   // const handleClearEMAIL = () => {
   //   setInputEMAIL("");

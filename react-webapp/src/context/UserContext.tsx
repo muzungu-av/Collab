@@ -18,7 +18,7 @@ interface AuthUser {
 interface UserContextType {
   authUser: AuthUser | null;
   baseApiUrl: string | null;
-  updateAuthUser: (partialUser: Partial<AuthUser>) => void;
+  // updateAuthUser: (partialUser: Partial<AuthUser>) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -85,7 +85,7 @@ export const UserProvider: React.FC<{
   }, []);
 
   return (
-    <UserContext.Provider value={{ authUser, baseApiUrl, updateAuthUser }}>
+    <UserContext.Provider value={{ authUser, baseApiUrl }}>
       {children}
     </UserContext.Provider>
   );
@@ -96,5 +96,20 @@ export const useAuthUser = () => {
   if (!context) {
     throw new Error("useAuthUser must be used within a UserProvider");
   }
-  return context;
+  const getTelegramId = (): number | undefined => {
+    if (!context.authUser?.telegram_id) {
+      return undefined;
+    }
+    // Если telegram_id уже число — возвращаем как есть
+    if (typeof context.authUser.telegram_id === "number") {
+      return context.authUser.telegram_id;
+    }
+    // Если telegram_id строка — преобразуем в число
+    const parsedId = Number(context.authUser.telegram_id);
+    return isNaN(parsedId) ? undefined : parsedId;
+  };
+  return {
+    ...context,
+    getTelegramId,
+  };
 };

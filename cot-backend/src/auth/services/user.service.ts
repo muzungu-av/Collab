@@ -14,7 +14,6 @@ export class UserService {
     telegramId: number,
   ): Promise<AuthUserResponseDto> {
     try {
-      const tid = BigInt(telegramId);
       const user =
         await this.userRepository.findAnyUserByTelegramId(telegramId);
 
@@ -28,9 +27,28 @@ export class UserService {
       //     message: 'Пользователь заблокирован или неактивен.',
       //   };
       // }
-
+      //незавершенная, брошенная регистрация partner-а
       if (
         user.user_type === 'partner' &&
+        // user.is_active &&
+        !user.blocked_automatically &&
+        (!user.email || !user.username)
+      ) {
+        //todo когда ввел неверный код и бросил после продолжения переходит на след шаг-продолжить регистрацию
+        return { status: 'signup-continue', user };
+      } else if (
+        user.user_type === 'partner' &&
+        (!user.is_active || user.blocked_automatically)
+      ) {
+        //найден заблокированный , юзер-партнер
+        return {
+          status: 'blocked',
+          message: 'Пользователь заблокирован или неактивен.',
+        };
+      }
+      //заблокированный юзер остальное
+      if (
+        user.user_type !== 'partner' &&
         (!user.is_active || user.blocked_automatically)
       ) {
         return {
@@ -39,6 +57,7 @@ export class UserService {
         };
       }
 
+      //найден нормальный, целый, юзер
       return { status: 'found', user };
     } catch (error) {
       return { status: 'error', message: error.message };

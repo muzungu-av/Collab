@@ -17,7 +17,8 @@ export class UserController {
      */
     @Body() body: WhoAmIDto,
   ): Promise<AuthUserResponseDto> {
-    return this.userService.getAnyUserByTelegramId(body.telegram_id);
+    const r = await this.userService.getAnyUserByTelegramId(body.telegram_id);
+    return r;
   }
 
   @Delete()

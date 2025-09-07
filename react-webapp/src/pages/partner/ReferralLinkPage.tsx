@@ -7,7 +7,7 @@ import CopyIconButton from "../../components/buttons/CopyIconButton";
 
 const ReferralLinkPage: React.FC = () => {
   const navigate = useNavigate();
-  const { authUser, baseApiUrl } = useAuthUser();
+  const { authUser, baseApiUrl, getTelegramId } = useAuthUser();
   const [referralLink, setReferralLink] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -25,15 +25,16 @@ const ReferralLinkPage: React.FC = () => {
 
   useEffect(() => {
     const fetchReferralLink = async () => {
-      if (!authUser?.telegram_id) {
+      const telegramId = getTelegramId();
+      if (!telegramId) {
         setError("Telegram ID не найден");
         return;
       }
 
       setLoading(true);
-      const signed = encodeTelegramId(authUser.telegram_id);
+      const signed = encodeTelegramId(telegramId);
       const userData = JSON.stringify({
-        telegram_id: Number(authUser.telegram_id),
+        telegram_id: telegramId,
         signed_id: signed,
       });
       try {
@@ -90,17 +91,17 @@ const ReferralLinkPage: React.FC = () => {
               <div style={{ marginRight: "10px" }}>
                 Полная ссылка:{" "}
                 <a
-                  href={`/api/regm/${referralLink}`}
+                  href={`/regm/${referralLink}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {`${window.location.origin}/api/regm/${referralLink}`}
+                  {`${window.location.origin}/regm/${referralLink}`}
                 </a>
               </div>
               <CopyIconButton
                 onClick={() =>
                   copyToClipboard(
-                    `${window.location.origin}/api/regm/${referralLink}`
+                    `${window.location.origin}/regm/${referralLink}`
                   )
                 }
               />

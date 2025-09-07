@@ -22,6 +22,7 @@ import UserDetectedErrorPage from "./pages/UserDetectedErrorPage";
 import BlockPage from "./pages/BlockPage";
 import ErrorPage from "./pages/ErrorPage";
 import ReferralLinkPage from "./pages/partner/ReferralLinkPage";
+import PartnerSignUpPage from "./pages/partner/PartnerCodeCheckPage";
 
 const App: React.FC = () => {
   const navigate = useNavigate();
@@ -64,8 +65,10 @@ const AppWrapper: React.FC<AppWrapperProps> = ({
   const isUserBlocked = renderPath === "/user-blocked";
   const isError = renderPath === "/error";
   const isPartner = renderPath === "/partner"; //авто-вход на страницу партнера
+  const isPartnerSignupContinue = renderPath === "/signup-continue"; // незавершенная регистрация партнера
+  //PartnerSignUpFinishPage
 
-  // условный роутинг - проверка на условия всяких нестандартных случаев
+  // роутинг - условия всяких нестандартных случаев
   const renderErrorRoutes = () => (
     <>
       {isUserDetectedError && (
@@ -76,6 +79,16 @@ const AppWrapper: React.FC<AppWrapperProps> = ({
     </>
   );
 
+  /* тут рендер для продолжения регистрации партнера (когда не завершил) */
+  const renderPartnerSignupContinue = () => (
+    <>
+      {isPartnerSignupContinue && (
+        <Route path="/" element={<PartnerSignUpPage />} />
+      )}
+    </>
+  );
+
+  /* тут рендер всех страниц партнеров */
   const renderParnerRootRoutes = () => (
     <>
       {/* эта страница для авто-входа */}
@@ -85,8 +98,7 @@ const AppWrapper: React.FC<AppWrapperProps> = ({
     </>
   );
 
-  //авто-вход на главную страницу тут (дефолтный случай)
-  // безусловный роутинг для всех
+  /* тут рендер  страниц  для всех новых пользователей (безусловный роутинг) */
   const renderDefaultRoutes = () => (
     <>
       <Route path="/" element={<App />} />
@@ -97,7 +109,7 @@ const AppWrapper: React.FC<AppWrapperProps> = ({
         path="/partner-signupfinish"
         element={<PartnerSignUpFinishPage />}
       />
-      <Route path="/partner" element={<PartnerPage />} />
+      {/* <Route path="/partner" element={<PartnerPage />} /> */}
       <Route path="/user-detected-error" element={<UserDetectedErrorPage />} />
     </>
   );
@@ -107,6 +119,7 @@ const AppWrapper: React.FC<AppWrapperProps> = ({
         <Routes>
           {renderErrorRoutes()}
           {renderParnerRootRoutes()}
+          {renderPartnerSignupContinue()}
           {!isUserDetectedError &&
             !isUserBlocked &&
             !isError &&

@@ -17,10 +17,14 @@ export class SupabaseAuthUserRepository implements IAuthUserRepository {
       if (error || !data || data.length === 0) {
         return null;
       }
-
       const users: AuthUser[] = data.map((item: any) => {
         const user = new AuthUser();
-        user.telegram_id = item.telegram_id.toString();
+        //на фронтенд отправляем в виде числа - строго (хотя там тоже есть преобразование )
+        if (typeof item.telegram_id === 'number') {
+          user.telegram_id = item.telegram_id;
+        } else {
+          user.telegram_id = Number(item.telegram_id);
+        }
         user.username = item.username;
         user.email = item.email;
         user.phone = item.phone;
