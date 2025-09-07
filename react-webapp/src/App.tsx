@@ -11,7 +11,7 @@ import {
   Route,
   useNavigate,
 } from "react-router-dom";
-import PartnerPage from "./pages/partner/PartnerPage";
+
 import PartnerCodeCheckPage from "./pages/partner/PartnerCodeCheckPage";
 import AdminContact from "./pages/AdminContact";
 import OutlineButton from "./components/buttons/OutlineButton";
@@ -23,6 +23,7 @@ import BlockPage from "./pages/BlockPage";
 import ErrorPage from "./pages/ErrorPage";
 import ReferralLinkPage from "./pages/partner/ReferralLinkPage";
 import PartnerSignUpPage from "./pages/partner/PartnerCodeCheckPage";
+import PartnerPage from "./pages/partner/PartnerPage";
 
 const App: React.FC = () => {
   const navigate = useNavigate();
