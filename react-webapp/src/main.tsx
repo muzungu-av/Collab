@@ -68,7 +68,15 @@ const checkPartnerAccess = async (
 async function renderApp() {
   const tg = window.Telegram.WebApp;
   const userData = tg.initDataUnsafe?.user;
-  const userId = Number(userData?.id);
+  let userId: number;
+
+  // Проверка на наличие переменной окружения
+  if (import.meta.env.VITE_FORCE_USER_ID === "true") {
+    userId = Number(import.meta.env.VITE_TG_USER_ID);
+  } else {
+    userId = Number(userData?.id);
+  }
+
   const { renderPath, errorMsg } = await checkPartnerAccess(userId);
   const root = document.getElementById("root");
   if (!root) return;

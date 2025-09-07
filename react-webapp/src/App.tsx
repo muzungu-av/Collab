@@ -24,6 +24,7 @@ import ErrorPage from "./pages/ErrorPage";
 import ReferralLinkPage from "./pages/partner/ReferralLinkPage";
 import PartnerSignUpPage from "./pages/partner/PartnerCodeCheckPage";
 import PartnerPage from "./pages/partner/PartnerPage";
+import PartnerStatisticPage from "./pages/partner/PartnerStatisticPage";
 
 const App: React.FC = () => {
   const navigate = useNavigate();
@@ -96,6 +97,9 @@ const AppWrapper: React.FC<AppWrapperProps> = ({
       {isPartner && <Route path="/" element={<PartnerPage />} />}
       {isPartner && <Route path="/ref-link" element={<ReferralLinkPage />} />}
       {isPartner && <Route path="/admin-contact" element={<AdminContact />} />}
+      {isPartner && (
+        <Route path="/partner-statistic" element={<PartnerStatisticPage />} />
+      )}
     </>
   );
 

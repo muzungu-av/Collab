@@ -1,0 +1,48 @@
+/* Основной контейнер */
+.statistic-container {
+  width: 350px;
+  background: linear-gradient(135deg, #1a1a1a 0%, #232327 100%);
+  border-radius: 8px;
+  border: 1px solid;
+  border-image: linear-gradient(90deg, #fba220, #ffd28f) 1;
+  padding: 10px 0;
+  margin: 20px auto;
+}
+
+/* Элемент статистики */
+.statistic-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 25px; /* Увеличен отступ справа */
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  box-sizing: border-box; /* Учитывает padding в ширине */
+}
+
+/* Градиентный текст */
+.gradient-text {
+  background: linear-gradient(90deg, #fba220, #ffd28f);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 14px;
+  text-align: left;
+  max-width: 70%; /* Ограничиваем ширину текста */
+}
+
+/* Значение (белый текст) */
+.value-text {
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: right;
+}
+
+/* Разделительная линия с градиентом */
+.statistic-divider {
+  height: 1px;
+  width: 90%;
+  margin: 0 auto;
+  background: linear-gradient(90deg, #fba220, #ffd28f);
+}
