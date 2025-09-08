@@ -7,12 +7,9 @@ import { useAuthUser } from "../../context/UserContext";
 const PaymentRequestPage: React.FC = () => {
   const { authUser, baseApiUrl, getTelegramId } = useAuthUser();
   const [inputCash, setInputCash] = useState<string>("");
-  const [inputEMAIL, setInputEMAIL] = useState<string>("");
+
   const handleClearCash = () => {
     setInputCash("");
-  };
-  const handleClearEMAIL = () => {
-    setInputEMAIL("");
   };
 
   const handle = () => {
@@ -28,11 +25,19 @@ const PaymentRequestPage: React.FC = () => {
 
   return (
     <CommonLayout showBackButton={true}>
-      {" "}
       <div>
         <div className="welcome-text">Запросить выплату</div>
         <br />
         <div className="simple-text">Подтвердите данные для вывода</div>
+        <OutlineInput
+          value={
+            authUser?.wallet ? authUser?.wallet : "Номер кошелька (нет данных)"
+          }
+          readOnly={true}
+          textColor="#FFFFFF"
+          onChange={() => {}}
+          onClear={() => {}}
+        />
         <OutlineInput
           value={inputCash}
           onChange={(e) => setInputCash(e.target.value)}
@@ -41,12 +46,12 @@ const PaymentRequestPage: React.FC = () => {
           placeholder="Сумма к выводу (максимальный баланс)"
         />
         <OutlineInput
-          value={inputEMAIL}
+          value={authUser?.email ? authUser?.email : "Email(нет данных)"}
           readOnly={true}
-          onChange={(e) => setInputEMAIL(e.target.value)}
-          onClear={handleClearEMAIL}
           textColor="#FFFFFF"
           placeholder="Email"
+          onChange={() => {}}
+          onClear={() => {}}
         />
         <br />
         <FilledButton onClick={handle}>Запросить выплату</FilledButton>

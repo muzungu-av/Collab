@@ -52,6 +52,7 @@ const checkPartnerAccess = async (
         referral_link: resp.user.referral_link,
         partner_referral_link: resp.user.partner_referral_link,
         created_at: resp.user.created_at,
+        wallet: resp.user.wallet,
       };
     } else {
       userData = {

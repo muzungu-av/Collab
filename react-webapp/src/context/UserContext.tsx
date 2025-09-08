@@ -13,12 +13,13 @@ export interface AuthUser {
   referral_link?: string | null;
   partner_referral_link?: string | null;
   created_at?: Date;
+  wallet?: string | null;
 }
 
 interface UserContextType {
   authUser: AuthUser | null;
   baseApiUrl: string | null;
-  updateAuthUser: (partialUser: Partial<AuthUser>) => void;
+  // updateAuthUser: (partialUser: Partial<AuthUser>) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -28,6 +29,7 @@ export const UserProvider: React.FC<{
   children: ReactNode;
   telegram_id?: number;
 }> = ({ user, children, telegram_id }) => {
+  //установка данных пользователя
   const [authUser, setAuthUser] = React.useState<AuthUser | null>(() => ({
     telegram_id,
     username: user?.username ? user!.username : "",
@@ -43,16 +45,24 @@ export const UserProvider: React.FC<{
     blocked_automatically: user?.blocked_automatically
       ? user!.blocked_automatically
       : false,
+    wallet: user?.wallet ? user!.wallet : "",
   }));
   const [baseApiUrl, setBaseApiUrl] = React.useState<string>("");
 
   // Функция для обновления полей AuthUser (кроме telegram_id)
-  const updateAuthUser = (partialUser: Partial<AuthUser>) => {
-    setAuthUser((prev) => (prev ? { ...prev, ...partialUser } : null));
-  };
+  // пока негде использовать
+  // const updateAuthUser = (partialUser: Partial<AuthUser>) => {
+  //   setAuthUser((prev) => (prev ? { ...prev, ...partialUser } : null));
+  // };
 
   return (
-    <UserContext.Provider value={{ authUser, baseApiUrl, updateAuthUser }}>
+    <UserContext.Provider
+      value={{
+        authUser,
+        baseApiUrl,
+        //updateAuthUser
+      }}
+    >
       {children}
     </UserContext.Provider>
   );

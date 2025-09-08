@@ -12,6 +12,7 @@ export class AuthUser {
   referral_link?: string | null;
   partner_referral_link?: string | null;
   created_at?: Date;
+  wallet?: string | null;
 
   // Метод для проверки подписи
   public signing(telegramId: string): void {
