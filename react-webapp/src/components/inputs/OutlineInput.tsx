@@ -4,6 +4,7 @@ import closeIcon from "./close-icon.svg";
 
 interface InputProps {
   value: string;
+  readOnly?: boolean;
   textColor?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onClear: () => void;
@@ -12,6 +13,7 @@ interface InputProps {
 
 const OutlineInput: React.FC<InputProps> = ({
   value,
+  readOnly = false,
   textColor = "#ffffff",
   onChange,
   onClear,
@@ -24,6 +26,7 @@ const OutlineInput: React.FC<InputProps> = ({
           className="outline-input"
           type="text"
           value={value}
+          readOnly={readOnly}
           onChange={onChange}
           placeholder={placeholder}
           style={{ color: textColor }}

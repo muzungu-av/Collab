@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import CommonLayout from "../../layouts/CommonLayout";
-import { useNavigate } from "react-router-dom";
 import { useAuthUser } from "../../context/UserContext";
 import OutlineInput from "../../components/inputs/OutlineInput";
 import FilledButton from "../../components/buttons/FilledButton";
 import { encodeTelegramId } from "../../utils/RequestEncoder";
 
 const PartnerSignUpFinishPage: React.FC = () => {
-  const navigate = useNavigate();
   const { baseApiUrl, getTelegramId } = useAuthUser();
   const [inputFIO, setInputFIO] = useState<string>("");
   const [inputEMAIL, setInputEMAIL] = useState<string>("");

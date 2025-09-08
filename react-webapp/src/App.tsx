@@ -15,7 +15,7 @@ import {
 import PartnerCodeCheckPage from "./pages/partner/PartnerCodeCheckPage";
 import AdminContact from "./pages/AdminContact";
 import OutlineButton from "./components/buttons/OutlineButton";
-import { UserProvider } from "./context/UserContext";
+import { AuthUser, UserProvider } from "./context/UserContext";
 import PartnerSignUpFinishPage from "./pages/partner/PartnerSignUpFinishPage";
 import PartnerStartPage from "./pages/partner/PartnerStartPage";
 import UserDetectedErrorPage from "./pages/UserDetectedErrorPage";
@@ -25,6 +25,7 @@ import ReferralLinkPage from "./pages/partner/ReferralLinkPage";
 import PartnerSignUpPage from "./pages/partner/PartnerCodeCheckPage";
 import PartnerPage from "./pages/partner/PartnerPage";
 import PartnerStatisticPage from "./pages/partner/PartnerStatisticPage";
+import PaymentRequestPage from "./pages/partner/PaymentRequestPage";
 
 const App: React.FC = () => {
   const navigate = useNavigate();
@@ -53,12 +54,14 @@ const App: React.FC = () => {
 };
 
 interface AppWrapperProps {
+  user?: AuthUser;
   renderPath?: React.ReactNode;
   errorMsg?: string;
   telegram_id?: number;
 }
 
 const AppWrapper: React.FC<AppWrapperProps> = ({
+  user,
   renderPath,
   errorMsg,
   telegram_id,
@@ -100,6 +103,12 @@ const AppWrapper: React.FC<AppWrapperProps> = ({
       {isPartner && (
         <Route path="/partner-statistic" element={<PartnerStatisticPage />} />
       )}
+      {isPartner && (
+        <Route
+          path="/partner-request-payment"
+          element={<PaymentRequestPage />}
+        />
+      )}
     </>
   );
 
@@ -118,8 +127,9 @@ const AppWrapper: React.FC<AppWrapperProps> = ({
       <Route path="/user-detected-error" element={<UserDetectedErrorPage />} />
     </>
   );
+
   return (
-    <UserProvider telegram_id={telegram_id}>
+    <UserProvider user={user} telegram_id={telegram_id}>
       <Router>
         <Routes>
           {renderErrorRoutes()}

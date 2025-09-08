@@ -2,15 +2,17 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import AppWrapper from "./App";
 import { encodeTelegramId } from "./utils/RequestEncoder";
+import { AuthUser } from "./context/UserContext";
 
 interface CheckPartnerAccessResult {
+  userData?: AuthUser;
   renderPath: string;
   errorMsg?: string;
 }
 
 // Функция для проверки доступа
 const checkPartnerAccess = async (
-  id: number | undefined
+  id: number | null
 ): Promise<CheckPartnerAccessResult> => {
   if (!id) {
     console.warn("ID пользователя не определен!");
@@ -19,7 +21,7 @@ const checkPartnerAccess = async (
 
   try {
     const signed = encodeTelegramId(id);
-    const userData = JSON.stringify({
+    const userReqData = JSON.stringify({
       telegram_id: id,
       signed_id: signed,
     });
@@ -30,21 +32,48 @@ const checkPartnerAccess = async (
       headers: {
         "Content-Type": "application/json",
       },
-      body: userData,
+      body: userReqData,
     });
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     const resp = await response.json();
+    let userData: AuthUser | null = null;
+    if (resp.status && (resp.status != "not_found" || resp.status != "error")) {
+      userData = {
+        telegram_id: id,
+        username: resp.user.username,
+        is_active: resp.user.is_active,
+        blocked_automatically: resp.user.blocked_automatically,
+        email: resp.user.email,
+        phone: resp.user.phone,
+        user_type: resp.user.user_type,
+        referral_link: resp.user.referral_link,
+        partner_referral_link: resp.user.partner_referral_link,
+        created_at: resp.user.created_at,
+      };
+    } else {
+      userData = {
+        telegram_id: id,
+        username: "",
+        is_active: false,
+        blocked_automatically: resp.user.blocked_automatically,
+        email: "",
+        phone: "",
+        user_type: resp.user.user_type,
+        referral_link: "",
+        partner_referral_link: "",
+      };
+    }
     // Обработка статусов ответа
     switch (resp.status) {
       case "found":
-        return { renderPath: "/partner" };
+        return { userData, renderPath: "/partner" };
       case "signup-continue":
-        return { renderPath: "/signup-continue" };
+        return { userData, renderPath: "/signup-continue" };
       case "blocked":
-        return { renderPath: "/user-blocked" };
+        return { userData, renderPath: "/user-blocked" };
       case "not_found":
         return { renderPath: "/" };
       case "error":
@@ -53,7 +82,10 @@ const checkPartnerAccess = async (
           errorMsg: resp.message || "Неизвестная ошибка",
         };
       default:
-        return { renderPath: "/error", errorMsg: "Неизвестный статус ответа" };
+        return {
+          renderPath: "/error",
+          errorMsg: "Неизвестный статус ответа",
+        };
     }
   } catch (error) {
     console.error("Ошибка при проверке доступа:", error);
@@ -67,17 +99,17 @@ const checkPartnerAccess = async (
 // Асинхронная функция для рендеринга
 async function renderApp() {
   const tg = window.Telegram.WebApp;
-  const userData = tg.initDataUnsafe?.user;
+  const userTgData = tg.initDataUnsafe?.user;
   let userId: number;
 
   // Проверка на наличие переменной окружения
   if (import.meta.env.VITE_FORCE_USER_ID === "true") {
     userId = Number(import.meta.env.VITE_TG_USER_ID);
   } else {
-    userId = Number(userData?.id);
+    userId = Number(userTgData?.id);
   }
 
-  const { renderPath, errorMsg } = await checkPartnerAccess(userId);
+  const { userData, renderPath, errorMsg } = await checkPartnerAccess(userId);
   const root = document.getElementById("root");
   if (!root) return;
 
@@ -87,6 +119,7 @@ async function renderApp() {
         renderPath={renderPath}
         errorMsg={errorMsg}
         telegram_id={userId}
+        user={userData}
       />
     </StrictMode>
   );
