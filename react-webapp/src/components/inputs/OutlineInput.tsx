@@ -31,7 +31,7 @@ const OutlineInput: React.FC<InputProps> = ({
           placeholder={placeholder}
           style={{ color: textColor }}
         />
-        {value && (
+        {value && !readOnly && (
           <button className="clear-icon" onClick={onClear}>
             <img src={closeIcon} alt="Clear" />
           </button>
