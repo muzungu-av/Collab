@@ -19,8 +19,15 @@ const PaymentRequestPage: React.FC = () => {
     }
 
     const cashValue = Number(inputCash);
-    alert(JSON.stringify(authUser));
-    alert(">> " + baseApiUrl + " \n " + getTelegramId());
+    alert(
+      "Перевод средств: " +
+        " \n " +
+        getTelegramId() +
+        " \n " +
+        authUser?.wallet +
+        " \n " +
+        inputCash
+    );
   };
 
   return (

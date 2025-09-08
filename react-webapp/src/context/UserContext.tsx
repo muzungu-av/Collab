@@ -13,7 +13,13 @@ export interface AuthUser {
   referral_link?: string | null;
   partner_referral_link?: string | null;
   created_at?: Date;
+
   wallet?: string | null;
+  wallet_type?: string | null;
+  wallet_is_active?: string | null;
+  wallet_is_verified?: string | null;
+  wallet_blocked_at?: string | null;
+  wallet_block_reason?: string | null;
 }
 
 interface UserContextType {
@@ -29,6 +35,7 @@ export const UserProvider: React.FC<{
   children: ReactNode;
   telegram_id?: number;
 }> = ({ user, children, telegram_id }) => {
+  alert("user ctx - " + JSON.stringify(user));
   //установка данных пользователя
   const [authUser, setAuthUser] = React.useState<AuthUser | null>(() => ({
     telegram_id,
@@ -46,6 +53,15 @@ export const UserProvider: React.FC<{
       ? user!.blocked_automatically
       : false,
     wallet: user?.wallet ? user!.wallet : "",
+    wallet_type: user?.wallet_type ? user!.wallet_type : "",
+    wallet_is_active: user?.wallet_is_active ? user!.wallet_is_active : "",
+    wallet_is_verified: user?.wallet_is_verified
+      ? user!.wallet_is_verified
+      : "",
+    wallet_blocked_at: user?.wallet_blocked_at ? user!.wallet_blocked_at : "",
+    wallet_block_reason: user?.wallet_block_reason
+      ? user!.wallet_block_reason
+      : "",
   }));
   const [baseApiUrl, setBaseApiUrl] = React.useState<string>("");
 

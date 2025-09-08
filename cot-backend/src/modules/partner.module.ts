@@ -5,7 +5,7 @@ import { PartnerSupabaseRepository } from './partner/repository/partner.supabase
 import { PartnerLocalRepository } from './partner/repository/partner.local.repository';
 import { EmptyPartnerRepository } from './partner/repository/partner.empty.repository';
 import { PartnerSignUpService } from './partner/services/partner-signup.service';
-import { PartnerSignUpController } from './partner/controllers/partner-signup,controller';
+import { PartnerSignUpController } from './partner/controllers/partner-signup.controller';
 import { PartnerDomain } from './partner/domain/partner.domain';
 import { JwtModule } from '@nestjs/jwt';
 

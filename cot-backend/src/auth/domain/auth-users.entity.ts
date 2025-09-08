@@ -13,6 +13,11 @@ export class AuthUser {
   partner_referral_link?: string | null;
   created_at?: Date;
   wallet?: string | null;
+  wallet_type?: string | null;
+  wallet_is_active?: string | null;
+  wallet_is_verified?: string | null;
+  wallet_blocked_at?: string | null;
+  wallet_block_reason?: string | null;
 
   // Метод для проверки подписи
   public signing(telegramId: string): void {

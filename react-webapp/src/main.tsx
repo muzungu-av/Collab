@@ -53,6 +53,11 @@ const checkPartnerAccess = async (
         partner_referral_link: resp.user.partner_referral_link,
         created_at: resp.user.created_at,
         wallet: resp.user.wallet,
+        wallet_type: resp.user.wallet_type,
+        wallet_is_active: resp.user.wallet_is_active,
+        wallet_is_verified: resp.user.wallet_is_verified,
+        wallet_blocked_at: resp.user.wallet_blocked_at,
+        wallet_block_reason: resp.user.wallet_block_reason,
       };
     } else {
       userData = {
@@ -65,6 +70,7 @@ const checkPartnerAccess = async (
         user_type: resp.user.user_type,
         referral_link: "",
         partner_referral_link: "",
+        wallet: "",
       };
     }
     // Обработка статусов ответа

@@ -17,6 +17,7 @@ export class UserService {
       const user =
         await this.userRepository.findAnyUserByTelegramId(telegramId);
 
+      console.log(JSON.stringify(user));
       if (!user || !(user instanceof AuthUser)) {
         return { status: 'not_found', message: 'Пользователь не найден.' };
       }

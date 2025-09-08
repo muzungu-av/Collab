@@ -34,7 +34,13 @@ export class SupabaseAuthUserRepository implements IAuthUserRepository {
         user.partner_referral_link = item.partner_referral_link;
         user.user_type = item.user_type;
         user.created_at = item.created_at;
-        user.wallet = item.wallet;
+        user.wallet = item.wallet_address;
+        user.wallet_type = item.wallet_type;
+        user.wallet_is_active = item.wallet_is_active;
+        user.wallet_is_verified = item.wallet_is_verified;
+        user.wallet_blocked_at = item.wallet_blocked_at;
+        user.wallet_block_reason = item.wallet_block_reason;
+
         return user;
       });
       const user = users[0];
