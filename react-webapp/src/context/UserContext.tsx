@@ -35,7 +35,6 @@ export const UserProvider: React.FC<{
   children: ReactNode;
   telegram_id?: number;
 }> = ({ user, children, telegram_id }) => {
-  alert("user ctx - " + JSON.stringify(user));
   //установка данных пользователя
   const [authUser, setAuthUser] = React.useState<AuthUser | null>(() => ({
     telegram_id,

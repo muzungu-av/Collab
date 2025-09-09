@@ -26,6 +26,8 @@ import PartnerSignUpPage from "./pages/partner/PartnerCodeCheckPage";
 import PartnerPage from "./pages/partner/PartnerPage";
 import PartnerStatisticPage from "./pages/partner/PartnerStatisticPage";
 import PaymentRequestPage from "./pages/partner/PaymentRequestPage";
+import PaymentConfirmationPage from "./pages/partner/PaymentConfirmationPage";
+import PaymentSuccessPage from "./pages/partner/PaymentSuccessPage";
 
 const App: React.FC = () => {
   const navigate = useNavigate();
@@ -107,6 +109,18 @@ const AppWrapper: React.FC<AppWrapperProps> = ({
         <Route
           path="/partner-request-payment"
           element={<PaymentRequestPage />}
+        />
+      )}
+      {isPartner && (
+        <Route
+          path="/partner-payment-confirmation"
+          element={<PaymentConfirmationPage />}
+        />
+      )}
+      {isPartner && (
+        <Route
+          path="/partner-payment-success"
+          element={<PaymentSuccessPage />}
         />
       )}
     </>

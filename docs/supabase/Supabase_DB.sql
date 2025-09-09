@@ -455,10 +455,18 @@ RETURNS TABLE (
     login_attempts INTEGER,
     referral_link VARCHAR(16),
     partner_referral_link VARCHAR(16),
-    user_type TEXT
+    user_type TEXT,
+    -- Поля из wallets
+    wallet_address VARCHAR(64),
+    wallet_type VARCHAR(20),
+    wallet_is_active BOOLEAN,
+    wallet_is_verified BOOLEAN,
+    wallet_blocked_at TIMESTAMPTZ,
+    wallet_block_reason TEXT
 ) AS $$
 BEGIN
     RETURN QUERY
+    -- Админы
     SELECT
         a.telegram_id,
         a.created_at,
@@ -470,10 +478,17 @@ BEGIN
         NULL::INTEGER AS login_attempts,
         NULL::VARCHAR(16) AS referral_link,
         NULL::VARCHAR(16) AS partner_referral_link,
-        'admin' AS user_type
+        'admin' AS user_type,
+        NULL::VARCHAR(64) AS wallet_address,
+        NULL::VARCHAR(20) AS wallet_type,
+        NULL::BOOLEAN AS wallet_is_active,
+        NULL::BOOLEAN AS wallet_is_verified,
+        NULL::TIMESTAMPTZ AS wallet_blocked_at,
+        NULL::TEXT AS wallet_block_reason
     FROM public.admin a
     WHERE a.telegram_id = telegram_id_param
     UNION ALL
+    -- Менеджеры
     SELECT
         m.telegram_id,
         m.created_at,
@@ -485,10 +500,18 @@ BEGIN
         NULL::INTEGER AS login_attempts,
         NULL::VARCHAR(16) AS referral_link,
         m.partner_referral_link,
-        'manager' AS user_type
+        'manager' AS user_type,
+        w.wallet_address,
+        w.wallet_type,
+        w.is_active AS wallet_is_active,
+        w.is_verified AS wallet_is_verified,
+        w.blocked_at AS wallet_blocked_at,
+        w.block_reason AS wallet_block_reason
     FROM public.manager m
+    LEFT JOIN public.wallets w ON m.telegram_id = w.manager_telegram_id
     WHERE m.telegram_id = telegram_id_param
     UNION ALL
+    -- Партнёры
     SELECT
         p.telegram_id,
         p.created_at,
@@ -500,11 +523,82 @@ BEGIN
         p.login_attempts,
         p.referral_link,
         NULL::VARCHAR(16) AS partner_referral_link,
-        'partner' AS user_type
+        'partner' AS user_type,
+        w.wallet_address,
+        w.wallet_type,
+        w.is_active AS wallet_is_active,
+        w.is_verified AS wallet_is_verified,
+        w.blocked_at AS wallet_blocked_at,
+        w.block_reason AS wallet_block_reason
     FROM public.partner p
+    LEFT JOIN public.wallets w ON p.telegram_id = w.partner_telegram_id
     WHERE p.telegram_id = telegram_id_param;
 END;
 $$ LANGUAGE plpgsql;
+
+
+-- CREATE OR REPLACE FUNCTION public.find_any_user_by_telegram_id(telegram_id_param BIGINT)
+-- RETURNS TABLE (
+--     telegram_id BIGINT,
+--     created_at TIMESTAMPTZ,
+--     username VARCHAR(50),
+--     email VARCHAR(100),
+--     phone VARCHAR(20),
+--     is_active BOOLEAN,
+--     blocked_automatically BOOLEAN,
+--     login_attempts INTEGER,
+--     referral_link VARCHAR(16),
+--     partner_referral_link VARCHAR(16),
+--     user_type TEXT
+-- ) AS $$
+-- BEGIN
+--     RETURN QUERY
+--     SELECT
+--         a.telegram_id,
+--         a.created_at,
+--         a.username,
+--         a.email,
+--         a.phone,
+--         NULL::BOOLEAN AS is_active,
+--         NULL::BOOLEAN AS blocked_automatically,
+--         NULL::INTEGER AS login_attempts,
+--         NULL::VARCHAR(16) AS referral_link,
+--         NULL::VARCHAR(16) AS partner_referral_link,
+--         'admin' AS user_type
+--     FROM public.admin a
+--     WHERE a.telegram_id = telegram_id_param
+--     UNION ALL
+--     SELECT
+--         m.telegram_id,
+--         m.created_at,
+--         m.username,
+--         m.email,
+--         m.phone,
+--         NULL::BOOLEAN AS is_active,
+--         NULL::BOOLEAN AS blocked_automatically,
+--         NULL::INTEGER AS login_attempts,
+--         NULL::VARCHAR(16) AS referral_link,
+--         m.partner_referral_link,
+--         'manager' AS user_type
+--     FROM public.manager m
+--     WHERE m.telegram_id = telegram_id_param
+--     UNION ALL
+--     SELECT
+--         p.telegram_id,
+--         p.created_at,
+--         p.username,
+--         p.email,
+--         p.phone,
+--         p.is_active,
+--         p.blocked_automatically,
+--         p.login_attempts,
+--         p.referral_link,
+--         NULL::VARCHAR(16) AS partner_referral_link,
+--         'partner' AS user_type
+--     FROM public.partner p
+--     WHERE p.telegram_id = telegram_id_param;
+-- END;
+-- $$ LANGUAGE plpgsql;
 
 
 /* удаляет партнера по его telegram_id*/

@@ -38,6 +38,15 @@ html {
   margin-left: 10px;
 }
 
+.success_logo {
+  display: block;
+  margin: 10px auto 0;
+  max-width: 100%;
+  width: auto;
+  height: 45px;
+  object-fit: contain;
+}
+
 /* Основной контейнер контента */
 .content {
   flex: 1;

@@ -3,10 +3,12 @@ import CommonLayout from "../../layouts/CommonLayout";
 import OutlineInput from "../../components/inputs/OutlineInput";
 import FilledButton from "../../components/buttons/FilledButton";
 import { useAuthUser } from "../../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const PaymentRequestPage: React.FC = () => {
   const { authUser, baseApiUrl, getTelegramId } = useAuthUser();
   const [inputCash, setInputCash] = useState<string>("");
+  const navigate = useNavigate();
 
   const handleClearCash = () => {
     setInputCash("");
@@ -19,15 +21,8 @@ const PaymentRequestPage: React.FC = () => {
     }
 
     const cashValue = Number(inputCash);
-    alert(
-      "Перевод средств: " +
-        " \n " +
-        getTelegramId() +
-        " \n " +
-        authUser?.wallet +
-        " \n " +
-        inputCash
-    );
+    // alert(getTelegramId() + " \n " + authUser?.wallet + " \n " + inputCash);
+    navigate("/partner-payment-confirmation");
   };
 
   return (
