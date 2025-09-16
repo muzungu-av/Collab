@@ -28,6 +28,8 @@ import PartnerStatisticPage from "./pages/partner/PartnerStatisticPage";
 import PaymentRequestPage from "./pages/partner/PaymentRequestPage";
 import PaymentConfirmationPage from "./pages/partner/PaymentConfirmationPage";
 import PaymentSuccessPage from "./pages/partner/PaymentSuccessPage";
+import ManagerSignUpPage from "./pages/manager/ManagerSignUpPage";
+import ManagerPage from "./pages/manager/ManagerPage";
 
 const App: React.FC = () => {
   const navigate = useNavigate();
@@ -43,7 +45,9 @@ const App: React.FC = () => {
         <br />
         <div className="simple-text">Выберите, как вы хотите</div>
         <div className="simple-text">использовать бота:</div>
-        <OutlineButton>Я покупаю бота (менеджер)</OutlineButton>
+        <OutlineButton onClick={() => navigate("/manager-signup")}>
+          Я покупаю бота (менеджер)
+        </OutlineButton>
         <OutlineButton onClick={() => navigate("/partner-start")}>
           Я хочу стать партнёром
         </OutlineButton>
@@ -72,6 +76,7 @@ const AppWrapper: React.FC<AppWrapperProps> = ({
   const isUserBlocked = renderPath === "/user-blocked";
   const isError = renderPath === "/error";
   const isPartner = renderPath === "/partner"; //авто-вход на страницу партнера
+  const isManager = renderPath === "/manager"; //авто-вход на страницу менеджера
   const isPartnerSignupContinue = renderPath === "/signup-continue"; // незавершенная регистрация партнера
   //PartnerSignUpFinishPage
 
@@ -92,6 +97,14 @@ const AppWrapper: React.FC<AppWrapperProps> = ({
       {isPartnerSignupContinue && (
         <Route path="/" element={<PartnerSignUpPage />} />
       )}
+    </>
+  );
+
+  /* тут рендер всех страниц manager-ов */
+  const renderManagerRootRoutes = () => (
+    <>
+      {/* эта страница для авто-входа */}
+      {isManager && <Route path="/" element={<ManagerPage />} />}
     </>
   );
 
@@ -137,8 +150,8 @@ const AppWrapper: React.FC<AppWrapperProps> = ({
         path="/partner-signupfinish"
         element={<PartnerSignUpFinishPage />}
       />
-      {/* <Route path="/partner" element={<PartnerPage />} /> */}
       <Route path="/user-detected-error" element={<UserDetectedErrorPage />} />
+      <Route path="/manager-signup" element={<ManagerSignUpPage />} />
     </>
   );
 
@@ -148,6 +161,7 @@ const AppWrapper: React.FC<AppWrapperProps> = ({
         <Routes>
           {renderErrorRoutes()}
           {renderParnerRootRoutes()}
+          {renderManagerRootRoutes()}
           {renderPartnerSignupContinue()}
           {!isUserDetectedError &&
             !isUserBlocked &&

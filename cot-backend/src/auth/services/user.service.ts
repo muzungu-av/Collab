@@ -17,49 +17,42 @@ export class UserService {
       const user =
         await this.userRepository.findAnyUserByTelegramId(telegramId);
 
-      console.log(JSON.stringify(user));
       if (!user || !(user instanceof AuthUser)) {
         return { status: 'not_found', message: 'Пользователь не найден.' };
       }
 
-      // if (!user.is_active) {    только у партнеров пока есть блокировка
-      //   return {
-      //     status: 'blocked',
-      //     message: 'Пользователь заблокирован или неактивен.',
-      //   };
-      // }
-      //незавершенная, брошенная регистрация partner-а
-      if (
-        user.user_type === 'partner' &&
-        // user.is_active &&
-        !user.blocked_automatically &&
-        (!user.email || !user.username)
-      ) {
-        //todo когда ввел неверный код и бросил после продолжения переходит на след шаг-продолжить регистрацию
-        return { status: 'signup-continue', user };
-      } else if (
-        user.user_type === 'partner' &&
-        (!user.is_active || user.blocked_automatically)
-      ) {
-        //найден заблокированный , юзер-партнер
-        return {
-          status: 'blocked',
-          message: 'Пользователь заблокирован или неактивен.',
-        };
-      }
-      //заблокированный юзер остальное
-      if (
-        user.user_type !== 'partner' &&
-        (!user.is_active || user.blocked_automatically)
-      ) {
-        return {
-          status: 'blocked',
-          message: 'Пользователь заблокирован или неактивен.',
-        };
+      //  только у партнеров пока есть блокировка
+
+      if (user.user_type === 'partner') {
+        //незавершенная, брошенная регистрация partner-а
+        if (!user.blocked_automatically && (!user.email || !user.username)) {
+          return { status: 'signup-continue', user };
+        } else if (!user.is_active || user.blocked_automatically) {
+          //найден заблокированный , юзер-партнер
+          return {
+            status: 'blocked',
+            message: 'Пользователь заблокирован или неактивен.',
+          };
+        }
+        // заблокированный partner (остальные случаи)
+        // должно быть после проверки незавершенной регистраци
+        if (!user.is_active || user.blocked_automatically) {
+          return {
+            status: 'blocked',
+            message: 'Пользователь заблокирован или неактивен.',
+          };
+        }
+
+        //найден нормальный, юзер partner c завершенной регистрацией
+        return { status: 'partner', user };
       }
 
-      //найден нормальный, целый, юзер
-      return { status: 'found', user };
+      //найден нормальный,юзер manager
+      if (user.user_type == 'manager') {
+        return { status: 'manager', user };
+      }
+
+      return { status: 'not_found', message: 'Пользователь не найден.' };
     } catch (error) {
       return { status: 'error', message: error.message };
     }

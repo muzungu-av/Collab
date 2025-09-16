@@ -4,16 +4,14 @@ import AppWrapper from "./App";
 import { encodeTelegramId } from "./utils/RequestEncoder";
 import { AuthUser } from "./context/UserContext";
 
-interface CheckPartnerAccessResult {
+interface CheckAccessResult {
   userData?: AuthUser;
   renderPath: string;
   errorMsg?: string;
 }
 
 // Функция для проверки доступа
-const checkPartnerAccess = async (
-  id: number | null
-): Promise<CheckPartnerAccessResult> => {
+const checkAccess = async (id: number | null): Promise<CheckAccessResult> => {
   if (!id) {
     console.warn("ID пользователя не определен!");
     return { renderPath: "/user-detected-error" };
@@ -40,7 +38,8 @@ const checkPartnerAccess = async (
 
     const resp = await response.json();
     let userData: AuthUser | null = null;
-    if (resp.status && (resp.status != "not_found" || resp.status != "error")) {
+
+    if (resp.status && resp.status != "not_found" && resp.status != "error") {
       userData = {
         telegram_id: id,
         username: resp.user.username,
@@ -60,14 +59,15 @@ const checkPartnerAccess = async (
         wallet_block_reason: resp.user.wallet_block_reason,
       };
     } else {
+      //""admin" | "manager" | "partner" | "unknown" | undefined"
       userData = {
         telegram_id: id,
         username: "",
         is_active: false,
-        blocked_automatically: resp.user.blocked_automatically,
+        blocked_automatically: true,
         email: "",
         phone: "",
-        user_type: resp.user.user_type,
+        user_type: "unknown",
         referral_link: "",
         partner_referral_link: "",
         wallet: "",
@@ -75,8 +75,10 @@ const checkPartnerAccess = async (
     }
     // Обработка статусов ответа
     switch (resp.status) {
-      case "found":
+      case "partner":
         return { userData, renderPath: "/partner" };
+      case "manager":
+        return { userData, renderPath: "/manager" };
       case "signup-continue":
         return { userData, renderPath: "/signup-continue" };
       case "blocked":
@@ -116,7 +118,7 @@ async function renderApp() {
     userId = Number(userTgData?.id);
   }
 
-  const { userData, renderPath, errorMsg } = await checkPartnerAccess(userId);
+  const { userData, renderPath, errorMsg } = await checkAccess(userId);
   const root = document.getElementById("root");
   if (!root) return;
 

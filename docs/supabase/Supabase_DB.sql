@@ -23,6 +23,7 @@ CREATE TABLE public.manager (
     phone VARCHAR(20) NULL UNIQUE
 );
 
+
 -- Таблица partner
 CREATE TABLE public.partner (
     telegram_id BIGINT PRIMARY KEY,
@@ -30,12 +31,16 @@ CREATE TABLE public.partner (
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     username VARCHAR(50) NULL,
     email VARCHAR(100) NULL UNIQUE,
-    phone VARCHAR(20) NULL UNIQUE
+    phone VARCHAR(20) NULL UNIQUE,
     is_active BOOLEAN NOT NULL DEFAULT FALSE,
     blocked_automatically BOOLEAN NOT NULL DEFAULT FALSE,
-    login_attempts INT NOT NULL DEFAULT 0
+    login_attempts INT NOT NULL DEFAULT 0,
+    referral_link VARCHAR(16) NULL UNIQUE,
 );
 
+
+
+create index IF not exists idx_partner on public.partner using btree (telegram_id) TABLESPACE pg_default;
 -- Таблица partner_passcode
 CREATE TABLE public.partner_passcode (
     passcode VARCHAR(10) PRIMARY KEY,
@@ -537,70 +542,6 @@ END;
 $$ LANGUAGE plpgsql;
 
 
--- CREATE OR REPLACE FUNCTION public.find_any_user_by_telegram_id(telegram_id_param BIGINT)
--- RETURNS TABLE (
---     telegram_id BIGINT,
---     created_at TIMESTAMPTZ,
---     username VARCHAR(50),
---     email VARCHAR(100),
---     phone VARCHAR(20),
---     is_active BOOLEAN,
---     blocked_automatically BOOLEAN,
---     login_attempts INTEGER,
---     referral_link VARCHAR(16),
---     partner_referral_link VARCHAR(16),
---     user_type TEXT
--- ) AS $$
--- BEGIN
---     RETURN QUERY
---     SELECT
---         a.telegram_id,
---         a.created_at,
---         a.username,
---         a.email,
---         a.phone,
---         NULL::BOOLEAN AS is_active,
---         NULL::BOOLEAN AS blocked_automatically,
---         NULL::INTEGER AS login_attempts,
---         NULL::VARCHAR(16) AS referral_link,
---         NULL::VARCHAR(16) AS partner_referral_link,
---         'admin' AS user_type
---     FROM public.admin a
---     WHERE a.telegram_id = telegram_id_param
---     UNION ALL
---     SELECT
---         m.telegram_id,
---         m.created_at,
---         m.username,
---         m.email,
---         m.phone,
---         NULL::BOOLEAN AS is_active,
---         NULL::BOOLEAN AS blocked_automatically,
---         NULL::INTEGER AS login_attempts,
---         NULL::VARCHAR(16) AS referral_link,
---         m.partner_referral_link,
---         'manager' AS user_type
---     FROM public.manager m
---     WHERE m.telegram_id = telegram_id_param
---     UNION ALL
---     SELECT
---         p.telegram_id,
---         p.created_at,
---         p.username,
---         p.email,
---         p.phone,
---         p.is_active,
---         p.blocked_automatically,
---         p.login_attempts,
---         p.referral_link,
---         NULL::VARCHAR(16) AS partner_referral_link,
---         'partner' AS user_type
---     FROM public.partner p
---     WHERE p.telegram_id = telegram_id_param;
--- END;
--- $$ LANGUAGE plpgsql;
-
-
 /* удаляет партнера по его telegram_id*/
 CREATE OR REPLACE FUNCTION public.delete_partner_by_telegram_id(p_telegram_id BIGINT)
 RETURNS BOOLEAN AS $$
@@ -616,6 +557,98 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
+
+
+--связываем менеджера и партнера
+ALTER TABLE public.manager
+ADD COLUMN partner_referral_link VARCHAR(16);
+
+ALTER TABLE public.manager
+ADD CONSTRAINT fk_partner_referral_link
+FOREIGN KEY (partner_referral_link)
+REFERENCES partner(referral_link);
+
+
+CREATE OR REPLACE FUNCTION public.insert_manager_with_wallet(
+  manager_telegram_id BIGINT,
+  wallet_address VARCHAR(64),
+  wallet_type VARCHAR(20),
+  manager_hashed_password TEXT DEFAULT NULL,
+  manager_username VARCHAR(50) DEFAULT NULL,
+  manager_email VARCHAR(100) DEFAULT NULL,
+  manager_partner_referral_link VARCHAR(16) DEFAULT NULL
+)
+RETURNS TABLE (
+  result BOOLEAN,
+  manager_id BIGINT,
+  error_text TEXT
+)
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+BEGIN
+  -- Проверяем, передан ли manager_partner_referral_link и не является ли он пустой строкой
+  IF manager_partner_referral_link IS NOT NULL AND manager_partner_referral_link <> '' THEN
+    -- Проверяем, существует ли такое значение в таблице partner
+    IF NOT EXISTS (SELECT 1 FROM public.partner WHERE referral_link = manager_partner_referral_link) THEN
+      RETURN QUERY SELECT FALSE AS result, NULL::BIGINT, 'Указанная партнёрская ссылка не существует'::TEXT;
+      RETURN;
+    END IF;
+  END IF;
+
+  -- Проверка существования wallet_type
+  IF NOT EXISTS (SELECT 1 FROM public.wallet_types WHERE type_name = wallet_type) THEN
+    RETURN QUERY SELECT FALSE AS result, NULL::BIGINT, 'Указанный тип кошелька не поддерживается'::TEXT;
+    RETURN;
+  END IF;
+
+  -- Вставка записи в таблицу manager
+  BEGIN
+    INSERT INTO public.manager (
+      telegram_id,
+      hashed_password,
+      username,
+      email,
+      partner_referral_link
+    )
+    VALUES (
+      manager_telegram_id,
+      manager_hashed_password,
+      manager_username,
+      manager_email,
+      -- Если manager_partner_referral_link пуст или NULL, записываем NULL
+      CASE WHEN manager_partner_referral_link IS NULL OR manager_partner_referral_link = '' THEN NULL ELSE manager_partner_referral_link END
+    );
+  EXCEPTION
+    WHEN unique_violation THEN
+      RETURN QUERY SELECT FALSE AS result, NULL::BIGINT, 'telegram_id или email уже существуют'::TEXT;
+      RETURN;
+  END;
+
+  -- Вставка записи в таблицу wallets
+  BEGIN
+    INSERT INTO public.wallets (
+      manager_telegram_id,
+      wallet_address,
+      wallet_type
+    )
+    VALUES (
+      manager_telegram_id,
+      wallet_address,
+      wallet_type
+    );
+  EXCEPTION
+    WHEN OTHERS THEN
+      RETURN QUERY SELECT FALSE AS result, NULL::BIGINT, 'Ошибка при добавлении кошелька: ' || SQLERRM::TEXT;
+      RETURN;
+  END;
+
+  RETURN QUERY SELECT TRUE AS result, manager_telegram_id, NULL::TEXT;
+EXCEPTION
+  WHEN OTHERS THEN
+    RETURN QUERY SELECT FALSE AS result, NULL::BIGINT, 'Ошибка: ' || SQLERRM::TEXT;
+END;
+$$;
 
 
 -- -- Политика для MANADER таблицы wallets (SELECT, UPDATE, DELETE)

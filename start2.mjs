@@ -16,7 +16,7 @@ async function main() {
     console.log("→ Starting backend and bot containers with WEBAPP_URL env...");
     await execa(
       "docker-compose",
-      ["up", "-d", "--build", "bot", "cot-backend", "webapp", "nginx"], //
+      ["up", "-d", "--build", "cot-backend", "webapp", "nginx"], //
       {
         cwd: projectDir,
         stdio: "inherit",
