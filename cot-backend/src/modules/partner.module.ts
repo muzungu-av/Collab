@@ -6,7 +6,6 @@ import { PartnerLocalRepository } from './partner/repository/partner.local.repos
 import { EmptyPartnerRepository } from './partner/repository/partner.empty.repository';
 import { PartnerSignUpService } from './partner/services/partner-signup.service';
 import { PartnerSignUpController } from './partner/controllers/partner-signup.controller';
-import { PartnerDomain } from './partner/domain/partner.domain';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({
@@ -24,7 +23,6 @@ import { JwtModule } from '@nestjs/jwt';
   controllers: [PartnerSignUpController],
   providers: [
     PartnerSignUpService,
-    PartnerDomain,
     {
       provide: 'SUPABASE_CLIENT',
       inject: [ConfigService],

@@ -18,3 +18,11 @@ const BlockPage: React.FC = () => {
 };
 
 export default BlockPage;
+//todo
+/* после блокировки непрв ввода кода партнера 
+Произошла ошибка
+Cannot read properties of undefined (reading 'username')
+
+Для связи с администрацией
+напишите нам на почту:
+*/

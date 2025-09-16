@@ -21,7 +21,6 @@ export class ManagerSignUpService {
     wallet_type: string = 'TON',
     partner_referral_link?: string,
   ): Promise<ResponseDto<any>> {
-    //todo убрать домен слои все
     const repositoryResponse = await this.repository.signUpManager(
       telegram_id,
       fio,

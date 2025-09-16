@@ -13,7 +13,7 @@ export class PartnerSupabaseRepository implements IPartnerRepository {
     WALLET: string,
     walletType: string,
     referral_link: string,
-  ): Promise<any> {
+  ): Promise<{ success: boolean; data?: any; message?: string }> {
     try {
       const { data, error } = await this.supabase.rpc(
         'update_partner_and_wallet',
@@ -27,10 +27,10 @@ export class PartnerSupabaseRepository implements IPartnerRepository {
         },
       );
       if (error) throw error;
-      return data;
+      return { success: true, data: data };
     } catch (error) {
       console.error('Transaction failed:', error);
-      return error;
+      return { success: false, message: error.message };
     }
   }
 }

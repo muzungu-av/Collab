@@ -1,3 +1,4 @@
+import { ResponseDto } from 'src/common/dto/response.dto';
 import { IPartnerRepository } from './interfaces/partner.repository.interface';
 
 export class EmptyPartnerRepository implements IPartnerRepository {
@@ -8,7 +9,7 @@ export class EmptyPartnerRepository implements IPartnerRepository {
     wallet: string,
     wallet_type: string,
     referral_link: string,
-  ): Promise<boolean> {
+  ): Promise<{ success: boolean; data?: any; message?: string }> {
     throw new Error(
       "Empty implementation of IPartnerRepository is used! Check ENV's",
     );

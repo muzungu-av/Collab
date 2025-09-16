@@ -38,8 +38,15 @@ const checkAccess = async (id: number | null): Promise<CheckAccessResult> => {
 
     const resp = await response.json();
     let userData: AuthUser | null = null;
-
-    if (resp.status && resp.status != "not_found" && resp.status != "error") {
+    console.log(">>>>>>>>>  ");
+    console.log(JSON.stringify(resp));
+    console.log(">>>>>>>>>  ");
+    if (
+      resp.status &&
+      resp.status != "not_found" &&
+      resp.status != "error" &&
+      resp.status != "blocked"
+    ) {
       userData = {
         telegram_id: id,
         username: resp.user.username,
@@ -59,7 +66,7 @@ const checkAccess = async (id: number | null): Promise<CheckAccessResult> => {
         wallet_block_reason: resp.user.wallet_block_reason,
       };
     } else {
-      //""admin" | "manager" | "partner" | "unknown" | undefined"
+      //"admin" | "manager" | "partner"
       userData = {
         telegram_id: id,
         username: "",

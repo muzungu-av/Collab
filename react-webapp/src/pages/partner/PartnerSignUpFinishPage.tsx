@@ -4,6 +4,7 @@ import { useAuthUser } from "../../context/UserContext";
 import OutlineInput from "../../components/inputs/OutlineInput";
 import FilledButton from "../../components/buttons/FilledButton";
 import { encodeTelegramId } from "../../utils/RequestEncoder";
+import { ResponseDto } from "../../types";
 
 const PartnerSignUpFinishPage: React.FC = () => {
   const { baseApiUrl, getTelegramId } = useAuthUser();
@@ -66,21 +67,24 @@ const PartnerSignUpFinishPage: React.FC = () => {
         },
         body: userData,
       });
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      const r = await response.json();
-      if (
-        Array.isArray(r.result) &&
-        r.result[0]?.result === false &&
-        r.result[0]?.error_text
-      ) {
-        alert(
-          "Произошла ошибка обновления данных: (" +
-            JSON.stringify(r.result[0]?.error_text) +
-            ")\nВозможно email,phone уже существуют."
-        );
-
+      // Получаем ответ от сервера в формате ResponseDto
+      const result: ResponseDto<{ token?: string }> = await response.json();
+      // Проверяем результат
+      if (result.success) {
+        // Успешная регистрация
+        alert("Регистрация прошла успешно!");
+        // Если есть токен, сохраняем его
+        if (result.token) {
+          localStorage.setItem("authToken", result.token);
+        }
+        window.location.href = "/"; //произойдет автовход на страницу партнера
+      } else {
+        // Ошибка регистрации
+        alert(`Ошибка: ${result.message || "Неизвестная ошибка"}`);
         /* удаляем недоконца создавшегося пользователя-партнера */
         try {
           await removeUserData(telegramId!, signed);
@@ -88,19 +92,6 @@ const PartnerSignUpFinishPage: React.FC = () => {
           alert("Ошибка во время отмены операции:" + error);
         }
         window.location.href = "/";
-      } else if (Array.isArray(r.result) && r.result[0]?.result === false) {
-        alert(
-          "Произошла ошибка обновления данных. Возможно email,phone уже существуют."
-        );
-        /* удаляем недоконца создавшегося пользователя-партнера */
-        await removeUserData(telegramId!, signed);
-        window.location.href = "/";
-      }
-
-      /* ПРОДОЛЖАЕМ перезагрузим  - это вызовет автовход на партнера */
-      if (Array.isArray(r.result) && r.result[0]?.result === true) {
-        alert("Данные сохранены");
-        window.location.href = "/"; //произойдет автовход на страницу партнера
       }
     } catch (error) {
       alert("Произошла ошибка, попробуйте еще раз - " + JSON.stringify(error));

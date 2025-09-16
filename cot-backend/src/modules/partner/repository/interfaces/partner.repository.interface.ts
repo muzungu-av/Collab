@@ -1,3 +1,5 @@
+import { ResponseDto } from 'src/common/dto/response.dto';
+
 export interface IPartnerRepository {
   updatePartnerInfoAndWallet(
     telegram_id: bigint,
@@ -6,5 +8,5 @@ export interface IPartnerRepository {
     wallet: string,
     wallet_type: string,
     referral_link: string,
-  ): Promise<boolean>;
+  ): Promise<{ success: boolean; data?: any; message?: string }>;
 }

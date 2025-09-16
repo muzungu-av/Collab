@@ -1,14 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { PartnerDomain } from '../domain/partner.domain';
 import { JwtService } from '@nestjs/jwt';
+import { ResponseDto } from 'src/common/dto/response.dto';
+import type { IPartnerRepository } from '../repository/interfaces/partner.repository.interface';
 import { PartnerPasscodeDomain } from 'src/modules/partner_passcode/domain/partner-passcode.domain';
 
 @Injectable()
 export class PartnerSignUpService {
   constructor(
     private readonly config: ConfigService,
-    private readonly partnerDomain: PartnerDomain,
+    @Inject('IPARTNER_REPOSITORY')
+    private readonly repository: IPartnerRepository,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -18,10 +20,10 @@ export class PartnerSignUpService {
     email: string,
     wallet: string,
     wallet_type: string = 'TON',
-  ): Promise<{ token: string; result: boolean }> {
+  ): Promise<ResponseDto<any>> {
     // генерируем код реферальной ссылки точно такой же как и код для регистрации партнеров
     const referral_link = PartnerPasscodeDomain.generatePasscode();
-    const result = await this.partnerDomain.updateSignUpInfo(
+    const repositoryResponse = await this.repository.updatePartnerInfoAndWallet(
       telegram_id,
       fio,
       email,
@@ -29,9 +31,16 @@ export class PartnerSignUpService {
       wallet_type,
       referral_link,
     );
-    // Генерируем JWT-токен с telegram_id
-    // const sign_id = this.encodeTelegramId(BigInt(telegram_id));
+    if (!repositoryResponse.success) {
+      const errorMessage =
+        repositoryResponse.message || 'Произошла неизвестная ошибка';
+      return ResponseDto.error(errorMessage);
+    }
     const token = this.jwtService.sign({ telegram_id });
-    return { token, result: result };
+    return ResponseDto.success(
+      { partner_id: repositoryResponse.data.partner_id },
+      'Партнёр и кошелёк успешно добавлены',
+      token,
+    );
   }
 }
