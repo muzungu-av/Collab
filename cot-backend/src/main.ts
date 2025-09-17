@@ -34,5 +34,10 @@ async function bootstrap() {
   app.setGlobalPrefix('api'); //все запросы должны отправляться на /api
   app.useLogger(new Logger());
   await app.listen(PORT);
+  // Обработка SIGTERM (для graceful shutdown)
+  process.on('SIGTERM', async () => {
+    await app.close(); // Закрываем все соединения
+    process.exit(0);
+  });
 }
 bootstrap();

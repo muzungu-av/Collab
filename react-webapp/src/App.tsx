@@ -29,7 +29,7 @@ import PaymentRequestPage from "./pages/partner/PaymentRequestPage";
 import PaymentConfirmationPage from "./pages/partner/PaymentConfirmationPage";
 import PaymentSuccessPage from "./pages/partner/PaymentSuccessPage";
 import ManagerSignUpPage from "./pages/manager/ManagerSignUpPage";
-import ManagerPage from "./pages/manager/ManagerPage";
+import ManagerPaymentOfferPage from "./pages/manager/ManagerPaymentOfferPage";
 
 const App: React.FC = () => {
   const navigate = useNavigate();
@@ -51,7 +51,7 @@ const App: React.FC = () => {
         <OutlineButton onClick={() => navigate("/partner-start")}>
           Я хочу стать партнёром
         </OutlineButton>
-        <OutlineButton>У меня уже есть аккаунт</OutlineButton>
+        <OutlineButton>Исполнитель</OutlineButton>
       </div>
 
       {/* <div style={{ color: "#765", fontSize: "10px" }}>{baseApiUrl}</div> */}
@@ -104,7 +104,7 @@ const AppWrapper: React.FC<AppWrapperProps> = ({
   const renderManagerRootRoutes = () => (
     <>
       {/* эта страница для авто-входа */}
-      {isManager && <Route path="/" element={<ManagerPage />} />}
+      {isManager && <Route path="/" element={<ManagerPaymentOfferPage />} />}
     </>
   );
 

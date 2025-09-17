@@ -1,0 +1,56 @@
+/* Контейнер */
+.read-only-value-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* Стили для кастомной */
+.read-only-value {
+  width: 350px;
+  height: 55px;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  color: #ff00ff;
+  text-align: left; /* Изменено на left для выравнивания */
+  line-height: 55px;
+  user-select: none;
+  position: relative;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #231f1d 0%, #232327 100%);
+  padding: 0 15px; /* Добавлены отступы */
+  border: none;
+  overflow: hidden;
+  display: flex; /* Добавлено для гибкого расположения */
+  justify-content: space-between; /* Размещает label и value по краям */
+}
+
+/* Градиентная рамка */
+.read-only-value::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  border-radius: 8px;
+  padding: 2px;
+  background: linear-gradient(90deg, #fba220, #ffd28f);
+  -webkit-mask: linear-gradient(#f0f 0 0) content-box, linear-gradient(#f0f 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+/* Стили для правой части (value) */
+.read-only-value-gradient-text {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 800;
+  background: linear-gradient(90deg, #fba220 0%, #ffd28f 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
