@@ -16,7 +16,7 @@ const MultiLineStatFrame: React.FC<MultiLineStatFrameProps> = ({ stats }) => {
       {stats.map(({ lines, value }, index) => (
         <React.Fragment key={index}>
           <div className="statistic-item">
-            <span className="gradient-text">
+            <span className="gradient-text-statistic-item">
               {lines.map((line, i) => (
                 <React.Fragment key={i}>
                   {line}

@@ -21,7 +21,7 @@
 }
 
 /* Градиентный текст */
-.gradient-text {
+.gradient-text-statistic-item {
   background: linear-gradient(90deg, #fba220, #ffd28f);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

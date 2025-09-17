@@ -38,9 +38,6 @@ const checkAccess = async (id: number | null): Promise<CheckAccessResult> => {
 
     const resp = await response.json();
     let userData: AuthUser | null = null;
-    console.log(">>>>>>>>>  ");
-    console.log(JSON.stringify(resp));
-    console.log(">>>>>>>>>  ");
     if (
       resp.status &&
       resp.status != "not_found" &&
