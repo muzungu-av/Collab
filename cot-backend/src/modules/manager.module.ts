@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { JwtModule } from '@nestjs/jwt';
-import { ManagerLocalRepository } from './repository/manager.local.repository';
-import { ManagerSupabaseRepository } from './repository/manager.supabase.repository';
-import { EmptyManagerRepository } from './repository/manager.empty.repository';
-import { ManagerSignUpService } from './services/manager-signup.service';
-import { ManagerSignUpController } from './controllers/manager-signup.controller';
+import { ManagerLocalRepository } from './manager/repository/manager.local.repository';
+import { ManagerSupabaseRepository } from './manager/repository/manager.supabase.repository';
+import { EmptyManagerRepository } from './manager/repository/manager.empty.repository';
+import { ManagerSignUpService } from './manager/services/manager-signup.service';
+import { ManagerSignUpController } from './manager/controllers/manager-signup.controller';
 
 @Module({
   imports: [

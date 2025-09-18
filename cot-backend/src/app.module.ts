@@ -4,7 +4,8 @@ import { LoggerMiddleware } from './logger.middleware';
 import { PartnerPasscodeModule } from './modules/partner-passcode.module';
 import { PartnerModule } from './modules/partner.module';
 import { AuthModule } from './auth/auth.module';
-import { ManagerModule } from './modules/manager/manager.module';
+import { ManagerModule } from './modules/manager.module';
+import { ConstantsModule } from './modules/constants.module';
 
 @Module({
   controllers: [],
@@ -16,6 +17,7 @@ import { ManagerModule } from './modules/manager/manager.module';
     ManagerModule,
     PartnerModule,
     PartnerPasscodeModule,
+    ConstantsModule,
     AuthModule,
   ],
 })

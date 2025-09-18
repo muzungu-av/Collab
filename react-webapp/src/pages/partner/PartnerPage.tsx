@@ -1,8 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import CommonLayout from "../../layouts/CommonLayout";
 import { useNavigate } from "react-router-dom";
-import { useAuthUser } from "../../context/UserContext";
-import { encodeTelegramId } from "../../utils/RequestEncoder";
 import OutlineButton from "../../components/buttons/OutlineButton";
 
 const PartnerPage: React.FC = () => {

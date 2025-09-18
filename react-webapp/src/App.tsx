@@ -30,6 +30,7 @@ import PaymentConfirmationPage from "./pages/partner/PaymentConfirmationPage";
 import PaymentSuccessPage from "./pages/partner/PaymentSuccessPage";
 import ManagerSignUpPage from "./pages/manager/ManagerSignUpPage";
 import ManagerPaymentOfferPage from "./pages/manager/ManagerPaymentOfferPage";
+import ManagerPaymentPage from "./pages/manager/ManagerPaymentPage";
 
 const App: React.FC = () => {
   const navigate = useNavigate();
@@ -78,7 +79,6 @@ const AppWrapper: React.FC<AppWrapperProps> = ({
   const isPartner = renderPath === "/partner"; //авто-вход на страницу партнера
   const isManager = renderPath === "/manager"; //авто-вход на страницу менеджера
   const isPartnerSignupContinue = renderPath === "/signup-continue"; // незавершенная регистрация партнера
-  //PartnerSignUpFinishPage
 
   // роутинг - условия всяких нестандартных случаев
   const renderErrorRoutes = () => (
@@ -105,6 +105,9 @@ const AppWrapper: React.FC<AppWrapperProps> = ({
     <>
       {/* эта страница для авто-входа */}
       {isManager && <Route path="/" element={<ManagerPaymentOfferPage />} />}
+      {isManager && (
+        <Route path="/manager-payment" element={<ManagerPaymentPage />} />
+      )}
     </>
   );
 

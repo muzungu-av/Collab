@@ -651,6 +651,20 @@ END;
 $$;
 
 
+CREATE TABLE app_constants (
+  key TEXT PRIMARY KEY,
+  value JSONB NOT NULL,
+  description TEXT,
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+-- Добавляем  константу стоимости подписки
+INSERT INTO app_constants (key, value, description)
+VALUES (
+  'subscription_price_yearly',
+  '{"amount": 49, "currency": "EUR"}',
+  'Цена ежегодной подписки'
+);
+
 -- -- Политика для MANADER таблицы wallets (SELECT, UPDATE, DELETE)
 -- -- Политика для SELECT
 -- CREATE POLICY manager_select_wallet_policy ON public.wallets
