@@ -6,6 +6,7 @@ import { PartnerModule } from './modules/partner.module';
 import { AuthModule } from './auth/auth.module';
 import { ManagerModule } from './modules/manager.module';
 import { ConstantsModule } from './modules/constants.module';
+import { SupabaseModule } from './supabase/supabase.module';
 
 @Module({
   controllers: [],
@@ -14,6 +15,7 @@ import { ConstantsModule } from './modules/constants.module';
       isGlobal: true, // делает доступным везде без импорта
       envFilePath: '.env', // путь до .env (смотри Dockerfile!)
     }),
+    SupabaseModule, // Подключаем Supabase один раз здесь
     ManagerModule,
     PartnerModule,
     PartnerPasscodeModule,

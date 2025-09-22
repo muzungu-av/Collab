@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { SupabaseClient } from '@supabase/supabase-js';
 import { JwtModule } from '@nestjs/jwt';
 import { ConstantsService } from './constants/services/constants.service';
 import { ConstantsSupabaseRepository } from './constants/repositories/constants.supabase.repository';
@@ -24,21 +24,8 @@ import { ConstantsLocalRepository } from './constants/repositories/constants.loc
   providers: [
     ConstantsService,
     {
-      provide: 'SUPABASE_CLIENT',
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
-        const supabaseUrl = configService.get<string>('SUPABASE_URL');
-        const supabaseKey = configService.get<string>(
-          'SUPABASE_SERVICE_ROLE_KEY',
-        );
-        return createClient(supabaseUrl!, supabaseKey!, {
-          db: { schema: 'public' },
-        });
-      },
-    },
-    {
       provide: 'ICONSTANTS_REPOSITORY', //общий интерфейс (конкретные реалезации ниже)
-      inject: [ConfigService, 'SUPABASE_CLIENT'],
+      inject: [ConfigService, 'SUPABASE_CLIENT'], // Инъекция из SupabaseModule
       useFactory: (configService: ConfigService, supabase: SupabaseClient) => {
         const dbType = configService.get<string>('DB_TYPE');
         switch (dbType) {

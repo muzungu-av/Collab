@@ -24,21 +24,8 @@ import { ManagerSignUpController } from './manager/controllers/manager-signup.co
   providers: [
     ManagerSignUpService,
     {
-      provide: 'SUPABASE_CLIENT',
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
-        const supabaseUrl = configService.get<string>('SUPABASE_URL');
-        const supabaseKey = configService.get<string>(
-          'SUPABASE_SERVICE_ROLE_KEY',
-        );
-        return createClient(supabaseUrl!, supabaseKey!, {
-          db: { schema: 'public' },
-        });
-      },
-    },
-    {
       provide: 'IMANAGER_REPOSITORY', //общий интерфейс (конкретные реалезации ниже)
-      inject: [ConfigService, 'SUPABASE_CLIENT'],
+      inject: [ConfigService, 'SUPABASE_CLIENT'], // Инъекция из SupabaseModule
       useFactory: (configService: ConfigService, supabase: SupabaseClient) => {
         const dbType = configService.get<string>('DB_TYPE');
         switch (dbType) {
