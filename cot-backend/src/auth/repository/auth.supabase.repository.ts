@@ -1,9 +1,9 @@
 import { SupabaseClient } from '@supabase/supabase-js';
-import { IAuthUserRepository } from 'src/auth/repository/auth-user.repository.interface';
 import { AuthUser } from '../domain/auth-users.entity';
 import { ImATeapotException } from '@nestjs/common';
+import { IAuthUserRepository } from './interfaces/auth.repository.interface';
 
-export class SupabaseAuthUserRepository implements IAuthUserRepository {
+export class AuthSupabaseRepository implements IAuthUserRepository {
   constructor(private readonly supabase: SupabaseClient) {}
 
   async findAnyUserByTelegramId(telegramId: number): Promise<AuthUser | null> {

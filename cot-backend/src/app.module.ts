@@ -15,12 +15,12 @@ import { SupabaseModule } from './supabase/supabase.module';
       isGlobal: true, // делает доступным везде без импорта
       envFilePath: '.env', // путь до .env (смотри Dockerfile!)
     }),
+    AuthModule,
     SupabaseModule, // Подключаем Supabase один раз здесь
     ManagerModule,
     PartnerModule,
     PartnerPasscodeModule,
     ConstantsModule,
-    AuthModule,
   ],
 })
 // export class AppModule {}

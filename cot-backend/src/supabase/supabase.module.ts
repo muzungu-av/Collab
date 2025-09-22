@@ -2,7 +2,7 @@ import { Module, Global, Provider } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-@Global() // Делает модуль доступным глобально (не обязательно импортировать везде)
+@Global()
 @Module({
   imports: [ConfigModule.forRoot()],
   providers: [

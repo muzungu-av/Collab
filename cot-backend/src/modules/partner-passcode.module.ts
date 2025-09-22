@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { SupabaseClient } from '@supabase/supabase-js';
 import { PartnerPasscodeService } from './partner_passcode/services/partner-passcode.service';
 import { PartnerPasscodeController } from './partner_passcode/controllers/partner-passcode.controller';
 import { PartnerPasscodeLocalRepository } from './partner_passcode/repository/partner-passcode.local.repository';

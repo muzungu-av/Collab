@@ -1,6 +1,6 @@
 // import { Module } from '@nestjs/common';
 // import { ConfigModule, ConfigService } from '@nestjs/config';
-// import { createClient, SupabaseClient } from '@supabase/supabase-js';
+// import { SupabaseClient } from '@supabase/supabase-js';
 // import { JwtModule } from '@nestjs/jwt';
 // import { BillingSupabaseRepository } from './billing/repositories/billing.supabase.repository';
 // import { BillingController } from './billing/controllers/billing.controller';

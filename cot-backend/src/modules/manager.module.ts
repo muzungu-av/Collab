@@ -1,25 +1,16 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { JwtModule } from '@nestjs/jwt';
+import { SupabaseClient } from '@supabase/supabase-js';
+
 import { ManagerLocalRepository } from './manager/repository/manager.local.repository';
 import { ManagerSupabaseRepository } from './manager/repository/manager.supabase.repository';
 import { EmptyManagerRepository } from './manager/repository/manager.empty.repository';
 import { ManagerSignUpService } from './manager/services/manager-signup.service';
 import { ManagerSignUpController } from './manager/controllers/manager-signup.controller';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot(),
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET'),
-        signOptions: { expiresIn: '1d' },
-      }),
-      inject: [ConfigService],
-    }),
-  ],
+  imports: [ConfigModule.forRoot(), AuthModule],
   controllers: [ManagerSignUpController],
   providers: [
     ManagerSignUpService,
