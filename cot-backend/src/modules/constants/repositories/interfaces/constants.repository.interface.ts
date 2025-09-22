@@ -1,5 +1,3 @@
-import { ResponseDto } from 'src/common/dto/response.dto';
-
 export interface IConstantsRepository {
   getConstant(
     key: string,

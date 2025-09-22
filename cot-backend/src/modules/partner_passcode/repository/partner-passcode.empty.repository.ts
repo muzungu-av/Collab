@@ -1,6 +1,6 @@
 import { IPartnerPasscodeRepository } from './interfaces/partner-passcode.repository.interface';
 
-export class EmptyPartnerPasscodeRepository
+export class PartnerPasscodeEmptyRepository
   implements IPartnerPasscodeRepository
 {
   private msg =

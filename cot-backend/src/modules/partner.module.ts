@@ -3,7 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { PartnerSupabaseRepository } from './partner/repository/partner.supabase.repository';
 import { PartnerLocalRepository } from './partner/repository/partner.local.repository';
-import { EmptyPartnerRepository } from './partner/repository/partner.empty.repository';
+import { PartnerEmptyRepository } from './partner/repository/partner.empty.repository';
 import { PartnerSignUpService } from './partner/services/partner-signup.service';
 import { PartnerSignUpController } from './partner/controllers/partner-signup.controller';
 import { AuthModule } from 'src/auth/auth.module';
@@ -27,7 +27,7 @@ import { AuthModule } from 'src/auth/auth.module';
             console.warn(
               `Unknown DB_TYPE: ${dbType}. Using empty implementation.`,
             );
-            return new EmptyPartnerRepository();
+            return new PartnerEmptyRepository();
         }
       },
     },

@@ -1,7 +1,7 @@
 import { ResponseDto } from 'src/common/dto/response.dto';
 import { IManagerRepository } from './interfaces/manager.repository.interface';
 
-export class EmptyManagerRepository implements IManagerRepository {
+export class ManagerEmptyRepository implements IManagerRepository {
   signUpManager(
     telegram_id: bigint,
     fio: string,

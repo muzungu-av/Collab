@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { IPartnerRepository } from './interfaces/partner.repository.interface';
-import { ResponseDto } from 'src/common/dto/response.dto';
 
 //to-do реализовать Все методы для локальной БД
 @Injectable()

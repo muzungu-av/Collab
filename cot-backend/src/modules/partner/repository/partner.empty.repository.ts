@@ -1,7 +1,6 @@
-import { ResponseDto } from 'src/common/dto/response.dto';
 import { IPartnerRepository } from './interfaces/partner.repository.interface';
 
-export class EmptyPartnerRepository implements IPartnerRepository {
+export class PartnerEmptyRepository implements IPartnerRepository {
   updatePartnerInfoAndWallet(
     telegram_id: bigint,
     fio: string,

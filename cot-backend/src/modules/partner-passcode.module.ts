@@ -5,7 +5,7 @@ import { PartnerPasscodeService } from './partner_passcode/services/partner-pass
 import { PartnerPasscodeController } from './partner_passcode/controllers/partner-passcode.controller';
 import { PartnerPasscodeLocalRepository } from './partner_passcode/repository/partner-passcode.local.repository';
 import { PartnerPasscodeSupabaseRepository } from './partner_passcode/repository/partner-passcode.supabase.repository';
-import { EmptyPartnerPasscodeRepository } from './partner_passcode/repository/partner-passcode.empty.repository';
+import { PartnerPasscodeEmptyRepository } from './partner_passcode/repository/partner-passcode.empty.repository';
 
 @Module({
   controllers: [PartnerPasscodeController],
@@ -25,7 +25,7 @@ import { EmptyPartnerPasscodeRepository } from './partner_passcode/repository/pa
             console.warn(
               `Unknown DB_TYPE: ${dbType}. Using empty implementation.`,
             );
-            return new EmptyPartnerPasscodeRepository();
+            return new PartnerPasscodeEmptyRepository();
         }
       },
     },

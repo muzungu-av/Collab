@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SupabaseClient } from '@supabase/supabase-js';
-
 import { ManagerLocalRepository } from './manager/repository/manager.local.repository';
 import { ManagerSupabaseRepository } from './manager/repository/manager.supabase.repository';
-import { EmptyManagerRepository } from './manager/repository/manager.empty.repository';
 import { ManagerSignUpService } from './manager/services/manager-signup.service';
 import { ManagerSignUpController } from './manager/controllers/manager-signup.controller';
 import { AuthModule } from 'src/auth/auth.module';
+import { ManagerEmptyRepository } from './manager/repository/manager.empty.repository';
 
 @Module({
   imports: [ConfigModule.forRoot(), AuthModule],
@@ -28,7 +27,7 @@ import { AuthModule } from 'src/auth/auth.module';
             console.warn(
               `Unknown DB_TYPE: ${dbType}. Using empty implementation.`,
             );
-            return new EmptyManagerRepository();
+            return new ManagerEmptyRepository();
         }
       },
     },
