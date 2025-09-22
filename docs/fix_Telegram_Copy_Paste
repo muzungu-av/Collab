@@ -1,0 +1,41 @@
+
+Проблемма на десктопе tg не работает вставка <paste>.
+Это из-за конфликта Electron и  Wayland как-то не могут они с буфером работать.
+
+Решение для ArchLinux (если у вас стоит Wayland) и SDDM
+
+1) Выполните команду для полной переустановки пакетов, отвечающих за сессии Plasma:
+    sudo pacman -S plasma-workspace plasma-desktop sddm-kcm --overwrite='*'
+Эта команда восстановит все конфигурационные файлы, включая plasma.desktop.
+
+2) Создайте файл сессии plasma.desktop
+    sudo nano /usr/share/xsessions/plasma.desktop
+    
+3) Вставьте следующий текст:
+    [Desktop Entry]
+    Name=Plasma (X11)
+    Comment=Plasma by KDE
+    Exec=env KDE_SESSION_VERSION=5 KDE_FULL_SESSION=true startplasma-x11
+    TryExec=/usr/bin/startplasma-x11
+    Icon=plasma
+    Type=Application
+    DesktopNames=KDE
+    X-KDE-PluginInfo-Version=5.27
+
+4) Перезагрузитесь войдите используя  "Plasma (X11)". Снова войдите и оставайтесь
+с Wayland.
+
+5) Если опция всё равно не появляется: Проверка конфига SDDM
+    [General]
+    SessionDir=/usr/share/xsessions
+
+    [X11]
+    SessionCommand=/usr/share/sddm/scripts/Xsession
+
+
+6) Запускать Telegram
+
+env GDK_BACKEND=x11 QT_QPA_PLATFORM=xcb Telegram
+
+то есть заставить его использовать plasma/x11 вместо Wayland.
+теперь Telegram будет использовать x11 а вся система Wayland

@@ -12,6 +12,20 @@ if (!webAppUrl) {
 const timestamp = Date.now();
 const bot = new TelegramBot(token, { polling: true });
 
+// Обработчик SIGTERM для graceful shutdown
+process.on("SIGTERM", async () => {
+  console.log("SIGTERM получен. Завершаем работу бота...");
+  bot.stopPolling(); // Останавливаем поллинг
+  process.exit(0); // Завершаем процесс
+});
+
+// Обработчик SIGINT (Ctrl+C)
+process.on("SIGINT", async () => {
+  console.log("SIGINT получен. Завершаем работу бота...");
+  bot.stopPolling();
+  process.exit(0);
+});
+
 bot.onText(/\/start/, (msg) => {
   bot.sendMessage(msg.chat.id, "Открой Web App:", {
     reply_markup: {
