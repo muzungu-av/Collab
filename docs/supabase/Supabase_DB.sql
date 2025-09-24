@@ -171,11 +171,15 @@ RETURNS TABLE (
 )
 LANGUAGE plpgsql
 SECURITY DEFINER
+SET search_path = public
 AS $$
 DECLARE
   passcode_exists BOOLEAN;
   partner_blocked BOOLEAN;
 BEGIN
+  -- Устанавливаем контекст текущего пользователя для RLS
+  PERFORM set_config('app.current_telegram_id', telegram_id_param::text, false); --false (сессионный уровень)  true (уровень запроса в этом блоке)
+
   -- Проверяем, существует ли свободный passcode
   SELECT EXISTS (SELECT 1 FROM public.partner_passcode pp WHERE pp.passcode = passcode_param AND pp.is_used = FALSE) INTO passcode_exists;
   -- Проверяем, заблокирован ли пользователь
@@ -321,18 +325,6 @@ CREATE INDEX idx_wallets_address ON public.wallets(wallet_address);
 -- FROM public.wallets w;
 
 
---Эта функция сохраняет telegram_id в параметре сессии app.current_telegram_id, который потом можно использовать в RLS-политиках.
-CREATE OR REPLACE FUNCTION public.set_current_telegram_id(p_telegram_id BIGINT)
-RETURNS VOID
-LANGUAGE plpgsql
-SECURITY DEFINER
-AS $$
-BEGIN
-  PERFORM set_config('app.current_telegram_id', p_telegram_id::text, false);
-END;
-$$;
-
-
 /*
  * завершает регистрацию partner вводятся атрибуты
  */
@@ -352,6 +344,7 @@ RETURNS TABLE (
 )
 LANGUAGE plpgsql
 SECURITY DEFINER
+SET search_path = public
 AS $$
 BEGIN
   -- Логируем входные параметры
@@ -366,7 +359,9 @@ BEGIN
   ];
 
   -- Устанавливаем контекст пользователя для RLS
-  PERFORM set_current_telegram_id(p_telegram_id);
+  -- Локальность переменной (true)
+  -- Если в будущем появятся триггеры (например, на таблицу wallets) или вызовы других функций, которым тоже нужен app.current_telegram_id, они переменную не увидят из-за true
+  PERFORM set_config('app.current_telegram_id', p_telegram_id::text, true);
 
   BEGIN
     -- Обновляем данные партнёра
@@ -384,7 +379,8 @@ BEGIN
       wallet_address,
       wallet_type
     ) VALUES (
-      p_telegram_id,
+      current_setting('app.current_telegram_id')::bigint,
+      -- p_telegram_id,
       p_wallet_address,
       p_wallet_type
     );
@@ -412,6 +408,7 @@ BEGIN
   END;
 END;
 $$;
+
 
 -- включаем RLS
 ALTER TABLE public.wallets ENABLE ROW LEVEL SECURITY;
@@ -444,9 +441,13 @@ ON DELETE SET NULL;
 
 
 /*
-* Функция ищет пользователя по telegram_id в таблицах admin, manager и partner и возвращает объединённый результат со всеми полями, 
+* Функция ищет пользователя по telegram_id в таблицах admin, manager и partner и возвращает объединённый результат со всеми полями,
 * включая NULL для отсутствующих значений.
 * Для таблицы partner учитываются только активные (is_active = true) и не заблокированные (blocked_automatically = false) пользователи.
+
+ Так как поисковая, она просто возвращает данные по telegram_id из разных таблиц
+ функция предназначена для бекенда (одна роль, которая имеет полный доступ),
+ то оставить её без SECURITY DEFINER. Бекенд и так подключается от имени сервис-аккаунта Supabase с правами на чтение.
 */
 CREATE OR REPLACE FUNCTION public.find_any_user_by_telegram_id(telegram_id_param BIGINT)
 RETURNS TABLE (
@@ -547,7 +548,7 @@ CREATE OR REPLACE FUNCTION public.delete_partner_by_telegram_id(p_telegram_id BI
 RETURNS BOOLEAN AS $$
 BEGIN
     -- Устанавливаем контекст RLS (например, telegram_id текущего пользователя)
-    PERFORM set_current_telegram_id(p_telegram_id);
+    PERFORM set_config('app.current_telegram_id', p_telegram_id::text, true);
 
     -- Удаляем запись (RLS автоматически применит фильтрацию)
     DELETE FROM public.partner
@@ -585,8 +586,13 @@ RETURNS TABLE (
 )
 LANGUAGE plpgsql
 SECURITY DEFINER
+SET search_path = public
 AS $$
 BEGIN
+
+  -- Устанавливаем контекст RLS для текущего telegram_id
+  PERFORM set_config('app.current_telegram_id', manager_telegram_id::text, true);
+
   -- Проверяем, передан ли manager_partner_referral_link и не является ли он пустой строкой
   IF manager_partner_referral_link IS NOT NULL AND manager_partner_referral_link <> '' THEN
     -- Проверяем, существует ли такое значение в таблице partner
@@ -612,7 +618,7 @@ BEGIN
       partner_referral_link
     )
     VALUES (
-      manager_telegram_id,
+      current_setting('app.current_telegram_id')::bigint,
       manager_hashed_password,
       manager_username,
       manager_email,
@@ -633,7 +639,7 @@ BEGIN
       wallet_type
     )
     VALUES (
-      manager_telegram_id,
+      current_setting('app.current_telegram_id')::bigint,
       wallet_address,
       wallet_type
     );
@@ -719,13 +725,3 @@ VALUES (
 --     FOR DELETE
 --     USING (true);
 
-
-
-
-
--- промпт
--- сейчас я настраиваю RLS запросы на вставку данных (insert) в таблицу ... ,
--- которые будут от имени service_role, обходит Row Level Security,
--- то есть от имени бакенда. но чтение и изменение будут от имени пользователей
--- с ролями (admin, partner, manager) вот для этого сделай команды для таблицы wallets.
--- и я не настроил не использую  auth.uid() а вместо этого использую current_setting (настройка сессии)
