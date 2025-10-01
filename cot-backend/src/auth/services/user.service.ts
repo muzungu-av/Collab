@@ -48,9 +48,34 @@ export class UserService {
       }
 
       //найден нормальный,юзер manager
-      if (user.user_type == 'manager') {
-        return { status: 'manager', user };
+      if (user.user_type === 'manager') {
+        const now = new Date();
+
+        const paidAt = user.manager_paid_at
+          ? new Date(user.manager_paid_at)
+          : null;
+        const validUntil = user.manager_valid_until
+          ? new Date(user.manager_valid_until)
+          : null;
+        const paymentStatus = user.manager_payment_status;
+
+        // проверяем, что есть дата, статус confirmed и сейчас в пределах оплаты
+        if (
+          paymentStatus === 'confirmed' &&
+          paidAt instanceof Date &&
+          validUntil instanceof Date &&
+          now >= paidAt &&
+          now <= validUntil
+        ) {
+          return { status: 'manager', user };
+        } else {
+          return { status: 'manager-unpaid-access', user };
+        }
       }
+
+      // if (user.user_type == 'manager') {
+      //   return { status: 'manager', user };
+      // }
 
       return { status: 'not_found', message: 'Пользователь не найден.' };
     } catch (error) {

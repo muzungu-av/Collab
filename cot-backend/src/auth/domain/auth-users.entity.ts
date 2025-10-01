@@ -19,6 +19,10 @@ export class AuthUser {
   wallet_blocked_at?: string | null;
   wallet_block_reason?: string | null;
 
+  manager_paid_at?: string | null;
+  manager_valid_until?: string | null;
+  manager_payment_status?: string | null;
+
   // Метод для проверки подписи
   public signing(telegramId: string): void {
     this.signed_id = SignedTelegramIdGuard.encodeTelegramId(BigInt(telegramId));

@@ -178,7 +178,12 @@ DECLARE
   partner_blocked BOOLEAN;
 BEGIN
   -- Устанавливаем контекст текущего пользователя для RLS
-  PERFORM set_config('app.current_telegram_id', telegram_id_param::text, false); --false (сессионный уровень)  true (уровень запроса в этом блоке)
+  PERFORM set_config('app.current_telegram_id', telegram_id_param::text, true);
+
+-- is_local = true → значение действует только до конца текущего блока/транзакции.
+--  Когда закончится текущая транзакция или выход из функции, настройка исчезнет.
+-- is_local = false → значение сохраняется до конца текущего сеанса (connection).
+--  всё, что дальше выполняется в этом же соединении (любые функции, запросы), будет видеть это значение.
 
   -- Проверяем, существует ли свободный passcode
   SELECT EXISTS (SELECT 1 FROM public.partner_passcode pp WHERE pp.passcode = passcode_param AND pp.is_used = FALSE) INTO passcode_exists;
@@ -360,7 +365,7 @@ BEGIN
 
   -- Устанавливаем контекст пользователя для RLS
   -- Локальность переменной (true)
-  -- Если в будущем появятся триггеры (например, на таблицу wallets) или вызовы других функций, которым тоже нужен app.current_telegram_id, они переменную не увидят из-за true
+  -- Если в будущем появятся триггеры (на таблицу wallets) или вызовы других функций, которым тоже нужен app.current_telegram_id, они переменную не увидят из-за true
   PERFORM set_config('app.current_telegram_id', p_telegram_id::text, true);
 
   BEGIN
@@ -468,7 +473,11 @@ RETURNS TABLE (
     wallet_is_active BOOLEAN,
     wallet_is_verified BOOLEAN,
     wallet_blocked_at TIMESTAMPTZ,
-    wallet_block_reason TEXT
+    wallet_block_reason TEXT,
+    --только для менеджеров статус оплаты
+    manager_paid_at TIMESTAMPTZ,
+    manager_valid_until TIMESTAMPTZ,
+    manager_payment_status VARCHAR(20)
 ) AS $$
 BEGIN
     RETURN QUERY
@@ -490,7 +499,10 @@ BEGIN
         NULL::BOOLEAN AS wallet_is_active,
         NULL::BOOLEAN AS wallet_is_verified,
         NULL::TIMESTAMPTZ AS wallet_blocked_at,
-        NULL::TEXT AS wallet_block_reason
+        NULL::TEXT AS wallet_block_reason,
+        NULL::TIMESTAMPTZ AS manager_paid_at,
+        NULL::TIMESTAMPTZ AS manager_valid_until,
+        NULL::VARCHAR(20) AS manager_payment_status
     FROM public.admin a
     WHERE a.telegram_id = telegram_id_param
     UNION ALL
@@ -512,9 +524,19 @@ BEGIN
         w.is_active AS wallet_is_active,
         w.is_verified AS wallet_is_verified,
         w.blocked_at AS wallet_blocked_at,
-        w.block_reason AS wallet_block_reason
+        w.block_reason AS wallet_block_reason,
+        mp.manager_paid_at,
+        mp.manager_valid_until,
+        mp.manager_payment_status
     FROM public.manager m
     LEFT JOIN public.wallets w ON m.telegram_id = w.manager_telegram_id
+    LEFT JOIN LATERAL (
+      SELECT mp_inner.paid_at as manager_paid_at, mp_inner.valid_until as manager_valid_until, mp_inner.status as manager_payment_status
+      FROM public.manager_payments mp_inner
+      WHERE mp_inner.manager_telegram_id = m.telegram_id
+      ORDER BY mp_inner.paid_at DESC
+      LIMIT 1
+      ) AS mp ON true
     WHERE m.telegram_id = telegram_id_param
     UNION ALL
     -- Партнёры
@@ -535,7 +557,10 @@ BEGIN
         w.is_active AS wallet_is_active,
         w.is_verified AS wallet_is_verified,
         w.blocked_at AS wallet_blocked_at,
-        w.block_reason AS wallet_block_reason
+        w.block_reason AS wallet_block_reason,
+        NULL::TIMESTAMPTZ AS manager_paid_at,
+        NULL::TIMESTAMPTZ AS manager_valid_until,
+        NULL::VARCHAR(20) AS manager_payment_status
     FROM public.partner p
     LEFT JOIN public.wallets w ON p.telegram_id = w.partner_telegram_id
     WHERE p.telegram_id = telegram_id_param;
@@ -547,12 +572,12 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION public.delete_partner_by_telegram_id(p_telegram_id BIGINT)
 RETURNS BOOLEAN AS $$
 BEGIN
-    -- Устанавливаем контекст RLS (например, telegram_id текущего пользователя)
+    -- Устанавливаем контекст RLS (telegram_id текущего пользователя)
     PERFORM set_config('app.current_telegram_id', p_telegram_id::text, true);
 
     -- Удаляем запись (RLS автоматически применит фильтрацию)
     DELETE FROM public.partner
-    WHERE telegram_id = p_telegram_id;
+    WHERE telegram_id = current_setting('app.current_telegram_id')::bigint;
 
     RETURN FOUND;
 END;
@@ -670,6 +695,179 @@ VALUES (
   '{"amount": 49, "currency": "EUR"}',
   'Цена ежегодной подписки'
 );
+
+
+
+-- ========================
+-- Таблица оплат доступа
+-- ========================
+CREATE TABLE public.manager_payments (
+    id BIGSERIAL PRIMARY KEY,
+    manager_telegram_id BIGINT NOT NULL REFERENCES public.manager(telegram_id) ON DELETE CASCADE,
+    wallet_id INT NOT NULL REFERENCES public.wallets(id) ON DELETE CASCADE,
+    tx_hash VARCHAR(128) NULL, -- хэш транзакции в блокчейне
+    amount NUMERIC(18, 8) NOT NULL, -- сумма в криптовалюте
+    currency VARCHAR(20) NOT NULL, -- USDT
+    paid_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    valid_until TIMESTAMPTZ NOT NULL, -- срок действия подписки
+    status VARCHAR(20) NOT NULL DEFAULT 'pending', -- pending / confirmed / failed / expired
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Индекс по manager_telegram_id (для быстрых выборок по менеджеру)
+CREATE INDEX idx_manager_payments_manager_id
+    ON public.manager_payments (manager_telegram_id);
+
+-- Индекс по wallet_id (для быстрых выборок по кошельку)
+CREATE INDEX idx_manager_payments_wallet_id
+    ON public.manager_payments (wallet_id);
+
+
+-- ========================
+-- Триггер: устанавливаем valid_until = paid_at + 1 year
+-- ========================
+CREATE OR REPLACE FUNCTION set_valid_until()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.valid_until := NEW.paid_at + INTERVAL '1 year';
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_set_valid_until
+BEFORE INSERT ON public.manager_payments
+FOR EACH ROW
+EXECUTE FUNCTION set_valid_until();
+
+-- ========================
+-- Триггер: автообновление поля updated_at
+-- ========================
+CREATE OR REPLACE FUNCTION set_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_set_updated_at
+BEFORE UPDATE ON public.manager_payments
+FOR EACH ROW
+EXECUTE FUNCTION set_updated_at();
+
+-- ========================
+-- Триггер: автоматический перевод status в expired
+-- ========================
+CREATE OR REPLACE FUNCTION check_expired_status()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.valid_until < NOW() THEN
+    NEW.status := 'expired';
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_check_expired_status
+BEFORE UPDATE ON public.manager_payments
+FOR EACH ROW
+EXECUTE FUNCTION check_expired_status();
+
+
+-- Включаем RLS для таблицы
+ALTER TABLE public.manager_payments ENABLE ROW LEVEL SECURITY;
+
+-- Политика: менеджер имеет доступ только к своим оплатам
+CREATE POLICY "Manager access to own payments"
+ON public.manager_payments
+FOR ALL
+TO manager
+USING (manager_telegram_id = current_setting('app.current_telegram_id')::bigint) --ограничивает чтение/обновление/удаление
+WITH CHECK (manager_telegram_id = current_setting('app.current_telegram_id')::bigint); --ограничивает вставку
+
+
+
+-- Функция для вставки новой оплаты в manager_payments
+create or replace function public.add_manager_payment(
+    p_manager_telegram_id bigint,
+    p_tx_hash text,
+    p_amount numeric,
+    p_currency varchar
+)
+returns jsonb
+language plpgsql
+as $$
+declare
+    v_wallet_id int;
+    v_payment record;
+begin
+
+    PERFORM set_config('app.current_telegram_id', p_manager_telegram_id::text, true);
+
+    -- ищем активный кошелек менеджера
+    select id into v_wallet_id
+    from public.wallets
+    where manager_telegram_id = current_setting('app.current_telegram_id')::bigint
+      and is_active = true
+    limit 1;
+
+    if v_wallet_id is null then
+        raise exception 'Не найден кошелек для менеджера %', p_manager_telegram_id
+            using errcode = 'P0001';
+    end if;
+
+    -- вставляем оплату
+    insert into public.manager_payments (
+        manager_telegram_id, wallet_id, tx_hash, amount, currency, status
+    ) values (
+        current_setting('app.current_telegram_id')::bigint, v_wallet_id, p_tx_hash, p_amount, p_currency, 'pending'
+    )
+    returning * into v_payment;
+
+    -- возвращаем JSON с успехом
+    return jsonb_build_object(
+        'success', true,
+        'message', 'Платеж успешно введен',
+        'data', to_jsonb(v_payment)
+    );
+end;
+$$;
+
+
+create or replace function public.confirm_manager_payment(
+    p_manager_telegram_id bigint,
+    p_tx_hash text
+)
+returns jsonb
+language plpgsql
+as $$
+declare
+    v_payment record;
+begin
+
+    PERFORM set_config('app.current_telegram_id', p_manager_telegram_id::text, true);
+
+    update public.manager_payments
+    set status = 'confirmed',
+        updated_at = now()
+    where manager_telegram_id = current_setting('app.current_telegram_id')::bigint
+      and tx_hash = p_tx_hash
+    returning * into v_payment;
+
+    if not found then
+        raise exception 'Payment not found for manager % with tx_hash %',
+            p_manager_telegram_id, p_tx_hash
+            using errcode = 'P0001';
+    end if;
+
+    return jsonb_build_object(
+        'success', true,
+        'message', 'Payment confirmed',
+        'data', to_jsonb(v_payment)
+    );
+end;
+$$;
 
 -- -- Политика для MANADER таблицы wallets (SELECT, UPDATE, DELETE)
 -- -- Политика для SELECT

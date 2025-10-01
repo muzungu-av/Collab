@@ -25,6 +25,7 @@ export class AuthSupabaseRepository implements IAuthUserRepository {
         } else {
           user.telegram_id = Number(item.telegram_id);
         }
+
         user.username = item.username;
         user.email = item.email;
         user.phone = item.phone;
@@ -40,6 +41,10 @@ export class AuthSupabaseRepository implements IAuthUserRepository {
         user.wallet_is_verified = item.wallet_is_verified;
         user.wallet_blocked_at = item.wallet_blocked_at;
         user.wallet_block_reason = item.wallet_block_reason;
+
+        user.manager_paid_at = item.manager_paid_at;
+        user.manager_valid_until = item.manager_valid_until;
+        user.manager_payment_status = item.manager_payment_status;
 
         return user;
       });
