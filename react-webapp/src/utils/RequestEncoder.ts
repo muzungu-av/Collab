@@ -5,6 +5,14 @@ export function encodeTelegramId(telegramId: number): string {
   return xored.toString(29);
 }
 
+// js
+// function encodeTelegramId(telegramId) {
+//   const tid = BigInt(telegramId);
+//   const SECRET_XOR = BigInt(0x139a8e71d);
+//   const xored = tid ^ SECRET_XOR;
+//   return xored.toString(29);
+// }
+
 // обфусцированная функция
 // _0x3d4f = (a, b) => a ^ b;
 // _0x1a2b = BigInt('0x139a8e71d');

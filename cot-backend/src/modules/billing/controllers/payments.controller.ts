@@ -22,7 +22,7 @@ export class PaymentsController {
 
     const result = await this.paymentsService.addPayment(
       dto.telegram_id,
-      dto.tx_hash,
+      // dto.tx_hash,
       dto.amount,
       dto.currency,
     );

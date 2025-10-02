@@ -13,13 +13,13 @@ export class PaymentsService {
 
   async addPayment(
     managerTelegramId: bigint,
-    txHash: string,
+    // txHash: string,
     amount: number,
     currency: string,
   ): Promise<ResponseDto<any>> {
     const result = await this.repository.addPayment(
       managerTelegramId,
-      txHash,
+      'txHash', // заглушка
       amount,
       currency,
     );

@@ -31,6 +31,9 @@ import PaymentSuccessPage from "./pages/partner/PaymentSuccessPage";
 import ManagerSignUpPage from "./pages/manager/ManagerSignUpPage";
 import ManagerPaymentOfferPage from "./pages/manager/ManagerPaymentOfferPage";
 import ManagerPaymentPage from "./pages/manager/ManagerPaymentPage";
+import ManagerPaymentPageSuccess from "./pages/manager/ManagerPaymentPageSuccess";
+import ManagerPaymentPageError from "./pages/manager/ManagerPaymentPageError";
+import ManagerPage from "./pages/manager/ManagerPage";
 
 const App: React.FC = () => {
   const navigate = useNavigate();
@@ -77,7 +80,8 @@ const AppWrapper: React.FC<AppWrapperProps> = ({
   const isUserBlocked = renderPath === "/user-blocked";
   const isError = renderPath === "/error";
   const isPartner = renderPath === "/partner"; //авто-вход на страницу партнера
-  const isManager = renderPath === "/manager"; //авто-вход на страницу менеджера
+  const isManager =
+    renderPath === "/manager" || renderPath === "/manager-unpaid-access"; //авто-вход на страницу менеджера
   const isPartnerSignupContinue = renderPath === "/signup-continue"; // незавершенная регистрация партнера
 
   // роутинг - условия всяких нестандартных случаев
@@ -103,10 +107,28 @@ const AppWrapper: React.FC<AppWrapperProps> = ({
   /* тут рендер всех страниц manager-ов */
   const renderManagerRootRoutes = () => (
     <>
-      {/* эта страница для авто-входа */}
-      {isManager && <Route path="/" element={<ManagerPaymentOfferPage />} />}
+      {/* эта страница для авто-входа на /manager заходить после оплаты через редирект на "/"" */}
+      renderPath
+      {isManager && renderPath === "/manager" && (
+        <Route path="/" element={<ManagerPage />} />
+      )}
+      {isManager && renderPath === "/manager-unpaid-access" && (
+        <Route path="/" element={<ManagerPaymentOfferPage />} />
+      )}
       {isManager && (
         <Route path="/manager-payment" element={<ManagerPaymentPage />} />
+      )}
+      {isManager && (
+        <Route
+          path="/manager-payment-success"
+          element={<ManagerPaymentPageSuccess />}
+        />
+      )}
+      {isManager && (
+        <Route
+          path="/manager-payment-err"
+          element={<ManagerPaymentPageError />}
+        />
       )}
     </>
   );

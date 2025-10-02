@@ -63,7 +63,7 @@ const checkAccess = async (id: number | null): Promise<CheckAccessResult> => {
         wallet_block_reason: resp.user.wallet_block_reason,
       };
     } else {
-      //"admin" | "manager" | "partner"
+      // когда "not_found" "error" "blocked"
       userData = {
         telegram_id: id,
         username: "",
@@ -77,12 +77,15 @@ const checkAccess = async (id: number | null): Promise<CheckAccessResult> => {
         wallet: "",
       };
     }
+    // ветка - "admin" "partner"  "manager" 'manager-unpaid-access'
     // Обработка статусов ответа
     switch (resp.status) {
       case "partner":
         return { userData, renderPath: "/partner" };
       case "manager":
         return { userData, renderPath: "/manager" };
+      case "manager-unpaid-access":
+        return { userData, renderPath: "/manager-unpaid-access" };
       case "signup-continue":
         return { userData, renderPath: "/signup-continue" };
       case "blocked":
