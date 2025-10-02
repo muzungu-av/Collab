@@ -72,7 +72,7 @@ const ManagerPaymentPage: React.FC = () => {
         </span>
         <br />
         <br />
-        <div style={{ color: "#fff", fontSize: "9px !important" }}>
+        <div style={{ color: "#fff", fontSize: "14px" }}>
           Убедитесь, что на вашем кошельке достаточно средств
         </div>
         <br />

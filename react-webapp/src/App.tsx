@@ -34,6 +34,8 @@ import ManagerPaymentPage from "./pages/manager/ManagerPaymentPage";
 import ManagerPaymentPageSuccess from "./pages/manager/ManagerPaymentPageSuccess";
 import ManagerPaymentPageError from "./pages/manager/ManagerPaymentPageError";
 import ManagerPage from "./pages/manager/ManagerPage";
+import ManagerStartMenu from "./pages/manager/ManagerStartMenu";
+import ManagerPostOrder from "./pages/manager/orders/ManagerPostOrderPage";
 
 const App: React.FC = () => {
   const navigate = useNavigate();
@@ -82,6 +84,7 @@ const AppWrapper: React.FC<AppWrapperProps> = ({
   const isPartner = renderPath === "/partner"; //авто-вход на страницу партнера
   const isManager =
     renderPath === "/manager" || renderPath === "/manager-unpaid-access"; //авто-вход на страницу менеджера
+  const isManagerHasAccess: boolean = renderPath === "/manager"; //признак менеджера с оплаченным доступом
   const isPartnerSignupContinue = renderPath === "/signup-continue"; // незавершенная регистрация партнера
 
   // роутинг - условия всяких нестандартных случаев
@@ -107,14 +110,14 @@ const AppWrapper: React.FC<AppWrapperProps> = ({
   /* тут рендер всех страниц manager-ов */
   const renderManagerRootRoutes = () => (
     <>
-      {/* эта страница для авто-входа на /manager заходить после оплаты через редирект на "/"" */}
-      renderPath
-      {isManager && renderPath === "/manager" && (
+      {/* эта страница для авто-входа на ManagerPage заходить после оплаты через редирект на "/"" */}
+      {isManager && isManagerHasAccess && (
         <Route path="/" element={<ManagerPage />} />
       )}
-      {isManager && renderPath === "/manager-unpaid-access" && (
+      {isManager && !isManagerHasAccess && (
         <Route path="/" element={<ManagerPaymentOfferPage />} />
       )}
+      {/* ..остальные (доступны не оплаченным) */}
       {isManager && (
         <Route path="/manager-payment" element={<ManagerPaymentPage />} />
       )}
@@ -130,6 +133,14 @@ const AppWrapper: React.FC<AppWrapperProps> = ({
           element={<ManagerPaymentPageError />}
         />
       )}
+      {/* ..остальные (доступны оплаченным) */}
+      {isManager && isManagerHasAccess && (
+        <Route path="/manager-start-menu" element={<ManagerStartMenu />} />
+      )}
+      {isManager && isManagerHasAccess && (
+        <Route path="/manager-post-order" element={<ManagerPostOrder />} />
+      )}
+      {/* другие страницы менеджера тут ... */}
     </>
   );
 

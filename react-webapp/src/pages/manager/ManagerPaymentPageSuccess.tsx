@@ -12,8 +12,6 @@ const ManagerPaymentPageSuccess: React.FC = () => {
   const { cost } = location.state || {};
   const { currency } = location.state || {};
 
-  //todo
-
   return (
     <CommonLayout showBackButton={true}>
       <div>

@@ -16,7 +16,9 @@ const ManagerPage: React.FC = () => {
       <div className="simple-text">Здесь будет логотип</div>
       <br />
       <br />
-      <FilledButton>Меню</FilledButton>
+      <FilledButton onClick={() => navigate("/manager-start-menu")}>
+        Меню
+      </FilledButton>
     </CommonLayout>
   );
 };

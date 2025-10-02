@@ -79,7 +79,7 @@ const ManagerPaymentOfferPage: React.FC = () => {
             value={cost + " " + currency!}
           />
           <br />
-          <div style={{ color: "#fff", fontSize: "9px !important" }}>
+          <div style={{ color: "#fff", fontSize: "14px" }}>
             Оплата будет списана с привязанного кошелька
           </div>
           <br />

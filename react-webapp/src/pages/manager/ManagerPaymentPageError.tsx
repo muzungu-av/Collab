@@ -18,7 +18,7 @@ const ManagerPaymentPageError: React.FC = () => {
         </div>
         <br />
         <br />
-        <div style={{ color: "#fff", fontSize: "7px !important" }}>
+        <div style={{ color: "#fff", fontSize: "14px" }}>
           Пополните кошелёк, чтобы произвести оплату
         </div>
       </div>
