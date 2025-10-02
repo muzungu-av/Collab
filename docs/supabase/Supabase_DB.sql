@@ -869,6 +869,22 @@ begin
 end;
 $$;
 
+
+-- таблица статусов заказов
+create table order_statuses (
+    id serial primary key,
+    name text unique not null,
+    color_start varchar(7) not null, -- HEX-код, например #FF0000
+    color_end varchar(7) not null
+);
+
+-- данные
+insert into order_statuses (name, color_start, color_end) values
+('Закрыт',   '#6D6D6D', '#A0A0A0'),
+('Ожидание', '#F7B733', '#FC4A1A'),
+('В работе', '#36D1DC', '#5B86E5'),
+('В Споре',  '#FF416C', '#FF4B2B');
+
 -- -- Политика для MANADER таблицы wallets (SELECT, UPDATE, DELETE)
 -- -- Политика для SELECT
 -- CREATE POLICY manager_select_wallet_policy ON public.wallets

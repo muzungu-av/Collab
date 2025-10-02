@@ -8,6 +8,7 @@ import { ManagerModule } from './modules/manager.module';
 import { ConstantsModule } from './modules/constants.module';
 import { SupabaseModule } from './supabase/supabase.module';
 import { BillingModule } from './modules/billing.module';
+import { ReferenceModule } from './modules/reference.module';
 
 @Module({
   controllers: [],
@@ -23,6 +24,7 @@ import { BillingModule } from './modules/billing.module';
     PartnerPasscodeModule,
     ConstantsModule,
     BillingModule,
+    ReferenceModule,
   ],
 })
 // export class AppModule {}

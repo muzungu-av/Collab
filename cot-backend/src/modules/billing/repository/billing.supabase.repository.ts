@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { IBillingRepository } from './interfaces/billing.repository.interface';
-import { PayDto } from '../controllers/dto/pay.dto';
 
 @Injectable()
 export class BillingSupabaseRepository implements IBillingRepository {

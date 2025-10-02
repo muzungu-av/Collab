@@ -1,14 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import { CurrencyController } from './billing/controllers/currency.controller';
-import { CurrencyService } from './billing/services/currency.service';
-import { PaymentsController } from './billing/controllers/payments.controller';
-import { PaymentsService } from './billing/services/payments.service';
 import { SupabaseClient } from '@supabase/supabase-js';
-import { BillingSupabaseRepository } from './billing/repository/billing.supabase.repository';
-import { BillingEmptyRepository } from './billing/repository/billing.empty.repository';
-import { BillingLocalRepository } from './billing/repository/billing.local.repository';
+import { ReferenceService } from './reference/services/reference.service';
+import { ReferenceSupabaseRepository } from './reference/repository/reference.supabase.repository';
+import { ReferenceLocalRepository } from './reference/repository/reference.local.repository';
+import { ReferenceEmptyRepository } from './reference/repository/reference.empty.repository';
+import { ReferenceController } from './reference/controllers/reference.controller';
 
 @Module({
   imports: [
@@ -22,28 +20,27 @@ import { BillingLocalRepository } from './billing/repository/billing.local.repos
       inject: [ConfigService],
     }),
   ],
-  controllers: [CurrencyController, PaymentsController],
+  controllers: [ReferenceController],
   providers: [
-    CurrencyService,
-    PaymentsService,
+    ReferenceService,
     {
-      provide: 'IBILLING_REPOSITORY', //общий интерфейс (конкретные реалезации ниже)
+      provide: 'IREFERENCE_REPOSITORY', //общий интерфейс (конкретные реалезации ниже)
       inject: [ConfigService, 'SUPABASE_CLIENT'], // Инъекция из SupabaseModule
       useFactory: (configService: ConfigService, supabase: SupabaseClient) => {
         const dbType = configService.get<string>('DB_TYPE');
         switch (dbType) {
           case 'SUPABASE':
-            return new BillingSupabaseRepository(supabase);
+            return new ReferenceSupabaseRepository(supabase);
           case 'POSTGRES':
-            return new BillingLocalRepository();
+            return new ReferenceLocalRepository();
           default:
             console.warn(
               `Unknown DB_TYPE: ${dbType}. Using empty implementation.`,
             );
-            return new BillingEmptyRepository();
+            return new ReferenceEmptyRepository();
         }
       },
     },
   ],
 })
-export class BillingModule {}
+export class ReferenceModule {}

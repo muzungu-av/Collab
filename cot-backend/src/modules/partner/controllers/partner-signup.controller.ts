@@ -22,4 +22,3 @@ export class PartnerSignUpController {
     );
   }
 }
-//todo "status": "Неверный passcode", приходит когда мы прерываемся

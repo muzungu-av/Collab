@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { ResponseDto } from 'src/common/dto/response.dto';
 import type { IPartnerRepository } from '../repository/interfaces/partner.repository.interface';
@@ -8,7 +7,6 @@ import { PartnerPasscodeDomain } from 'src/modules/partner_passcode/domain/partn
 @Injectable()
 export class PartnerSignUpService {
   constructor(
-    private readonly config: ConfigService,
     @Inject('IPARTNER_REPOSITORY')
     private readonly repository: IPartnerRepository,
     private readonly jwtService: JwtService,

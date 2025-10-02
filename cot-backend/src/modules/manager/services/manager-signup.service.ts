@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { ResponseDto } from 'src/common/dto/response.dto';
 import type { IManagerRepository } from '../repository/interfaces/manager.repository.interface';
@@ -7,7 +6,6 @@ import type { IManagerRepository } from '../repository/interfaces/manager.reposi
 @Injectable()
 export class ManagerSignUpService {
   constructor(
-    private readonly config: ConfigService,
     @Inject('IMANAGER_REPOSITORY')
     private readonly repository: IManagerRepository,
     private readonly jwtService: JwtService,

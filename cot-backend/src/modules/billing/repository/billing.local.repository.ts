@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { IBillingRepository } from './billing.repository.interface';
+import { IBillingRepository } from './interfaces/billing.repository.interface';
 
 //to-do реализовать Все методы для локальной БД
 @Injectable()
